@@ -4,6 +4,7 @@ import os
 import urlgrabber
 import constants
 
+
 baseDirname = 'html/'
 baseURL     = 'http://www.transfermarkt.co.uk/jumplist/startseite/verein/'
 
