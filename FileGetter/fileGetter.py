@@ -1,7 +1,7 @@
 __author__ = 'matic'
 
 import os
-import urllib
+import urlgrabber
 import constants
 
 baseDirname = 'html/'
@@ -32,8 +32,7 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         if(season != '15'):
             url = baseURL + `clubId` + '?saison_id=20' + season
 
-        f = open(filename,'wb')
-        f.write(urllib.urlopen(url).read())
-        f.close()
+        urlgrabber.urlgrab(url, filename)
 
 fetchHTMLFiles(constants.clubDictESP, constants.leagues['spain'])
+fetchHTMLFiles(constants.clubDictESP, constants.leagues['spain'], constants.seasons[2014])
