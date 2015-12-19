@@ -7,7 +7,7 @@ from Club import Club
 from PlayerClubSeason import PlayerClubSeason
 from ClubSeason import ClubSeason
 
-filename = "./html/EFC_29_14.html"
+filename = "../FileGetter/html/LaLiga/15/VCF_1049"
 
 d = pq(filename=filename)
 club = Club()
@@ -26,11 +26,14 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
         else:
             prevClubPresent = True
 
+        # Playing Position
         if idx == 0:
             player.playingPosition  =    pq(column).attr('title')
             player.playingNumber    =    int(pq(column).children().html())
             idx += 1
             continue
+
+        # Player Name
         if idx == 1:
             nameElement =   d(".spielprofil_tooltip")
             names =         d(".spielprofil_tooltip").html().split(" ")
@@ -39,6 +42,8 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
                 player.lastName = " ".join(names[1:len(names)])
             idx += 1
             continue
+
+        # Birth date (only if not current season)
         if idx == 2:
             print prevClubPresent
             if(prevClubPresent):
@@ -49,6 +54,8 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
             else:
                 idx += 1
                 continue
+
+        # Player nationality / birth date
         if idx == 3:
             if(prevClubPresent):
                 player.nationality = pq(pq(column).html()).attr('title')
@@ -56,22 +63,28 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
                 player.birthDate = int(pq(column).html().split(" ")[2])
             idx += 1
             continue
+
+        # Player nationality (only if current season)
         if (idx == 4):
             if(not prevClubPresent):
                 player.nationality = pq(pq(column).html()).attr('title')
                 idx += 1
             continue
-        #price
+
+        # Player market valuew
         if (idx == 5):
             priceString = ""
             addNum = False
             for let in pq(column).html().split("<")[0]:
-                if(let == u'\xa3'):
-                    addNum = True
-                    continue
-                else:
-                    if(let != "m"):
-                        priceString += let
-        print float(priceString)
+                if(let.isdigit() or let == '.' or let == ','):
+                    priceString += let
+                elif(let == 'm'):
+                    multiplier = 1000000
+                elif(let == 'k'):
+                    multiplier = 1000
+
+            price = float(priceString) * multiplier
+            print price
+
     player.to_string()
     break
