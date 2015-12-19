@@ -71,16 +71,16 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
                 idx += 1
             continue
 
-        # Player market valuew
+        # Player market value
         if (idx == 5):
             priceString = ""
             addNum = False
-            for let in pq(column).html().split("<")[0]:
-                if(let.isdigit() or let == '.' or let == ','):
-                    priceString += let
-                elif(let == 'm'):
+            for character in pq(column).html().split("<")[0]:
+                if(character.isdigit() or character == '.' or character == ','):
+                    priceString += character
+                elif(character == 'm'):
                     multiplier = 1000000
-                elif(let == 'k'):
+                elif(character == 'k'):
                     multiplier = 1000
 
             price = float(priceString) * multiplier
