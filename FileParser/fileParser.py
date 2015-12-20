@@ -9,18 +9,18 @@ from ClubSeason import ClubSeason
 
 filename = "../FileGetter/html/LaLiga/15/VCF_1049"
 
-d = pq(filename=filename)
+document = pq(filename=filename)
 club = Club()
 club.idClub = filename.split("_",2)[1]
-club.nameClub = d(".spielername-profil").html().strip()
+club.nameClub = document(".spielername-profil").html().strip()
 
-for i in d(d(d(".items")[0]).children()[1]).children().items():
+for i in document(document(document(".items")[0]).children()[1]).children().items():
     player = Player()
-    pcs = PlayerClubSeason()
-    idx = 0
+    pcs    = PlayerClubSeason()
+    idx    = 0
     for j in range(0,len(i.children())):
         column = i.children()[j]
-        print pq(column)
+
         if (str(pq(i.children()[2]).attr('class')) == "hide"):
             prevClubPresent = False
         else:
@@ -28,15 +28,16 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
 
         # Playing Position
         if idx == 0:
-            player.playingPosition  =    pq(column).attr('title')
-            player.playingNumber    =    int(pq(column).children().html())
+            player.playingPosition = pq(column).attr('title')
+            player.playingNumber   = int(pq(column).children().html())
             idx += 1
             continue
 
         # Player Name
         if idx == 1:
-            nameElement =   d(".spielprofil_tooltip")
-            names =         d(".spielprofil_tooltip").html().split(" ")
+            nameElement = pq(column)(".spielprofil_tooltip")
+            names       = nameElement.attr('title').split(" ")
+
             player.firstName = names[0]
             if len(names) > 1:
                 player.lastName = " ".join(names[1:len(names)])
@@ -87,4 +88,4 @@ for i in d(d(d(".items")[0]).children()[1]).children().items():
             print price
 
     player.to_string()
-    break
+    # break
