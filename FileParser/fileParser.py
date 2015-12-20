@@ -7,7 +7,7 @@ from Club import Club
 from PlayerClubSeason import PlayerClubSeason
 from ClubSeason import ClubSeason
 
-filename = "../FileGetter/html/LaLiga/15/VCF_1049"
+filename = "../FileGetter/html/LaLiga/14/VCF_1049"
 
 document = pq(filename=filename)
 club = Club()
@@ -30,7 +30,15 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
         # Playing Position
         if idx == 0:
             player.playingPosition = pq(column).attr('title')
-            player.playingNumber   = int(pq(column).children().html())
+
+            playingNumber = pq(column).children().html()
+
+            # if player does not have a number exclude him from the parsing
+            if playingNumber != '-':
+                player.playingNumber   = int(playingNumber)
+            else:
+                break
+
 
             idx += 1
             continue
@@ -65,6 +73,8 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
         # Player nationality / birth date
         if idx == 3:
             if(prevClubPresent):
+                flagElement = pq(pq(column).html())
+
                 # check for multiple nationality
                 if len(flagElement.children()) > 0:
                     nationality = flagElement.children().attr('title')
@@ -90,8 +100,8 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
                     nationality = flagElement.attr('title')
 
                 player.nationality = nationality
-                idx += 1
 
+            idx += 1
             continue
 
         # Player market value
