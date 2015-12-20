@@ -155,3 +155,45 @@ clubDictITA['CAP']  = 4102   # Capri FC 1909
 clubDictITA['HEV']  = 276    # Hellas Verona
 clubDictITA['CHV']  = 862    # Chievo Verona
 clubDictITA['FRC']  = 8970   # Frosinone Calcio
+
+# PORTUGUESE PRIMERA LIGA
+clubDictPOR         = dict()
+clubDictPOR['FCP']  = 720    # FC Porto
+clubDictPOR['SPO']  = 336    # Sporting CP
+clubDictPOR['SLB']  = 294    # SL Benfica
+clubDictPOR['SCB']  = 1075   # SC Braga
+clubDictPOR['VGU']  = 2420   # Vitoria Guimaraes SC
+clubDictPOR['RIA']  = 2425   # Rio Ave FC
+clubDictPOR['BEL']  = 2457   # CF Belenenses Lissabon
+clubDictPOR['CSM']  = 1301   # CS Maritimo
+clubDictPOR['CDN']  = 982    # CD Nacional
+clubDictPOR['GDE']  = 1465   # GD Estorilpraia
+clubDictPOR['PAC']  = 2995   # FC Pacos De Ferreira
+clubDictPOR['FCA']  = 8024   # FC Arouca
+clubDictPOR['ACC']  = 2990   # Academica Coimbra
+clubDictPOR['BOA']  = 2503   # Boavista Porto FC
+clubDictPOR['VIS']  = 1085   # Vitoria Setubal FC
+clubDictPOR['MFC']  = 979    # Moreirense FC
+clubDictPOR['CDT']  = 7179   # CD Tondela
+clubDictPOR['UNM']  = 976    # CF Uniao Madeira
+
+# NETHERLANDS EREDIVISE
+clubDictNED = dict()
+clubDictNED['PSV'] = 383  # PSV Eindhoven
+clubDictNED['AJA'] = 610  # AJAX Amsterdam
+clubDictNED['FEY'] = 243  # Feyenoord Rotterdam
+clubDictNED['AZA'] = 1090 # AZ Alkmaar
+clubDictNED['FCT'] = 317  # FC Twente
+clubDictNED['VIT'] = 499  # Vitesse Arnhem
+clubDictNED['GRO'] = 202  # FC Groningen
+clubDictNED['HEE'] = 306  # SC Heerenveen
+clubDictNED['UTR'] = 200  # FC Utrecht
+clubDictNED['WIL'] = 403  # Willem II Tilburg
+clubDictNED['ZWO'] = 1269  # PEC Zwoole
+clubDictNED['ADH'] = 1268 # ADO Den Haag
+clubDictNED['NEC'] = 467  # NEC Nijmegen
+clubDictNED['HER'] = 1304 # Heracles Almelo
+clubDictNED['SCC'] = 133  # SC Cambuur-Leeuwarden
+clubDictNED['ROD'] = 192  # Roda JC Kerkrade
+clubDictNED['EXC'] = 798  # Excelsior Rotterdam
+clubDictNED['DGR'] = 642  # De Graafschap Doetinchem

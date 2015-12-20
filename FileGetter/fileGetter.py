@@ -36,8 +36,10 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         urlgrabber.urlgrab(url, filename)
 
 for season in [2015, 2014, 2013, 2012, 2011, 2010]:
-    fetchHTMLFiles(constants.clubDictESP, constants.leagues['spain'],   constants.seasons[season])
-    fetchHTMLFiles(constants.clubDictENG, constants.leagues['england'], constants.seasons[season])
-    fetchHTMLFiles(constants.clubDictGER, constants.leagues['germany'], constants.seasons[season])
-    fetchHTMLFiles(constants.clubDictITA, constants.leagues['italy'],   constants.seasons[season])
-    fetchHTMLFiles(constants.clubDictFRA, constants.leagues['france'],  constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictESP, constants.leagues['spain'],        constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictENG, constants.leagues['england'],      constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictGER, constants.leagues['germany'],      constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictITA, constants.leagues['italy'],        constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictFRA, constants.leagues['france'],       constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictNED, constants.leagues['netherlands'],  constants.seasons[season])
+    fetchHTMLFiles(constants.clubDictPOR, constants.leagues['portugal'],     constants.seasons[season])
