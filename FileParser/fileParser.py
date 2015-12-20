@@ -18,6 +18,7 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
     player = Player()
     pcs    = PlayerClubSeason()
     idx    = 0
+
     for j in range(0,len(i.children())):
         column = i.children()[j]
 
@@ -30,17 +31,21 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
         if idx == 0:
             player.playingPosition = pq(column).attr('title')
             player.playingNumber   = int(pq(column).children().html())
+
             idx += 1
             continue
 
-        # Player Name
+        # Player Name and ID
         if idx == 1:
             nameElement = pq(column)(".spielprofil_tooltip")
             names       = nameElement.attr('title').split(" ")
+            id          = nameElement.attr('id')
 
+            player.idP       = int(id)
             player.firstName = names[0]
             if len(names) > 1:
                 player.lastName = " ".join(names[1:len(names)])
+
             idx += 1
             continue
 
@@ -50,6 +55,7 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
             if(prevClubPresent):
                 age = pq(column).html().split(" ")
                 player.birthDate = int(pq(column).html().split(" ")[2])
+
                 idx += 1
                 continue
             else:
@@ -68,6 +74,7 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
                 player.nationality = nationality
             else:
                 player.birthDate = int(pq(column).html().split(" ")[2])
+
             idx += 1
             continue
 
@@ -84,6 +91,7 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
 
                 player.nationality = nationality
                 idx += 1
+
             continue
 
         # Player market value
