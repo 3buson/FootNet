@@ -59,7 +59,13 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
         # Player nationality / birth date
         if idx == 3:
             if(prevClubPresent):
-                player.nationality = pq(pq(column).html()).attr('title')
+                # check for multiple nationality
+                if len(flagElement.children()) > 0:
+                    nationality = flagElement.children().attr('title')
+                else:
+                    nationality = flagElement.attr('title')
+
+                player.nationality = nationality
             else:
                 player.birthDate = int(pq(column).html().split(" ")[2])
             idx += 1
@@ -68,7 +74,15 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
         # Player nationality (only if current season)
         if (idx == 4):
             if(not prevClubPresent):
-                player.nationality = pq(pq(column).html()).attr('title')
+                flagElement = pq(pq(column).html())
+
+                # check for multiple nationality
+                if len(flagElement.children()) > 0:
+                    nationality = flagElement.children().attr('title')
+                else:
+                    nationality = flagElement.attr('title')
+
+                player.nationality = nationality
                 idx += 1
             continue
 
