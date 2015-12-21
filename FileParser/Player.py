@@ -31,7 +31,10 @@ class Player:
         if(self.nationality == ''):
             self.nationality = 'Unknown'
 
-        idC = constants.countriesDict[self.nationality]
+        if(constants.countriesDict.has_key(self.nationality)):
+            idC = constants.countriesDict[self.nationality]
+        else:
+            idC = constants.countriesDict['Unknown']
 
         #TODO: Mapping of playing positions
         try:
