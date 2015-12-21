@@ -3,19 +3,22 @@ __author__ = 'Matevz Lenic'
 from pyquery import PyQuery as pq
 import lxml
 import os
+
+import constants
+
 from Player import Player
 from Club import Club
 from PlayerClubSeason import PlayerClubSeason
 from ClubSeason import ClubSeason
 from Season import Season
 
-def parseFile(filename, season):
+def parseFile(filename, league, season):
     document = pq(filename=filename)
-    club = Club()
-    club.idClub = filename.split("_",2)[1]
+
+    club          = Club()
+    club.idClub   = filename.split("_",2)[1]
+    club.idL      = constants.leagueIds[league]
     club.nameClub = document(".spielername-profil").html().strip()
-    #TODO: set club league id
-    club.idL = 1
 
     for i in document(document(document(".items")[0]).children()[1]).children().items():
         player = Player()
@@ -140,4 +143,4 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
                 # loop through clubs
                 for filename in os.listdir(currentDirectory2):
-                    parseFile(currentDirectory2 + '/' + filename, seasonDirectory)
+                    parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)

@@ -21,6 +21,23 @@ leagues['turkey']      = 'SuperLig'
 leagues['USA']         = 'MajorLeagueSoccer'
 
 
+leagueIds                         = dict()
+leagueIds['PremierLeague']        = 1
+leagueIds['LaLiga']               = 2
+leagueIds['Bundesliga']           = 3
+leagueIds['SerieA']               = 4
+leagueIds['Ligue1']               = 5
+leagueIds['PrimerLiga']           = 6
+leagueIds['Eredevisie']           = 7
+leagueIds['ProLeague']            = 8
+leagueIds['Premiership']          = 9
+leagueIds['PremierLeagueRussia']  = 10
+leagueIds['PremierLeagueUkraine'] = 11
+leagueIds['SuperLeague']          = 12
+leagueIds['SuperLig']             = 13
+leagueIds['MajorLeagueSoccer']    = 14
+
+
 # --- SEASONS --- #
 seasons = dict()
 seasons[2015] = '15'
