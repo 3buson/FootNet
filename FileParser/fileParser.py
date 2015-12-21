@@ -170,9 +170,9 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
                           (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
 
-                print "\nParsed season %s, league: %s" % (seasonDirectory, leagueDirectory)
+                print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
 
-        print "\nParsed all seasons for league %s" % leagueDirectory
+        print "\nParsed all seasons for league %s\n" % leagueDirectory
 
 
 # --- PARSE ONE FILE ONLY --- #
