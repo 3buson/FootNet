@@ -117,7 +117,7 @@ INSERT INTO `countries` (`nameCountry`) VALUES
     ('Cuba'),
     ('Cyprus'),
     ('Czech Republic'),
-    ('Côte d’Ivoire'),
+    ('Cote d\'Ivoire'),
     ('Denmark'),
     ('Djibouti'),
     ('Dominica'),
@@ -325,6 +325,7 @@ INSERT INTO `countries` (`nameCountry`) VALUES
     ('Scotland'),
     ('Ireland'),
     ('Northern Ireland'),
+    ('Wales'),
     ('USA'),
     ('Unknown');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
