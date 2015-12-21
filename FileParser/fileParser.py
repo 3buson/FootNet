@@ -2,6 +2,7 @@ __author__ = 'Matevz Lenic'
 
 from pyquery import PyQuery as pq
 import lxml
+import time
 import os
 
 import sys
@@ -153,8 +154,15 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
                 # loop through clubs
                 for filename in os.listdir(currentDirectory2):
+                    print "Parsing file file %s, legue: %s, season: %s..." %\
+                          (filename, leagueDirectory, seasonDirectory)
+
+                    startTime = time.time()
                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
-                    print "Parsed file %s, legue: %s, season: %s" % (filename, leagueDirectory, seasonDirectory)
+                    endTime= time.time()
+
+                    print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
+                          (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
 
                 print "Parsed season %s, league: %s" % (seasonDirectory, leagueDirectory)
 
