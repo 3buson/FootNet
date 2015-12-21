@@ -110,6 +110,7 @@ INSERT INTO `countries` (`nameCountry`) VALUES
     ('Colombia'),
     ('Comoros'),
     ('Congo - Brazzaville'),
+	('Congo'),
     ('Congo DR'),
     ('Cook Islands'),
     ('Costa Rica'),
