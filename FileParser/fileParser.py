@@ -25,6 +25,9 @@ def parseFile(filename, league, season):
         pcs    = PlayerClubSeason()
         idx    = 0
 
+        pcs.idS    = int(season)
+        pcs.idClub = club.idClub
+
         for j in range(0,len(i.children())):
             column = i.children()[j]
 
@@ -126,7 +129,9 @@ def parseFile(filename, league, season):
                 print price
 
         player.to_string()
+
         player.dbInsert()
+
         break
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
