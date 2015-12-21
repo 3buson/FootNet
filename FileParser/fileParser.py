@@ -6,13 +6,16 @@ from Player import Player
 from Club import Club
 from PlayerClubSeason import PlayerClubSeason
 from ClubSeason import ClubSeason
+from Season import Season
 
-filename = "../FileGetter/html/LaLiga/14/VCF_1049"
-
+#filename = "../FileGetter/html/LaLiga/14/VCF_1049"
+filename = "../../html/LaLiga/14/EFC_29.html"
 document = pq(filename=filename)
 club = Club()
 club.idClub = filename.split("_",2)[1]
 club.nameClub = document(".spielername-profil").html().strip()
+#TODO: set club league id
+club.idL = 1
 
 for i in document(document(document(".items")[0]).children()[1]).children().items():
     player = Player()
@@ -106,7 +109,7 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
 
         # Player market value
         if (idx == 5):
-            priceString = ""
+            priceString = "0"
             addNum = False
             for character in pq(column).html().split("<")[0]:
                 if(character.isdigit() or character == '.' or character == ','):
@@ -120,4 +123,6 @@ for i in document(document(document(".items")[0]).children()[1]).children().item
             print price
 
     player.to_string()
+    player.dbInsert()
+    break
     # break

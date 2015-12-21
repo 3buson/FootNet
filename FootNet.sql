@@ -55,8 +55,15 @@ CREATE TABLE IF NOT EXISTS `countries` (
   PRIMARY KEY (`idC`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table footballnetwork.countries: ~0 rows (približno)
+-- Dumping data for table footballnetwork.countries: ~6 rows (približno)
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
+INSERT INTO `countries` (`idC`, `nameCountry`) VALUES
+	(1, 'Slovenia'),
+	(2, 'England'),
+	(3, 'Spain'),
+	(4, 'Italy'),
+	(5, 'Germany'),
+	(6, 'France');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 
 
@@ -70,8 +77,14 @@ CREATE TABLE IF NOT EXISTS `leagues` (
   CONSTRAINT `FK_BelongsTo` FOREIGN KEY (`idC`) REFERENCES `countries` (`idC`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table footballnetwork.leagues: ~0 rows (približno)
+-- Dumping data for table footballnetwork.leagues: ~5 rows (približno)
 /*!40000 ALTER TABLE `leagues` DISABLE KEYS */;
+INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
+	(1, 2, 'Premier League'),
+	(2, 3, 'La Liga'),
+	(3, 4, 'Serie A'),
+	(4, 5, 'Bundesliga'),
+	(5, 6, 'Ligue 1');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 
@@ -83,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `lastName` varchar(255) DEFAULT NULL,
   `birthDate` year(4) NOT NULL,
   `playingPosition` varchar(5) NOT NULL,
+  `playingNumber` int(11) DEFAULT NULL,
   PRIMARY KEY (`idP`),
   KEY `FK_ResidesIn` (`idC`),
   CONSTRAINT `FK_ResidesIn` FOREIGN KEY (`idC`) REFERENCES `countries` (`idC`)
@@ -121,8 +135,25 @@ CREATE TABLE IF NOT EXISTS `season` (
   PRIMARY KEY (`idS`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table footballnetwork.season: ~0 rows (približno)
+-- Dumping data for table footballnetwork.season: ~16 rows (približno)
 /*!40000 ALTER TABLE `season` DISABLE KEYS */;
+INSERT INTO `season` (`idS`, `year`) VALUES
+	(1, '2001'),
+	(2, '2002'),
+	(3, '2003'),
+	(4, '2004'),
+	(5, '2005'),
+	(6, '2006'),
+	(7, '2007'),
+	(8, '2008'),
+	(9, '2009'),
+	(10, '2010'),
+	(11, '2011'),
+	(12, '2012'),
+	(13, '2013'),
+	(14, '2014'),
+	(15, '2015'),
+	(16, '2016');
 /*!40000 ALTER TABLE `season` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
