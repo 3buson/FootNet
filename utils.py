@@ -86,4 +86,4 @@ def getCountriesDics():
         return cDict
 
 
-#createPlayerEdgeListFromDB("adjlist")
+createPlayerEdgeListFromDB("adjlist")
