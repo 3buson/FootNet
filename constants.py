@@ -5,8 +5,10 @@ import utils
 # --- DATABASE --- #
 databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
 
+
 # --- COUNTRIES DICTIONARY --- #
 countriesDict = utils.getCountriesDics()
+
 
 # --- LEAGUES --- #
 leagues                = dict()
@@ -134,88 +136,88 @@ clubDictGER['SVD']  = 105   # SV Darmstadt 98
 
 # FRENCH LIGUE 1
 clubDictFRA         = dict()
-clubDictFRA['PSG']  = 583    # Paris Saint-Germain
-clubDictFRA['OLY']  = 1041   # Olympique Lyon
-clubDictFRA['ASM']  = 162    # AS Monaco
-clubDictFRA['OMA']  = 244    # Olympique Marseille
-clubDictFRA['ASE']  = 618    # AS Saint-Etienne
-clubDictFRA['SRE']  = 273    # Stade Rennais FC
-clubDictFRA['GIB']  = 40     # FC Girondins Bordeaux
-clubDictFRA['LOL']  = 1082   # Losc Lille
-clubDictFRA['ONI']  = 417    # OGC Nice
-clubDictFRA['FCT']  = 415    # FC Toulouse
-clubDictFRA['FCL']  = 1158   # FC Lorient
-clubDictFRA['HSCM'] = 969    # HSC Montpellier
-clubDictFRA['SRE']  = 1421   # Stade Reims
-clubDictFRA['FCN']  = 995    # FC Nantes
-clubDictFRA['EAG']  = 855    # EA Guingamp
-clubDictFRA['EST']  = 1095   # ES Troyes AC
-clubDictFRA['SMC']  = 1162   # SM Caen
-clubDictFRA['SCB']  = 595    # SC Bastia
-clubDictFRA['SCOA'] = 1420   # SCO Angers
-clubDictFRA['GFCA'] = 3558   # GFC Aiaccio
+clubDictFRA['PSG']  = 583   # Paris Saint-Germain
+clubDictFRA['OLY']  = 1041  # Olympique Lyon
+clubDictFRA['ASM']  = 162   # AS Monaco
+clubDictFRA['OMA']  = 244   # Olympique Marseille
+clubDictFRA['ASE']  = 618   # AS Saint-Etienne
+clubDictFRA['SRE']  = 273   # Stade Rennais FC
+clubDictFRA['GIB']  = 40    # FC Girondins Bordeaux
+clubDictFRA['LOL']  = 1082  # Losc Lille
+clubDictFRA['ONI']  = 417   # OGC Nice
+clubDictFRA['FCT']  = 415   # FC Toulouse
+clubDictFRA['FCL']  = 1158  # FC Lorient
+clubDictFRA['HSCM'] = 969   # HSC Montpellier
+clubDictFRA['SRE']  = 1421  # Stade Reims
+clubDictFRA['FCN']  = 995   # FC Nantes
+clubDictFRA['EAG']  = 855   # EA Guingamp
+clubDictFRA['EST']  = 1095  # ES Troyes AC
+clubDictFRA['SMC']  = 1162  # SM Caen
+clubDictFRA['SCB']  = 595   # SC Bastia
+clubDictFRA['SCOA'] = 1420  # SCO Angers
+clubDictFRA['GFCA'] = 3558  # GFC Aiaccio
 
 # ITALIAN SERIE A
 clubDictITA         = dict()
-clubDictITA['JUV']  = 506    # Juventus FC
-clubDictITA['NAP']  = 6195   # SSC Napoli
-clubDictITA['ASR']  = 12     # AS Roma
-clubDictITA['IMI']  = 46     # Inter Milan
-clubDictITA['ACM']  = 5      # AC Milan
-clubDictITA['SSL']  = 398    # SS Lazio
-clubDictITA['FIO']  = 430    # ACF Fiorentina
-clubDictITA['UCS']  = 1038   # UC Sampdoria
-clubDictITA['GEN']  = 252    # Genoa CFC
-clubDictITA['UDC']  = 410    # Udinese Calcio
-clubDictITA['USS']  = 6574   # US Sassuolo
-clubDictITA['TOR']  = 416    # Torino FC
-clubDictITA['BOL']  = 1025   # Bologna FC 1909
-clubDictITA['ATA']  = 800    # Atalanta BC
-clubDictITA['USP']  = 458    # US Palermo
-clubDictITA['FCE']  = 749    # FC Empoli
-clubDictITA['CAP']  = 4102   # Capri FC 1909
-clubDictITA['HEV']  = 276    # Hellas Verona
-clubDictITA['CHV']  = 862    # Chievo Verona
-clubDictITA['FRC']  = 8970   # Frosinone Calcio
+clubDictITA['JUV']  = 506   # Juventus FC
+clubDictITA['NAP']  = 6195  # SSC Napoli
+clubDictITA['ASR']  = 12    # AS Roma
+clubDictITA['IMI']  = 46    # Inter Milan
+clubDictITA['ACM']  = 5     # AC Milan
+clubDictITA['SSL']  = 398   # SS Lazio
+clubDictITA['FIO']  = 430   # ACF Fiorentina
+clubDictITA['UCS']  = 1038  # UC Sampdoria
+clubDictITA['GEN']  = 252   # Genoa CFC
+clubDictITA['UDC']  = 410   # Udinese Calcio
+clubDictITA['USS']  = 6574  # US Sassuolo
+clubDictITA['TOR']  = 416   # Torino FC
+clubDictITA['BOL']  = 1025  # Bologna FC 1909
+clubDictITA['ATA']  = 800   # Atalanta BC
+clubDictITA['USP']  = 458   # US Palermo
+clubDictITA['FCE']  = 749   # FC Empoli
+clubDictITA['CAP']  = 4102  # Capri FC 1909
+clubDictITA['HEV']  = 276   # Hellas Verona
+clubDictITA['CHV']  = 862   # Chievo Verona
+clubDictITA['FRC']  = 8970  # Frosinone Calcio
 
 # PORTUGUESE PRIMERA LIGA
-clubDictPOR         = dict()
-clubDictPOR['FCP']  = 720    # FC Porto
-clubDictPOR['SPO']  = 336    # Sporting CP
-clubDictPOR['SLB']  = 294    # SL Benfica
-clubDictPOR['SCB']  = 1075   # SC Braga
-clubDictPOR['VGU']  = 2420   # Vitoria Guimaraes SC
-clubDictPOR['RIA']  = 2425   # Rio Ave FC
-clubDictPOR['BEL']  = 2457   # CF Belenenses Lissabon
-clubDictPOR['CSM']  = 1301   # CS Maritimo
-clubDictPOR['CDN']  = 982    # CD Nacional
-clubDictPOR['GDE']  = 1465   # GD Estorilpraia
-clubDictPOR['PAC']  = 2995   # FC Pacos De Ferreira
-clubDictPOR['FCA']  = 8024   # FC Arouca
-clubDictPOR['ACC']  = 2990   # Academica Coimbra
-clubDictPOR['BOA']  = 2503   # Boavista Porto FC
-clubDictPOR['VIS']  = 1085   # Vitoria Setubal FC
-clubDictPOR['MFC']  = 979    # Moreirense FC
-clubDictPOR['CDT']  = 7179   # CD Tondela
-clubDictPOR['UNM']  = 976    # CF Uniao Madeira
+clubDictPOR        = dict()
+clubDictPOR['FCP'] = 720   # FC Porto
+clubDictPOR['SPO'] = 336   # Sporting CP
+clubDictPOR['SLB'] = 294   # SL Benfica
+clubDictPOR['SCB'] = 1075  # SC Braga
+clubDictPOR['VGU'] = 2420  # Vitoria Guimaraes SC
+clubDictPOR['RIA'] = 2425  # Rio Ave FC
+clubDictPOR['BEL'] = 2457  # CF Belenenses Lissabon
+clubDictPOR['CSM'] = 1301  # CS Maritimo
+clubDictPOR['CDN'] = 982   # CD Nacional
+clubDictPOR['GDE'] = 1465  # GD Estorilpraia
+clubDictPOR['PAC'] = 2995  # FC Pacos De Ferreira
+clubDictPOR['FCA'] = 8024  # FC Arouca
+clubDictPOR['ACC'] = 2990  # Academica Coimbra
+clubDictPOR['BOA'] = 2503  # Boavista Porto FC
+clubDictPOR['VIS'] = 1085  # Vitoria Setubal FC
+clubDictPOR['MFC'] = 979   # Moreirense FC
+clubDictPOR['CDT'] = 7179  # CD Tondela
+clubDictPOR['UNM'] = 976   # CF Uniao Madeira
 
 # NETHERLANDS EREDIVISE
-clubDictNED = dict()
-clubDictNED['PSV'] = 383  # PSV Eindhoven
-clubDictNED['AJA'] = 610  # AJAX Amsterdam
-clubDictNED['FEY'] = 243  # Feyenoord Rotterdam
-clubDictNED['AZA'] = 1090 # AZ Alkmaar
-clubDictNED['FCT'] = 317  # FC Twente
-clubDictNED['VIT'] = 499  # Vitesse Arnhem
-clubDictNED['GRO'] = 202  # FC Groningen
-clubDictNED['HEE'] = 306  # SC Heerenveen
-clubDictNED['UTR'] = 200  # FC Utrecht
-clubDictNED['WIL'] = 403  # Willem II Tilburg
+clubDictNED        = dict()
+clubDictNED['PSV'] = 383   # PSV Eindhoven
+clubDictNED['AJA'] = 610   # AJAX Amsterdam
+clubDictNED['FEY'] = 243   # Feyenoord Rotterdam
+clubDictNED['AZA'] = 1090  # AZ Alkmaar
+clubDictNED['FCT'] = 317   # FC Twente
+clubDictNED['VIT'] = 499   # Vitesse Arnhem
+clubDictNED['GRO'] = 202   # FC Groningen
+clubDictNED['HEE'] = 306   # SC Heerenveen
+clubDictNED['UTR'] = 200   # FC Utrecht
+clubDictNED['WIL'] = 403   # Willem II Tilburg
 clubDictNED['ZWO'] = 1269  # PEC Zwoole
-clubDictNED['ADH'] = 1268 # ADO Den Haag
-clubDictNED['NEC'] = 467  # NEC Nijmegen
-clubDictNED['HER'] = 1304 # Heracles Almelo
-clubDictNED['SCC'] = 133  # SC Cambuur-Leeuwarden
-clubDictNED['ROD'] = 192  # Roda JC Kerkrade
-clubDictNED['EXC'] = 798  # Excelsior Rotterdam
-clubDictNED['DGR'] = 642  # De Graafschap Doetinchem
+clubDictNED['ADH'] = 1268  # ADO Den Haag
+clubDictNED['NEC'] = 467   # NEC Nijmegen
+clubDictNED['HER'] = 1304  # Heracles Almelo
+clubDictNED['SCC'] = 133   # SC Cambuur-Leeuwarden
+clubDictNED['ROD'] = 192   # Roda JC Kerkrade
+clubDictNED['EXC'] = 798   # Excelsior Rotterdam
+clubDictNED['DGR'] = 642   # De Graafschap Doetinchem
