@@ -19,6 +19,10 @@ def connectToDB():
     return connection
 
 def createPlayerEdgeListFromDB(filename):
+    print "Exporting edge list"
+
+    startTime = time.time()
+
     file       = open(filename, 'w')
     connection = connectToDB()
 
@@ -33,36 +37,41 @@ def createPlayerEdgeListFromDB(filename):
 
         # output all the player IDs and their names
         for player in players:
-            playerIndices[player[0]] = playerIdx
-            file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
+            if(player[0] > 0):
+                playerIndices[player[0]] = playerIdx
+                file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
 
-            playerIdx += 1
+                playerIdx += 1
 
         # output adjacency list
         for player in players:
             playerId = player[0]
 
-            # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
-            cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
-            clubsBySeasons = cursor.fetchall()
+            if(playerId > 0):
+                # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
+                cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
+                clubsBySeasons = cursor.fetchall()
 
-            # link all the players from all the clubs to the current player
-            linkedPlayerIds = list()
-            for clubBySeason in clubsBySeasons:
-                cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
-                playersInClubInSeason = cursor.fetchall()
+                # link all the players from all the clubs to the current player
+                linkedPlayerIds = list()
+                for clubBySeason in clubsBySeasons:
+                    cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
+                    playersInClubInSeason = cursor.fetchall()
 
-                for playerInClubSeason in playersInClubInSeason:
-                    linkedPlayerIds.append(playerInClubSeason[0])
+                    for playerInClubSeason in playersInClubInSeason:
+                        linkedPlayerIds.append(playerInClubSeason[0])
 
-            for linkedPlayer in linkedPlayerIds:
-                if playerIndices[playerId] < playerIndices[linkedPlayer]:
-                    file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
+                for linkedPlayer in linkedPlayerIds:
+                    if(linkedPlayer > 0):
+                        if playerIndices[playerId] < playerIndices[linkedPlayer]:
+                            file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
 
     except Exception, e:
         print "Exception occurred!", e
 
     finally:
+        endTime = time.time()
+        print "Edge list exported, time spend %f s" % (endTime - startTime)
         file.close()
 
 def getCountriesDics():
@@ -86,4 +95,5 @@ def getCountriesDics():
         return cDict
 
 
-#createPlayerEdgeListFromDB("adjlist")
+
+createPlayerEdgeListFromDB("EPLLaLiga131415")

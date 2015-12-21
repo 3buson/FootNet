@@ -122,7 +122,8 @@ def parseFile(filename, league, season):
             # Player market value
             if (idx == 5):
                 priceString = "0"
-                addNum = False
+                multiplier  = 1
+
                 for character in pq(column).html().split("<")[0]:
                     if(character.isdigit() or character == '.' or character == ','):
                         priceString += character
@@ -148,7 +149,7 @@ def parseFile(filename, league, season):
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 
-rootDirectory = "../FileGetter/htmlTest/"
+rootDirectory = "../FileGetter/html/"
 
 for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
     # loop through leagues
@@ -160,12 +161,12 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
                 # loop through clubs
                 for filename in os.listdir(currentDirectory2):
-                    print "Parsing file file %s, legue: %s, season: %s..." %\
+                    print "Parsing file %s, legue: %s, season: %s..." %\
                           (filename, leagueDirectory, seasonDirectory)
 
                     startTime = time.time()
                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
-                    endTime= time.time()
+                    endTime = time.time()
 
                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
                           (filename, leagueDirectory, seasonDirectory, (endTime - startTime))

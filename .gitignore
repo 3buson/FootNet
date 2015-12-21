@@ -1,4 +1,7 @@
 *.pyc
+*.png
+*.jpg
+
 .idea/
 fileGetter/.idea/
 FileGetter/html
