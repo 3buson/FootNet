@@ -61,6 +61,7 @@ def parseFile(filename, league, season):
                 names       = nameElement.attr('title').split(" ")
                 id          = nameElement.attr('id')
 
+                pcs.idP          = int(id)
                 player.idP       = int(id)
                 player.firstName = names[0]
                 if len(names) > 1:

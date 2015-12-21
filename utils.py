@@ -58,7 +58,6 @@ def createPlayerEdgeListFromDB(filename):
             for linkedPlayer in linkedPlayerIds:
                 file.write("%s %s", playerIndices[playerId], playerIndices[linkedPlayer])
 
-
     except Exception, e:
         print "Exception occurred!", e
 
