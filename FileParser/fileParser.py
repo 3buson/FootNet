@@ -154,11 +154,11 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                 # loop through clubs
                 for filename in os.listdir(currentDirectory2):
                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
-                    print "Parsed file %s", filename
+                    print "Parsed file %s, legue: %s, season: %s" % (filename, leagueDirectory, seasonDirectory)
 
-                print "Parsed season %s", seasonDirectory
+                print "Parsed season %s, league: %s" % (seasonDirectory, leagueDirectory)
 
-        print "Parsed league %s", leagueDirectory
+        print "Parsed all seasons for league %s" % leagueDirectory
 
 
 # --- PARSE ONE FILE ONLY --- #
