@@ -4,6 +4,8 @@ from pyquery import PyQuery as pq
 import lxml
 import os
 
+import sys
+sys.path.insert(0, '../')
 import constants
 
 from Player import Player

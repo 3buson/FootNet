@@ -2,6 +2,7 @@ __author__ = 'matic'
 
 import time
 import pyodbc
+
 import constants
 
 def connectToDB():

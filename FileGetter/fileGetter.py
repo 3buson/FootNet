@@ -2,6 +2,9 @@ __author__ = 'matic'
 
 import os
 import urlgrabber
+
+import sys
+sys.path.insert(0, '../')
 import constants
 
 

@@ -1,7 +1,7 @@
 __author__ = 'matic'
 
 # --- DATABASE --- #
-databaseString = 'DRIVER={SQL Server};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
+databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
 
 # --- LEAGUES --- #
 leagues                = dict()
