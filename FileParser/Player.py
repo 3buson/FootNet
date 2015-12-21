@@ -25,6 +25,9 @@ class Player:
         connection = utils.connectToDB()
         cursor     = connection.cursor()
 
+        if(self.nationality == ''):
+            self.nationality = 'Unknown'
+
         idC = constants.countriesDict[self.nationality]
 
         #TODO: Mapping of playing positions

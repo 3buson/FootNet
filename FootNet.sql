@@ -325,7 +325,8 @@ INSERT INTO `countries` (`nameCountry`) VALUES
     ('Scotland'),
     ('Ireland'),
     ('Northern Ireland'),
-    ('USA');
+    ('USA'),
+    ('Unknown');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 
 
