@@ -42,22 +42,24 @@ def createPlayerEdgeListFromDB(filename):
         for player in players:
             playerId = player[0]
 
-            # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
-            cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
-            clubsBySeasons = cursor.fetchall()
+            if(playerId > 0):
+                # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
+                cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
+                clubsBySeasons = cursor.fetchall()
 
-            # link all the players from all the clubs to the current player
-            linkedPlayerIds = list()
-            for clubBySeason in clubsBySeasons:
-                cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
-                playersInClubInSeason = cursor.fetchall()
+                # link all the players from all the clubs to the current player
+                linkedPlayerIds = list()
+                for clubBySeason in clubsBySeasons:
+                    cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
+                    playersInClubInSeason = cursor.fetchall()
 
-                for playerInClubSeason in playersInClubInSeason:
-                    linkedPlayerIds.append(playerInClubSeason[0])
+                    for playerInClubSeason in playersInClubInSeason:
+                        linkedPlayerIds.append(playerInClubSeason[0])
 
-            for linkedPlayer in linkedPlayerIds:
-                if playerIndices[playerId] < playerIndices[linkedPlayer]:
-                    file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
+                for linkedPlayer in linkedPlayerIds:
+                    if(linkedPlayer > 0):
+                        if playerIndices[playerId] < playerIndices[linkedPlayer]:
+                            file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
 
     except Exception, e:
         print "Exception occurred!", e
