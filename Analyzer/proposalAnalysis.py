@@ -19,7 +19,7 @@ def analyzeCloseness(FNGraph):
 
     # print top 25
     for i in range(0, 25):
-        print "\tMode %d Closeness: %f" %\
+        print "\tMode %d \t Closeness: %f" %\
             (nodesSortedByCloseness[i], closeness[nodesSortedByCloseness[i]])
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
@@ -37,7 +37,7 @@ def analyzePageRank(FNGraph):
     nodesPrinted = 0
     for item in PRankH:
         if(nodesPrinted < 25):
-            print "\tNode: %s PageRank: %.7f" % (item, PRankH[item])
+            print "\tNode: %s \t PageRank: %.7f" % (item, PRankH[item])
         else:
             break
 
@@ -59,7 +59,7 @@ def analyzeBetweenness(FNGraph):
     nodesPrinted = 0
     for node in Nodes:
         if(nodesPrinted < 25):
-            print "\tNode: %d Betweenness: %.7f" % (node, Nodes[node])
+            print "\tNode: %d \t Betweenness: %.7f" % (node, Nodes[node])
         else:
             break
 
