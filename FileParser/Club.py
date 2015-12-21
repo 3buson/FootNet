@@ -1,5 +1,6 @@
 __author__ = 'Matevz Lenic'
 
+import pyodbc
 import utils
 
 class Club:
