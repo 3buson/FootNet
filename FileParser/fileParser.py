@@ -142,7 +142,7 @@ def parseFile(filename, league, season):
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 
-rootDirectory = "../FileGetter/html/"
+rootDirectory = "../FileGetter/htmlTest/"
 
 for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
     # loop through leagues

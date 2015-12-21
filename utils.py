@@ -20,7 +20,7 @@ def connectToDB():
 
 def createPlayerEdgeListFromDB(filename):
     file       = open(filename, 'w')
-    connection = connectToDB(constants.databaseString)
+    connection = connectToDB()
 
     try:
         cursor = connection.cursor()
@@ -34,7 +34,7 @@ def createPlayerEdgeListFromDB(filename):
         # output all the player IDs and their names
         for player in players:
             playerIndices[player[0]] = playerIdx
-            file.write("# %d \"%s\"", playerIdx, "".join(player[1], player[2]))
+            file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
 
             playerIdx += 1
 
@@ -56,7 +56,8 @@ def createPlayerEdgeListFromDB(filename):
                     linkedPlayerIds.append(playerInClubSeason[0])
 
             for linkedPlayer in linkedPlayerIds:
-                file.write("%s %s", playerIndices[playerId], playerIndices[linkedPlayer])
+                if playerIndices[playerId] < playerIndices[linkedPlayer]:
+                    file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
 
     except Exception, e:
         print "Exception occurred!", e
@@ -83,3 +84,6 @@ def getCountriesDics():
 
     finally:
         return cDict
+
+
+#createPlayerEdgeListFromDB("adjlist")
