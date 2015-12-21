@@ -66,12 +66,13 @@ INSERT INTO `countries` (`idC`, `nameCountry`) VALUES
 	(6, 'France'),
 	(7, 'Portugal'),
 	(8, 'Netherlands'),
-	(9, 'Scotland'),
-	(10, 'Russia'),
-	(11, 'Ukraine'),
-	(12, 'Switzerland'),
-	(13, 'Turkey'),
-	(14, 'USA');
+	(9, 'Belgium'),
+	(10, 'Scotland'),
+	(11, 'Russia'),
+	(12, 'Ukraine'),
+	(13, 'Switzerland'),
+	(14, 'Turkey'),
+	(15, 'USA');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 
 
@@ -93,15 +94,15 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(3, 4, 'Serie A'),
 	(4, 5, 'Bundesliga'),
 	(5, 6, 'Ligue 1'),
-	(6, 6, 'PrimeraLiga'),
-	(8, 7, 'ProLeague'),
+	(6, 7, 'PrimeraLiga'),
 	(7, 8, 'Eredivise'),
-	(9, 9, 'Premiership'),
-	(10, 10, 'PremierLeagueRussia'),
-	(11, 11, 'PremierLeagueUkraine'),
-	(12, 12, 'SuperLeague'),
-	(13, 13, 'SuperLig'),
-	(14, 14, 'MajorLeagueSoccer');
+	(8, 9, 'ProLeague'),
+	(9, 10, 'Premiership'),
+	(10, 11, 'PremierLeagueRussia'),
+	(11, 12, 'PremierLeagueUkraine'),
+	(12, 13, 'SuperLeague'),
+	(13, 14, 'SuperLig'),
+	(14, 15, 'MajorLeagueSoccer');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 
