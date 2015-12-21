@@ -72,7 +72,6 @@ def parseFile(filename, league, season):
 
             # Birth date (only if not current season)
             if idx == 2:
-                print prevClubPresent
                 if(prevClubPresent):
                     age = pq(column).html().split(" ")
                     player.birthDate = int(pq(column).html().split(" ")[2])
@@ -130,35 +129,38 @@ def parseFile(filename, league, season):
                         multiplier = 1000
 
                 price = float(priceString) * multiplier
-                print price
 
                 pcs.playerValue = price
 
         club.dbInsert()
 
-        player.to_string()
+        # player.to_string()
         player.dbInsert()
 
         pcs.dbInsert()
 
-        break
-
 # --- PARSE ALL FILES IN A DIRECTORY --- #
-#
-# rootDirectory = "../FileGetter/html/"
-#
-# for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
-#     # loop through leagues
-#     for leagueDirectory in dirnames1:
-#         currentDirectory1 = os.path.join(dirname1, leagueDirectory)
-#         for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
-#             # loop through seasons
-#             for seasonDirectory in dirnames2:
-#                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
-#                 # loop through clubs
-#                 for filename in os.listdir(currentDirectory2):
-#                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
+
+rootDirectory = "../FileGetter/html/"
+
+for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
+    # loop through leagues
+    for leagueDirectory in dirnames1:
+        currentDirectory1 = os.path.join(dirname1, leagueDirectory)
+        for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
+            # loop through seasons
+            for seasonDirectory in dirnames2:
+                currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
+                # loop through clubs
+                for filename in os.listdir(currentDirectory2):
+                    parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
+                    print "Parsed file %s", filename
+
+                print "Parsed season %s", seasonDirectory
+
+        print "Parsed league %s", leagueDirectory
+
 
 # --- PARSE ONE FILE ONLY --- #
-filename = "../FileGetter/html/LaLiga/15/VCF_1049"
-parseFile(filename, 'LaLiga', '15')
+# filename = "../FileGetter/html/LaLiga/15/VCF_1049"
+# parseFile(filename, 'LaLiga', '15')

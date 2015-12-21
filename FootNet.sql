@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
 -- Dumping data for table footballnetwork.countries: ~6 rows (približno)
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
 INSERT INTO `countries` (`nameCountry`) VALUES
-	('Afghanistan'),
+    ('Afghanistan'),
     ('Albania'),
     ('Algeria'),
     ('American Samoa'),
@@ -363,8 +363,8 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 CREATE TABLE IF NOT EXISTS `player` (
   `idP` int(11) NOT NULL,
   `idC` int(11) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) DEFAULT NULL,
+  `firstName` nvarchar(255) NOT NULL,
+  `lastName` nvarchar(255) DEFAULT NULL,
   `birthDate` year(4) NOT NULL,
   `playingPosition` varchar(5) NOT NULL,
   `playingNumber` int(11) DEFAULT NULL,

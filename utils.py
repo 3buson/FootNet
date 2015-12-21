@@ -63,3 +63,23 @@ def createPlayerEdgeListFromDB(filename):
 
     finally:
         file.close()
+
+def getCountriesDics():
+    cDict = dict()
+
+    try:
+        connection = connectToDB()
+        cursor     = connection.cursor()
+
+        cursor.execute("SELECT * from countries")
+        result = cursor.fetchall()
+
+        for resultRow in result:
+            cDict[resultRow[1]] = resultRow[0]
+
+    except pyodbc.DatabaseError, e:
+        print "ERROR - DatabaseError", e
+        pass
+
+    finally:
+        return cDict

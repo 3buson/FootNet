@@ -3,6 +3,7 @@ __author__ = 'Matevz Lenic'
 import pyodbc
 
 import utils
+import constants
 
 class Player:
 
@@ -24,7 +25,8 @@ class Player:
         connection = utils.connectToDB()
         cursor     = connection.cursor()
 
-        idC = self.getCId()
+        idC = constants.countriesDict[self.nationality]
+
         #TODO: Mapping of playing positions
         try:
             cursor.execute("INSERT IGNORE INTO player(idP,idC,firstName,lastName,birthDate,playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -34,15 +36,3 @@ class Player:
             pass
 
         connection.commit()
-
-    def getCId(self):
-        try:
-            connection = utils.connectToDB()
-            cursor     = connection.cursor()
-
-            cursor.execute("SELECT idC from countries WHERE nameCountry = ?" , self.nationality)
-            r = cursor.fetchone()
-        except pyodbc.DatabaseError:
-            print "ERROR"
-            pass
-        return r.idC

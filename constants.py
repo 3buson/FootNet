@@ -1,7 +1,12 @@
 __author__ = 'matic'
 
+import utils
+
 # --- DATABASE --- #
 databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
+
+# --- COUNTRIES DICTIONARY --- #
+countriesDict = utils.getCountriesDics()
 
 # --- LEAGUES --- #
 leagues                = dict()
