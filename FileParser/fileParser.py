@@ -23,6 +23,8 @@ def parseFile(filename, league, season):
     club.idL      = constants.leagueIds[league]
     club.nameClub = document(".spielername-profil").html().strip()
 
+    club.dbInsert()
+
     for i in document(document(document(".items")[0]).children()[1]).children().items():
         player = Player()
         pcs    = PlayerClubSeason()
@@ -133,12 +135,16 @@ def parseFile(filename, league, season):
 
                 pcs.playerValue = price
 
-        club.dbInsert()
-
         # player.to_string()
         player.dbInsert()
 
         pcs.dbInsert()
+
+        # cleanup
+        del player
+        del pcs
+
+    del club
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 
@@ -164,9 +170,9 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
                           (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
 
-                print "Parsed season %s, league: %s" % (seasonDirectory, leagueDirectory)
+                print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
 
-        print "Parsed all seasons for league %s" % leagueDirectory
+        print "\nParsed all seasons for league %s\n" % leagueDirectory
 
 
 # --- PARSE ONE FILE ONLY --- #
