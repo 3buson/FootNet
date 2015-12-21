@@ -79,16 +79,16 @@ def analyzeDegrees(FNGraph):
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
 
 def analyzeMisc(FNGraph):
-    #Getting LCC, average distances, clustering
+    # LCC, average distances, clustering
     t1 = time.time()
 
     print "Started calculating miscellaneous network statistics:"
 
-    print '\tPercentage of nodes in LCC in Football network: %.3f' % float(snap.GetMxWccSz(FNGraph))
+    print '\tPercentage of nodes in LCC in Football network: %.3f' % (snap.GetMxWccSz(FNGraph) * 100.0)
     GraphClustCoeff = snap.GetClustCf (FNGraph, -1)
     print "\tClustering coefficient: %.3f" % GraphClustCoeff
 
-    print "Finished calculating in %f seconds\n" % (time.time()-t1)
+    print "Finished calculating in %f seconds\n" % (time.time() - t1)
 
 def main():
     FNGraph = snap.LoadEdgeList(snap.PUNGraph, "EPLLaLiga131415")
