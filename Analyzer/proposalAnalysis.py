@@ -4,6 +4,26 @@ import snap
 import time
 import matplotlib.pyplot as plt
 
+
+def analyzeCloseness(FNGraph):
+    t1 = time.time()
+
+    print "Started calculating Closeness scores: \n"
+
+    closeness = dict()
+
+    for NI in FNGraph.Nodes():
+        closeness[NI.GetId()] = snap.GetClosenessCentr(FNGraph, NI.GetId())
+
+    nodesSortedByCloseness = sorted(closeness, key=closeness.get, reverse=True)
+
+    # print top 25
+    for i in range(0, 25):
+        print "\tMode %d Closeness: %f" %\
+            (nodesSortedByCloseness[i], closeness[nodesSortedByCloseness[i]])
+
+    print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
+
 def analyzePageRank(FNGraph):
     t1 = time.time()
 
@@ -17,7 +37,7 @@ def analyzePageRank(FNGraph):
     nodesPrinted = 0
     for item in PRankH:
         if(nodesPrinted < 25):
-            print "\t %s %.7f" % (item, PRankH[item])
+            print "\tNode: %s PageRank: %.7f" % (item, PRankH[item])
         else:
             break
 
@@ -39,7 +59,7 @@ def analyzeBetweenness(FNGraph):
     nodesPrinted = 0
     for node in Nodes:
         if(nodesPrinted < 25):
-            print "\tnode: %d centrality: %.7f" % (node, Nodes[node])
+            print "\tNode: %d Betweenness: %.7f" % (node, Nodes[node])
         else:
             break
 
@@ -116,6 +136,7 @@ def analyzeMisc(FNGraph):
 
 def main():
     FNGraph = snap.LoadEdgeList(snap.PUNGraph, "EPLLaLiga131415")
+    analyzeCloseness(FNGraph)
     analyzePageRank(FNGraph)
     analyzeBetweenness(FNGraph)
     analyzeDegrees(FNGraph)
