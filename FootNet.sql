@@ -323,6 +323,8 @@ INSERT INTO `countries` (`nameCountry`) VALUES
     ('Zimbabwe'),
     ('England'),
     ('Scotland'),
+    ('Ireland'),
+    ('Northern Ireland'),
     ('USA');
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 
@@ -353,7 +355,7 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(11, 246, 'PremierLeagueUkraine'),
 	(12, 225, 'SuperLeague'),
 	(13, 238, 'SuperLig'),
-	(14, 266, 'MajorLeagueSoccer');
+	(14, 268, 'MajorLeagueSoccer');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 
