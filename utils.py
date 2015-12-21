@@ -19,6 +19,10 @@ def connectToDB():
     return connection
 
 def createPlayerEdgeListFromDB(filename):
+    print "Exporting edge list"
+
+    startTime = time.time()
+
     file       = open(filename, 'w')
     connection = connectToDB()
 
@@ -33,10 +37,11 @@ def createPlayerEdgeListFromDB(filename):
 
         # output all the player IDs and their names
         for player in players:
-            playerIndices[player[0]] = playerIdx
-            file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
+            if(player[0] > 0):
+                playerIndices[player[0]] = playerIdx
+                file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
 
-            playerIdx += 1
+                playerIdx += 1
 
         # output adjacency list
         for player in players:
@@ -65,6 +70,8 @@ def createPlayerEdgeListFromDB(filename):
         print "Exception occurred!", e
 
     finally:
+        endTime = time.time()
+        print "Edge list exported, time spend %f s" % (endTime - startTime)
         file.close()
 
 def getCountriesDics():
@@ -88,4 +95,4 @@ def getCountriesDics():
         return cDict
 
 
-createPlayerEdgeListFromDB("adjlist")
+createPlayerEdgeListFromDB("EPLLaLiga131415")
