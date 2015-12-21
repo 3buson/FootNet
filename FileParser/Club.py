@@ -1,5 +1,6 @@
 __author__ = 'Matevz Lenic'
-import pyodbc
+
+import utils
 
 class Club:
 
@@ -9,13 +10,12 @@ class Club:
         self.nameClub = nameClub
 
     def dbInsert(self):
-        connection = pyodbc.connect('DSN=FootNet')
+        connection = utils.connectToDB()
         cursor     = connection.cursor()
         try:
             cursor.execute("INSERT IGNORE INTO club(idClub,idL,nameClub) VALUES (?, ?, ?)",
-                       self.idC, self.idL, self.nameClub)
+                       self.idClub, self.idL, self.nameClub)
         except pyodbc.DatabaseError, e:
             print "ERROR - DatabaseError", e
-            pass
 
         connection.commit()

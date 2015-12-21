@@ -1,5 +1,7 @@
 __author__ = 'Matevz Lenic'
+
 import pyodbc
+import utils
 
 class Player:
 
@@ -18,8 +20,8 @@ class Player:
 
 
     def dbInsert(self):
-        connection = pyodbc.connect('DSN=FootNet')
-        cursor    = connection.cursor()
+        connection = utils.connectToDB()
+        cursor     = connection.cursor()
 
         idC = self.getCId()
         #TODO: Mapping of playing positions
@@ -34,7 +36,7 @@ class Player:
 
     def getCId(self):
         try:
-            connection = pyodbc.connect('DSN=FootNet')
+            connection = utils.connectToDB()
             cursor     = connection.cursor()
 
             cursor.execute("SELECT idC from countries WHERE nameCountry = ?" , self.nationality)

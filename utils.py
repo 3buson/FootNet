@@ -4,16 +4,16 @@ import time
 import pyodbc
 import constants
 
-def connectToDB(connectionString):
+def connectToDB():
     connection = None
 
     while connection is None:
         try:
-            connection = pyodbc.connect(connectionString)
+            connection = pyodbc.connect('DSN=FootNet')
         except Exception, e:
             print "Error connecting to database. Trying again in 1 sec !", e
 
-    time.sleep(1)
+        time.sleep(1)
 
     return connection
 
@@ -42,13 +42,13 @@ def createPlayerEdgeListFromDB(filename):
             playerId = player[0]
 
             # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
-            cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = %s ", playerId)
+            cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
             clubsBySeasons = cursor.fetchall()
 
             # link all the players from all the clubs to the current player
             linkedPlayerIds = list()
             for clubBySeason in clubsBySeasons:
-                cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = %s AND pcs.idS = %s", clubBySeason[0], clubBySeason[1])
+                cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
                 playersInClubInSeason = cursor.fetchall()
 
                 for playerInClubSeason in playersInClubInSeason:
