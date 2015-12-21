@@ -122,7 +122,8 @@ def parseFile(filename, league, season):
             # Player market value
             if (idx == 5):
                 priceString = "0"
-                addNum = False
+                multiplier  = 1
+
                 for character in pq(column).html().split("<")[0]:
                     if(character.isdigit() or character == '.' or character == ','):
                         priceString += character
@@ -148,7 +149,7 @@ def parseFile(filename, league, season):
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 
-rootDirectory = "../FileGetter/htmlTest/"
+rootDirectory = "../FileGetter/html/"
 
 for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
     # loop through leagues
