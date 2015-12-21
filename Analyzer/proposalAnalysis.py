@@ -88,6 +88,24 @@ def analyzeMisc(FNGraph):
     GraphClustCoeff = snap.GetClustCf (FNGraph, -1)
     print "\tClustering coefficient: %.3f" % GraphClustCoeff
 
+    diam = snap.GetBfsFullDiam(FNGraph, 1432, False)
+    print "\tNetwork diameter: %.3f\n" % diam
+
+    avgDist = 0
+    iter1 = 0
+    allNodes1 = FNGraph.GetNodes()
+    for NI in FNGraph.Nodes():
+        if(iter1 % 100 == 0):
+            print "\tCalculated for %d nodes" % iter1
+        NIdToDistH = snap.TIntH()
+        snap.GetShortPath(FNGraph, NI.GetId(), NIdToDistH)
+        singleDistSum = 0
+        for item in NIdToDistH:
+            singleDistSum += NIdToDistH[item]
+        avgDist += (1.0/allNodes1) * float(singleDistSum)/(allNodes1-1)
+        iter1 += 1
+    print "\tNetwork average distance: %.3f" % avgDist
+
     print "Finished calculating in %f seconds\n" % (time.time()-t1)
 
 def main():
