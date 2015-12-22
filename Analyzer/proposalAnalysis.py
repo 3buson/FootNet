@@ -16,7 +16,7 @@ def analyzePageRank(FNGraph):
 
     nodesPrinted = 0
     for item in PRankH:
-        if(nodesPrinted < 25):
+        if(nodesPrinted < 5):
             print "\t %s %.7f" % (item, PRankH[item])
         else:
             break
@@ -38,7 +38,7 @@ def analyzeBetweenness(FNGraph):
 
     nodesPrinted = 0
     for node in Nodes:
-        if(nodesPrinted < 25):
+        if(nodesPrinted < 5):
             print "\tnode: %d centrality: %.7f" % (node, Nodes[node])
         else:
             break
