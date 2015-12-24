@@ -94,6 +94,25 @@ def getCountriesDics():
     finally:
         return cDict
 
+def checkIfPlayerExists(playerId):
+    exists = False
+
+    try:
+        connection = connectToDB()
+        cursor     = connection.cursor()
+
+        cursor.execute("SELECT * from player WHERE idP = ?", playerId)
+        result = cursor.fetchall()
+
+        if(len(result) > 0):
+            exists = True
+
+    except pyodbc.DatabaseError, e:
+        print "ERROR - DatabaseError", e
+        pass
+
+    finally:
+        return exists
 
 
-createPlayerEdgeListFromDB("EPLLaLiga131415")
+# createPlayerEdgeListFromDB("EPLLaLiga131415")
