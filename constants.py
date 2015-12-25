@@ -226,22 +226,22 @@ clubDictNED['DGR'] = 642   # De Graafschap Doetinchem
 
 # BELGIAM JUPILER PRO LEAGUE
 clubDictBEL        = dict()
-clubDictBEL['AND'] = 58     # RSC ANDERLECHT
-clubDictBEL['BRU'] = 2282   # CLUB BRUGGE KV
-clubDictBEL['GEN'] = 157    # KAA GENT
-clubDictBEL['GNK'] = 1184   # KRC GENK
-clubDictBEL['STL'] = 3057   # STANDARD LIEGE
-clubDictBEL['OOS'] = 2861   # KV OOSTENDE
-clubDictBEL['MEC'] = 354    # KV MECHELEN
-clubDictBEL['LOK'] = 498    # KSC LOKEREN
-clubDictBEL['ZUL'] = 3508   # SV ZULTE WAREGEM
-clubDictBEL['TRU'] = 475    # SINT-TRUIDENSE VV
-clubDictBEL['KOR'] = 601    # KV KORTRIJK
-clubDictBEL['MOU'] = 29228  # MOUSCRON-PERUWELZ
-clubDictBEL['CHA'] = 172    # RSC CHARLEROI
-clubDictBEL['WES'] = 968    # KVC WESTERLO
-clubDictBEL['HEV'] = 2727   # OUD-HEVERLEE LEUVEN
-clubDictBEL['WAA'] = 28643  # WAASLAND-BEVEREN
+clubDictBEL['AND'] = 58     # RSC Anderlecht
+clubDictBEL['BRU'] = 2282   # CLUB Brugge KV
+clubDictBEL['GEN'] = 157    # KAA Gent
+clubDictBEL['GNK'] = 1184   # KRC Genk
+clubDictBEL['STL'] = 3057   # Standard Liege
+clubDictBEL['OOS'] = 2861   # KV Oostende
+clubDictBEL['MEC'] = 354    # KV Mechelen
+clubDictBEL['LOK'] = 498    # KSC Lokeren
+clubDictBEL['ZUL'] = 3508   # SV Zulte Waregem
+clubDictBEL['TRU'] = 475    # Sint-Truidense VV
+clubDictBEL['KOR'] = 601    # KV Kortrijk
+clubDictBEL['MOU'] = 29228  # Mouscron-Preuwelz
+clubDictBEL['CHA'] = 172    # RSC Charleroi
+clubDictBEL['WES'] = 968    # KVC Westerlo
+clubDictBEL['HEV'] = 2727   # OUD-Heverlee Luever
+clubDictBEL['WAA'] = 28643  # Waasland-Beveren
 
 # SCOTTISH PREMIERSHIP
 clubDictSCO        = dict()
@@ -310,11 +310,48 @@ clubDictSWI['LUG'] = 2790  # FC Lugano
 
 # TURKISH SUPER LIG
 clubDictTUR = dict()
+clubDictTUR['FEN'] = 36     # Fenerbahce SK
+clubDictTUR['BES'] = 114    # Besiktas JK
+clubDictTUR['GAL'] = 141    # Galatasaray SK
+clubDictTUR['TRA'] = 449    # Trabzonspor
+clubDictTUR['BUR'] = 20     # Bursaspor
+clubDictTUR['MED'] = 6869   # Medipol Basaksheir
+clubDictTUR['KAS'] = 10484  # Kasimpasa
+clubDictTUR['OSM'] = 2944   # Osmanlispor FK
+clubDictTUR['GEN'] = 820    # Genclerbirligi Ankara
+clubDictTUR['SIV'] = 2381   # Medicana Sivasspor
+clubDictTUR['ANT'] = 589    # Antalyaspor
+clubDictTUR['ESK'] = 825    # Eskisehirspor
+clubDictTUR['KON'] = 2293   # Torku Konyaspor
+clubDictTUR['RIZ'] = 126    # Caykur Rizespor
+clubDictTUR['KAY'] = 3205   # Kayserispor
+clubDictTUR['AKH'] = 19771  # Akhisar Belediye Genclik VE SPOR
+clubDictTUR['MER'] = 3216   # Mersin Idmanyurdu
 
 # USA MAJOR LEAGUE SOCCER
-clubDictUSA = dict()
+clubDictUSA        = dict()
+clubDictUSA['TOR'] = 11141  # Toronto FC
+clubDictUSA['LAG'] = 1061   # Los Angeles Galaxy
+clubDictUSA['NYC'] = 40058  # New York City FC
+clubDictUSA['SES'] = 9636   # Seattle Soundres FC
+clubDictUSA['COC'] = 813    # Columbus Crew SC
+clubDictUSA['ORC'] = 45604  # Orlando City SC
+clubDictUSA['COR'] = 1247   # Colorado Rapids
+clubDictUSA['MON'] = 4078   # Montreal Impact
+clubDictUSA['POT'] = 4291   # Portland Timbers
+clubDictUSA['SKC'] = 4284   # Sporting Kansas City
+clubDictUSA['NER'] = 626    # New England Revolution
+clubDictUSA['NYR'] = 623    # New York Red Bulls
+clubDictUSA['HOD'] = 9168   # Houston Dynamo
+clubDictUSA['RSL'] = 6643   # Real Salt Lake City
+clubDictUSA['PHU'] = 25467  # Philadelphia Union
+clubDictUSA['SJE'] = 218    # San Jose Earthquakes
+clubDictUSA['FCD'] = 8816   # FC Dallas
+clubDictUSA['DCU'] = 2440   # D.C. United
+clubDictUSA['VAW'] = 6321   # Vancouver Whitecaps
+clubDictUSA['CHF'] = 432    # Chicago Fire
 
-# DICS OF CLUB DICTS
+# DICT OF CLUB DICTS
 clubs                         = dict()
 clubs['PremierLeague']        = clubDictENG
 clubs['LaLiga']               = clubDictESP
