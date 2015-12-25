@@ -71,7 +71,18 @@ def parseFile(filename, league, season):
 
                 # Playing Number and Position
                 if idx == 0:
-                    player.playingPosition = pq(column).attr('title')
+                    position = pq(column).attr('title')
+
+                    if(position == 'Torwart' or position == 'Goalkeeper'):
+                        player.playingPosition = 'GK'
+                    elif(position == 'Abwehr' or position == 'Defence'):
+                        player.playingPosition = 'DEF'
+                    elif(position == 'Mittelfeld' or position == 'Midfield'):
+                        player.playingPosition = 'MID'
+                    elif(position == 'Sturm' or position == 'Striker'):
+                        player.playingPosition = 'ATT'
+                    else:
+                        player.playingPosition = 'UNK'
 
                     playingNumber = pq(column).children().html()
 

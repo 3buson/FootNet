@@ -36,9 +36,8 @@ class Player:
         else:
             idC = constants.countriesDict['Unknown']
 
-        #TODO: Mapping of playing positions
         try:
-            cursor.execute("INSERT IGNORE INTO player(idP,idC,firstName,lastName,birthDate,playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?)",
                        self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber)
 
         except pyodbc.DatabaseError, e:
