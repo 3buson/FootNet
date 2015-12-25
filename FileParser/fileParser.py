@@ -215,13 +215,16 @@ def parseFile(filename, league, season):
 rootDirectory = "../FileGetter/html/"
 
 for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
+
     # loop through leagues
     for leagueDirectory in dirnames1:
         currentDirectory1 = os.path.join(dirname1, leagueDirectory)
         for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
+
             # loop through seasons
             for seasonDirectory in dirnames2:
                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
+
                 # loop through clubs
                 for filename in os.listdir(currentDirectory2):
                     print "Parsing file %s, legue: %s, season: %s..." %\

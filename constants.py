@@ -15,19 +15,19 @@ countriesDict = utils.getCountriesDics()
 
 # --- LEAGUES --- #
 leagues                = dict()
-leagues['england']     = 'PremierLeague'
-leagues['spain']       = 'LaLiga'
-leagues['germany']     = 'Bundesliga'
-leagues['italy']       = 'SerieA'
-leagues['france']      = 'Ligue1'
-leagues['portugal']    = 'PrimeraLiga'
-leagues['netherlands'] = 'Eredevisie'
-leagues['belgium']     = 'ProLeague'
-leagues['scotland']    = 'Premiership'
-leagues['russia']      = 'PremierLeagueRussia'
-leagues['ukraine']     = 'PremierLeagueUkraine'
-leagues['switzerland'] = 'SuperLeague'
-leagues['turkey']      = 'SuperLig'
+leagues['England']     = 'PremierLeague'
+leagues['Spain']       = 'LaLiga'
+leagues['Germany']     = 'Bundesliga'
+leagues['Italy']       = 'SerieA'
+leagues['France']      = 'Ligue1'
+leagues['Portugal']    = 'PrimeraLiga'
+leagues['Netherlands'] = 'Eredevisie'
+leagues['Belgium']     = 'ProLeague'
+leagues['Scotland']    = 'Premiership'
+leagues['Russia']      = 'PremierLeagueRussia'
+leagues['Ukraine']     = 'PremierLeagueUkraine'
+leagues['Switzerland'] = 'SuperLeague'
+leagues['Turkey']      = 'SuperLig'
 leagues['USA']         = 'MajorLeagueSoccer'
 
 

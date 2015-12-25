@@ -36,6 +36,10 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         if(season != '15'):
             url = baseURL + `clubId` + '?saison_id=20' + season
 
+        # because of different season schedule seasons are shifted for one number in MLS...
+        if(league == 'MajorLeagueSoccer'):
+            url = baseURL + `clubId` + '?saison_id=' + `(int('20' + season) - 1)`
+
         urlgrabber.urlgrab(url, filename)
 
 def main():
@@ -44,9 +48,9 @@ def main():
             league = constants.leagues[country]
             fetchHTMLFiles(constants.clubs[league], league, constants.seasons[season])
 
-            print "\nFetched all HTML files for league %s" % league
+            print "\nFetched all HTML files for league %s\n" % league
 
-        print "\nFetched all HTML files for all leagues for season 20%s" % season
+        print "\nFetched all HTML files for all leagues for season %s\n" % season
 
 if __name__ == "__main__":
     main()
