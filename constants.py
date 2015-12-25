@@ -65,7 +65,6 @@ seasons[2004] = '04'
 seasons[2003] = '03'
 seasons[2002] = '02'
 seasons[2001] = '01'
-seasons[2000] = '00'
 
 
 # --- CLUBS --- #
@@ -308,3 +307,26 @@ clubDictSWI['STG'] = 257   # FC St. Gallen
 clubDictSWI['FCT'] = 938   # FC Thun
 clubDictSWI['FCV'] = 163   # FC Vaduz
 clubDictSWI['LUG'] = 2790  # FC Lugano
+
+# TURKISH SUPER LIG
+clubDictTUR = dict()
+
+# USA MAJOR LEAGUE SOCCER
+clubDictUSA = dict()
+
+# DICS OF CLUB DICTS
+clubs                         = dict()
+clubs['PremierLeague']        = clubDictENG
+clubs['LaLiga']               = clubDictESP
+clubs['Bundesliga']           = clubDictGER
+clubs['SerieA']               = clubDictITA
+clubs['Ligue1']               = clubDictFRA
+clubs['PrimeraLiga']          = clubDictPOR
+clubs['Eredevisie']           = clubDictNED
+clubs['ProLeague']            = clubDictBEL
+clubs['Premiership']          = clubDictSCO
+clubs['PremierLeagueRussia']  = clubDictRUS
+clubs['PremierLeagueUkraine'] = clubDictUKR
+clubs['SuperLeague']          = clubDictSWI
+clubs['SuperLig']             = clubDictTUR
+clubs['MajorLeagueSoccer']    = clubDictUSA
