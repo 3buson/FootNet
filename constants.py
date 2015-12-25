@@ -2,6 +2,9 @@ __author__ = 'matic'
 
 import utils
 
+# --- VARIOUS CONSTANTS --- #
+currentSeason = '15'
+
 # --- DATABASE --- #
 databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
 

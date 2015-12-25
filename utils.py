@@ -11,6 +11,7 @@ def connectToDB():
     while connection is None:
         try:
             connection = pyodbc.connect('DSN=FootNet')
+
         except Exception, e:
             print "Error connecting to database. Trying again in 1 sec !", e
 

@@ -1,44 +1,55 @@
 __author__ = 'Matevz Lenic'
 
 from pyquery import PyQuery as pq
-import lxml
 import time
+import sys
+import re
 import os
 
-import sys
 sys.path.insert(0, '../')
 import constants
 import utils
 
-from Player import Player
 from Club import Club
-from PlayerClubSeason import PlayerClubSeason
-from ClubSeason import ClubSeason
+from Player import Player
 from Season import Season
+from ClubSeason import ClubSeason
+from PlayerClubSeason import PlayerClubSeason
 
 def parseFile(filename, league, season):
     document = pq(filename=filename)
 
+    clubId          = filename.split("_",2)[1]
+    clubValue       = 0
     playersInserted = 0
 
     club          = Club()
-    club.idClub   = filename.split("_",2)[1]
+    club.idClub   = clubId
     club.idL      = constants.leagueIds[league]
     club.nameClub = document(".spielername-profil").html().strip()
 
     club.dbInsert()
 
+    # parse club ranking
+    if(season != constants.currentSeason):
+        htmlString = open(filename).read().replace('\t', '')
+        standing = re.search(r"(.*)Platz", htmlString).group(1)[:-2]
+    else:
+        standing = 0
+
+    # parse players table
     for i in document(document(document(".items")[0]).children()[1]).children().items():
         player = Player()
         pcs    = PlayerClubSeason()
         idx    = 0
 
-        playerExists = False
+        playerExists      = False
+        playerObjectValid = True
 
         # check if player is already in the DB
-        id = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
+        playerId = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
 
-        if(utils.checkIfPlayerExists(id)):
+        if(utils.checkIfPlayerExists(playerId)):
             playerExists = True
 
         pcs.idS    = int(season)
@@ -63,6 +74,7 @@ def parseFile(filename, league, season):
                     if playingNumber != '-':
                         player.playingNumber = int(playingNumber)
                     else:
+                        playerObjectValid = False
                         break
 
                     pcs.playerNumber = playingNumber
@@ -147,12 +159,15 @@ def parseFile(filename, league, season):
 
                     price = float(priceString) * multiplier
 
+                    clubValue += price
+
                     pcs.playerValue = price
 
-            # player.to_string()
-            player.dbInsert()
+            if(playerObjectValid):
+                # player.to_string()
+                player.dbInsert()
 
-            playersInserted += 1
+                playersInserted += 1
 
         else:
             # parse only player market value
@@ -169,17 +184,27 @@ def parseFile(filename, league, season):
 
             price = float(priceString) * multiplier
 
+            clubValue += price
+
             pcs.playerValue = price
 
+        cs         = ClubSeason()
+        cs.idClub  = clubId
+        cs.idS     = int(season)
+        cs.ranking = int(standing)
+        cs.value   = clubValue
+
+        cs.dbInsert()
         pcs.dbInsert()
 
         # cleanup
         del player
         del pcs
+        del cs
 
     del club
 
-    print "Inserted %d new player(s)" % playerExists
+    print "Inserted %d new player(s)" % playersInserted
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 rootDirectory = "../FileGetter/html/"

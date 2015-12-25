@@ -40,6 +40,7 @@ class Player:
         try:
             cursor.execute("INSERT IGNORE INTO player(idP,idC,firstName,lastName,birthDate,playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?)",
                        self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber)
+
         except pyodbc.DatabaseError, e:
             print "ERROR - DatabaseError", e
             pass

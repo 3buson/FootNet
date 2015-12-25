@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   PRIMARY KEY (`idC`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table footballnetwork.countries: ~6 rows (približno)
+-- Dumping data for table footballnetwork.countries: ~270 rows (približno)
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
 INSERT INTO `countries` (`nameCountry`) VALUES
     ('Afghanistan'),
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `leagues` (
   CONSTRAINT `FK_BelongsTo` FOREIGN KEY (`idC`) REFERENCES `countries` (`idC`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table footballnetwork.leagues: ~5 rows (približno)
+-- Dumping data for table footballnetwork.leagues: ~15 rows (približno)
 /*!40000 ALTER TABLE `leagues` DISABLE KEYS */;
 INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(1, 265, 'PremierLeague'),
