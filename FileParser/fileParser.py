@@ -51,16 +51,26 @@ def parseFile(filename, league, season):
         playerExists      = False
         playerObjectValid = True
 
-        # check if player is already in the DB
-        playerId = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
+        playerId     = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
+        playerNumber = pq(i.children()[0]).children().html()
 
+        # if player does not have a number exclude him from the parsing
+        if playerNumber != '-':
+            player.playingNumber = int(playerNumber)
+        else:
+            playerNumber      = '0'
+            playerObjectValid = False
+
+        # check if player is already in the DB
         if(utils.checkIfPlayerExists(playerId)):
             playerExists = True
 
-        pcs.idS    = int(season)
-        pcs.idClub = club.idClub
+        pcs.idS          = int(season)
+        pcs.idP          = int(playerId)
+        pcs.idClub       = club.idClub
+        pcs.playerNumber = int(playerNumber)
 
-        if(not playerExists):
+        if(not playerExists and playerObjectValid):
             for j in range(0,len(i.children())):
                 column = i.children()[j]
 
@@ -69,7 +79,7 @@ def parseFile(filename, league, season):
                 else:
                     prevClubPresent = True
 
-                # Playing Number and Position
+                # Playing Position
                 if idx == 0:
                     position = pq(column).attr('title')
 
@@ -84,17 +94,6 @@ def parseFile(filename, league, season):
                     else:
                         player.playingPosition = 'UNK'
 
-                    playingNumber = pq(column).children().html()
-
-                    # if player does not have a number exclude him from the parsing
-                    if playingNumber != '-':
-                        player.playingNumber = int(playingNumber)
-                    else:
-                        playerObjectValid = False
-                        break
-
-                    pcs.playerNumber = playingNumber
-
                     idx += 1
                     continue
 
@@ -102,10 +101,8 @@ def parseFile(filename, league, season):
                 if idx == 1:
                     nameElement = pq(column)(".spielprofil_tooltip")
                     names       = nameElement.attr('title').split(" ")
-                    id          = nameElement.attr('id')
 
-                    pcs.idP          = int(id)
-                    player.idP       = int(id)
+                    player.idP       = int(playerId)
                     player.firstName = names[0]
                     if len(names) > 1:
                         player.lastName = " ".join(names[1:len(names)])
@@ -182,10 +179,11 @@ def parseFile(filename, league, season):
             if(playerObjectValid):
                 # player.to_string()
                 player.dbInsert()
+                pcs.dbInsert()
 
                 playersInserted += 1
 
-        else:
+        elif(playerObjectValid):
             # parse only player market value
             priceString = "0"
             multiplier  = 1
@@ -204,6 +202,8 @@ def parseFile(filename, league, season):
 
             pcs.playerValue = price
 
+            pcs.dbInsert()
+
         cs         = ClubSeason()
         cs.idClub  = clubId
         cs.idS     = int(season)
@@ -211,12 +211,11 @@ def parseFile(filename, league, season):
         cs.value   = clubValue
 
         cs.dbInsert()
-        pcs.dbInsert()
 
         # cleanup
-        del player
-        del pcs
         del cs
+        del pcs
+        del player
 
     del club
 
@@ -254,5 +253,5 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
 
 # --- PARSE ONE FILE ONLY --- #
-# filename = "../FileGetter/html/LaLiga/14/VCF_1049"
-# parseFile(filename, 'LaLiga', '14')
+# filename = "../FileGetter/html/LaLiga/15/VCF_1049"
+# parseFile(filename, 'LaLiga', '15')
