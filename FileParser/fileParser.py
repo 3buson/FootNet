@@ -19,6 +19,11 @@ from PlayerClubSeason import PlayerClubSeason
 def parseFile(filename, league, season):
     document = pq(filename=filename)
 
+    # check if club squad table is present
+    if(len(document(".items")) < 1):
+        print "Club squad not available"
+        return
+
     clubId          = filename.split("_",2)[1]
     clubValue       = 0
     playersInserted = 0
@@ -235,5 +240,5 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
 
 # --- PARSE ONE FILE ONLY --- #
-# filename = "../FileGetter/html/LaLiga/15/VCF_1049"
-# parseFile(filename, 'LaLiga', '15')
+# filename = "../FileGetter/html/LaLiga/14/VCF_1049"
+# parseFile(filename, 'LaLiga', '14')
