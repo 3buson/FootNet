@@ -221,3 +221,87 @@ clubDictNED['SCC'] = 133   # SC Cambuur-Leeuwarden
 clubDictNED['ROD'] = 192   # Roda JC Kerkrade
 clubDictNED['EXC'] = 798   # Excelsior Rotterdam
 clubDictNED['DGR'] = 642   # De Graafschap Doetinchem
+
+# BELGIAM JUPILER PRO LEAGUE
+clubDictBEL        = dict()
+clubDictBEL['AND'] = 58     # RSC ANDERLECHT
+clubDictBEL['BRU'] = 2282   # CLUB BRUGGE KV
+clubDictBEL['GEN'] = 157    # KAA GENT
+clubDictBEL['GNK'] = 1184   # KRC GENK
+clubDictBEL['STL'] = 3057   # STANDARD LIEGE
+clubDictBEL['OOS'] = 2861   # KV OOSTENDE
+clubDictBEL['MEC'] = 354    # KV MECHELEN
+clubDictBEL['LOK'] = 498    # KSC LOKEREN
+clubDictBEL['ZUL'] = 3508   # SV ZULTE WAREGEM
+clubDictBEL['TRU'] = 475    # SINT-TRUIDENSE VV
+clubDictBEL['KOR'] = 601    # KV KORTRIJK
+clubDictBEL['MOU'] = 29228  # MOUSCRON-PERUWELZ
+clubDictBEL['CHA'] = 172    # RSC CHARLEROI
+clubDictBEL['WES'] = 968    # KVC WESTERLO
+clubDictBEL['HEV'] = 2727   # OUD-HEVERLEE LEUVEN
+clubDictBEL['WAA'] = 28643  # WAASLAND-BEVEREN
+
+# SCOTTISH PREMIERSHIP
+clubDictSCO        = dict()
+clubDictSCO['CEL'] = 371   # Celtic FC
+clubDictSCO['ABE'] = 370   # Aberdeen FC
+clubDictSCO['HOM'] = 43    # Heart of Midlothian FC
+clubDictSCO['STI'] = 2578  # St. Iohnstone FC
+clubDictSCO['DUN'] = 1519  # Dundee United FC
+clubDictSCO['ROC'] = 2759  # Ross County FC
+clubDictSCO['MOW'] = 987   # Motherwell FC
+clubDictSCO['ICT'] = 2451  # Inverness Caledonian Thistle FC
+clubDictSCO['KIL'] = 2553  # Kilmarnock FC
+clubDictSCO['HAM'] = 2999  # Hamilton Academical FC
+clubDictSCO['DFC'] = 511   # Dundee FC
+clubDictSCO['PAR'] = 2760  # Patrick Thistle FC
+clubDictSCO['RAN'] = 124   # Rangers FC
+
+# RUSSIAN PREMIERLEAGUE
+clubDictRUS        = dict()
+clubDictRUS['ZSP'] = 964    # Zenit St. Petersburg
+clubDictRUS['MOS'] = 2410   # CSKA Moscow
+clubDictRUS['FKK'] = 16704  # FK Krasnodar
+clubDictRUS['SPA'] = 232    # Spartak Moscow
+clubDictRUS['LOK'] = 932    # Lokomotiv Moscow
+clubDictRUS['DIN'] = 121    # Dinamo Moscow
+clubDictRUS['RUK'] = 2698   # Rubin Kazan
+clubDictRUS['KUK'] = 2439   # Kuban Krasnodar
+clubDictRUS['TEG'] = 3725   # Terek Grozny
+clubDictRUS['KSS'] = 2696   # Krylya Sovetov Samara
+clubDictRUS['ANM'] = 2700   # Anzhi Makhachkala
+clubDictRUS['FKR'] = 1083   # FK Rostov
+clubDictRUS['USO'] = 11127  # Ural Scerdlovskaya Oblast
+clubDictRUS['MOR'] = 11126  # Mordovia Saransk
+clubDictRUS['UFA'] = 28095  # FK UFA
+clubDictRUS['AMP'] = 4128   # Amkar Perm
+
+# UKRANIAN PREMIERLEAGUE
+clubDictUKR        = dict()
+clubDictUKR['SHD'] = 660    # Shakhtar Donersk
+clubDictUKR['DYK'] = 338    # Dynamo Kyiv
+clubDictUKR['DND'] = 339    # Dnipro Dnipropetrovsk
+clubDictUKR['ZOL'] = 10690  # Zorya Lugansk
+clubDictUKR['VOP'] = 2740   # Vorskla Poltava
+clubDictUKR['VOL'] = 4482   # Volyn Lutsk
+clubDictUKR['MEK'] = 6414   # Metalist Kharkiv
+clubDictUKR['KAL'] = 2477   # Karpaty Lviv
+clubDictUKR['STD'] = 16247  # Stal Dniprodzerzhynsk
+clubDictUKR['OLI'] = 23611  # Olimpik Donetsk
+clubDictUKR['CHO'] = 6992   # Chornomorets Odessa
+clubDictUKR['FKO'] = 18303  # FK Oleksandria
+clubDictUKR['GOU'] = 6996   # Goverla Uzhgorod
+clubDictUKR['MEZ'] = 6994   # Metalurg Zaporizhya
+
+# SWISS SUPER LEAGUE
+clubDictSWI        = dict()
+clubDictSWI['FCB'] = 26    # FC Basel 1893
+clubDictSWI['YUB'] = 452   # BSC Young Boys
+clubDictSWI['FCS'] = 321   # FC Sion
+clubDictSWI['GCZ'] = 504   # Grasshopper Club Zurich
+clubDictSWI['FCZ'] = 260   # FC Zurich
+clubDictSWI['FCL'] = 434   # FC Luzern
+clubDictSWI['STG'] = 257   # FC St. Gallen
+clubDictSWI['FCT'] = 938   # FC Thun
+clubDictSWI['FCV'] = 163   # FC Vaduz
+clubDictSWI['LUG'] = 2790  # FC Lugano
