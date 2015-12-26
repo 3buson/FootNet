@@ -38,7 +38,11 @@ def parseFile(filename, league, season):
     # parse club ranking
     if(season != constants.currentSeason):
         htmlString = open(filename).read().replace('\t', '')
-        standing = re.search(r"(.*)Platz", htmlString).group(1)[:-2]
+        match = re.search(r"(.*)Platz", htmlString)
+        if(not match):
+            standing = 1
+        else:
+            standing = match.group(1)[:-2]
     else:
         standing = 0
 
