@@ -118,8 +118,11 @@ def parseFile(filename, league, season):
                 # Birth date (only if not current season)
                 if idx == 2:
                     if(prevClubPresent) and not playerExists:
-                        age = pq(column).html().split(" ")
-                        player.birthDate = int(pq(column).html().split(" ")[2])
+                        date = pq(column).html().split(" ")
+                        if(len(date) > 2):
+                            player.birthDate = int(date[2])
+                        else:
+                            player.birthDate = 0
 
                         idx += 1
                         continue
