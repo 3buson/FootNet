@@ -11,9 +11,9 @@ class Club:
         self.idL      = idL
         self.nameClub = nameClub
 
-    def dbInsert(self):
-        connection = utils.connectToDB()
-        cursor     = connection.cursor()
+    def dbInsert(self, connection):
+        cursor = connection.cursor()
+
         try:
             cursor.execute("INSERT IGNORE INTO club(idClub, idL, nameClub) VALUES (?, ?, ?)",
                        self.idClub, self.idL, self.nameClub)

@@ -13,9 +13,8 @@ class PlayerClubSeason:
         self.playerValue  = playerValue
         self.playerNumber = playerNumber
 
-    def dbInsert(self):
-        connection = utils.connectToDB()
-        cursor     = connection.cursor()
+    def dbInsert(self, connection):
+        cursor = connection.cursor()
 
         try:
             cursor.execute("INSERT IGNORE INTO playerclubseason(idP, idClub, idS, playerValue, playerNumber) VALUES (?, ?, ?, ?, ?)",

@@ -24,9 +24,8 @@ class Player:
                self.birthDate, self.playingPosition, self.playingNumber)
 
 
-    def dbInsert(self):
-        connection = utils.connectToDB()
-        cursor     = connection.cursor()
+    def dbInsert(self, connection):
+        cursor = connection.cursor()
 
         if(self.nationality == ''):
             self.nationality = 'Unknown'

@@ -17,7 +17,10 @@ from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
 
 def parseFile(filename, league, season):
-    document = pq(filename=filename)
+    connection  = utils.connectToDB()
+    document    = pq(filename=filename)
+    pcsList     = list()
+    playersList = list()
 
     # check if club squad table is present
     if(len(document(".items")) < 1):
@@ -32,8 +35,6 @@ def parseFile(filename, league, season):
     club.idClub   = clubId
     club.idL      = constants.leagueIds[league]
     club.nameClub = document(".spielername-profil").html().strip()
-
-    club.dbInsert()
 
     # parse club ranking
     if(season != constants.currentSeason):
@@ -182,8 +183,8 @@ def parseFile(filename, league, season):
 
             if(playerObjectValid):
                 # player.to_string()
-                player.dbInsert()
-                pcs.dbInsert()
+                playersList.append(player)
+                pcsList.append(pcs)
 
                 playersInserted += 1
 
@@ -206,7 +207,7 @@ def parseFile(filename, league, season):
 
             pcs.playerValue = price
 
-            pcs.dbInsert()
+            pcsList.append(pcs)
 
         # cleanup
         del pcs
@@ -218,11 +219,21 @@ def parseFile(filename, league, season):
     cs.ranking = int(standing)
     cs.value   = clubValue
 
-    cs.dbInsert()
+    # inserting
+    club.dbInsert(connection)
+    cs.dbInsert(connection)
+
+    for player in playersList:
+        player.dbInsert(connection)
+
+    for pcs in pcsList:
+        pcs.dbInsert(connection)
 
     # cleanup
     del cs
     del club
+    del playersList
+    del pcsList
 
     print "Inserted %d new player(s)" % playersInserted
 
