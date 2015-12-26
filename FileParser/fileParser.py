@@ -208,19 +208,20 @@ def parseFile(filename, league, season):
 
             pcs.dbInsert()
 
-        cs         = ClubSeason()
-        cs.idClub  = clubId
-        cs.idS     = int(season)
-        cs.ranking = int(standing)
-        cs.value   = clubValue
-
-        cs.dbInsert()
-
         # cleanup
-        del cs
         del pcs
         del player
 
+    cs         = ClubSeason()
+    cs.idClub  = clubId
+    cs.idS     = int(season)
+    cs.ranking = int(standing)
+    cs.value   = clubValue
+
+    cs.dbInsert()
+
+    # cleanup
+    del cs
     del club
 
     print "Inserted %d new player(s)" % playersInserted
