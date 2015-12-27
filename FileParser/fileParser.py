@@ -144,7 +144,11 @@ def parseFile(filename, league, season):
 
                             player.nationality = nationality
                         else:
-                            player.birthDate = int(pq(column).html().split(" ")[2])
+                            date = pq(column).html().split(" ")
+                            if(len(date) > 2):
+                                player.birthDate = int(date[2])
+                            else:
+                                player.birthDate = 0
 
                     idx += 1
                     continue
