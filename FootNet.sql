@@ -401,6 +401,8 @@ CREATE TABLE IF NOT EXISTS `playerclubseason` (
   `onSubs` int(11) DEFAULT NULL,
   `offSubs` int(11) DEFAULT NULL,
   `penaltyGoals` int(11) DEFAULT NULL,
+  `concededGoals` int(11) DEFAULT NULL,
+  `cleanSheets` int(11) DEFAULT NULL,
   `minutesPerGoal` int(11) DEFAULT NULL,
   `minutesPlayed` int(11) DEFAULT NULL,
   PRIMARY KEY (`idP`,`idClub`,`idS`),

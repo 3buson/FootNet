@@ -29,8 +29,10 @@ def parseAllPlayerClubSeasonDetails(seasonId='all'):
 
     playersSeasons = cursor.fetchall()
 
+    print "Entries to process: %d" % len(playersSeasons)
+
     for playerSeason in playersSeasons:
-        parsePlayerClubSeasonDetails(connection, playerSeason[0], playersSeasons[1])
+        parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1])
 
 
 def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
@@ -38,9 +40,14 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
     pcs.idP = playerId
     pcs.idS = seasonId
 
-    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + playerId + '/saison/20' + seasonId + '/plus/1'
-    playerHTML = urlgrabber.urlopen()
-    document   = pq(playerHTML)
+    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + `seasonId` + '/plus/1'
+    playerHTML = urlgrabber.urlopen(url)
+    document   = pq(playerHTML.read())
+
+    playerHTML.close()
+
+    print url
+    print playerHTML
 
     if(len(document(".items")) < 1):
         print "Player details not available"
@@ -50,113 +57,223 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
 
     fieldIdx = 0
 
-    for field in document(document('tfoot')[0]).children()[0].children():
-        # Apps
-        if(fieldIdx == 2):
-            apps = field.html()
+    fields = len(document(document(document('tfoot')[0]).children()[0]).children())
 
-            if(apps == '-'):
-                apps = 0
+    for field in document(document(document('tfoot')[0]).children()[0]).children().items():
+        # Goalkeeper
+        if(fields == 13):
+            # Apps
+            if(fieldIdx == 2):
+                apps = field.html()
 
-            pcs.apps = apps
+                if(apps == '-'):
+                    apps = 0
 
-        # Goals
-        if(fieldIdx == 3):
-            goals = field.html()
+                pcs.apps = int(apps)
 
-            if(goals == '-'):
-                goals = 0
+            # Goals
+            if(fieldIdx == 3):
+                goals = field.html()
 
-            pcs.goals = goals
+                if(goals == '-'):
+                    goals = 0
 
-        # Assists
-        if(fieldIdx == 4):
-            assists = field.html()
+                pcs.goals = int(goals)
 
-            if(assists == '-'):
-                assists = 0
+            # Own goals
+            if(fieldIdx == 4):
+                ownGoals = field.html()
 
-            pcs.assists = assists
+                if(ownGoals == '-'):
+                    ownGoals = 0
 
-        # Own goals
-        if(fieldIdx == 5):
-            ownGoals = field.html()
+                pcs.ownGoals = int(ownGoals)
 
-            if(ownGoals == '-'):
-                ownGoals = 0
+            # On subs
+            if(fieldIdx == 5):
+                onSubs = field.html()
 
-            pcs.ownGoals = ownGoals
+                if(onSubs == '-'):
+                    onSubs = 0
 
-        # On subs
-        if(fieldIdx == 6):
-            onSubs = field.html()
+                pcs.onSubs = int(onSubs)
 
-            if(onSubs == '-'):
-                onSubs = 0
+            # Off subs
+            if(fieldIdx  == 6):
+                offSubs = field.html()
 
-            pcs.onSubs = onSubs
+                if(offSubs  == '-'):
+                    offSubs  = 0
 
-        # Off subs
-        if(onSubs  == 7):
-            onSubs  = field.html()
+                pcs.offSubs = int(offSubs)
 
-            if(onSubs  == '-'):
-                onSubs  = 0
+            # Yellow cards
+            if(fieldIdx == 7):
+                yellowCards = field.html()
 
-            pcs.onSubs  = onSubs
+                if(yellowCards == '-'):
+                    yellowCards = 0
 
-        # Yellow cards
-        if(fieldIdx == 8):
-            yellowCards = field.html()
+                pcs.yellowCards = int(yellowCards)
 
-            if(yellowCards == '-'):
-                yellowCards = 0
+            # Red cards
+            if(fieldIdx == 9):
+                redCards = field.html()
 
-            pcs.yellowCards = yellowCards
+                if(redCards == '-'):
+                    redCards = 0
 
-        # Red cards
-        if(fieldIdx == 10):
-            redCards = field.html()
+                pcs.redCards = int(redCards)
 
-            if(redCards == '-'):
-                redCards = 0
+            # Conceded goals
+            if(fieldIdx == 10):
+                concededGoals = field.html()
 
-            pcs.apps = redCards
+                if(concededGoals == '-'):
+                    concededGoals = 0
 
-        # Penalty goals
-        if(fieldIdx == 11):
-            penaltyGoals = field.html()
+                pcs.concededGoals = int(concededGoals)
 
-            if(penaltyGoals == '-'):
-                penaltyGoals = 0
+            # Clean sheets
+            if(fieldIdx == 11):
+                cleanSheets = field.html()
 
-            pcs.penaltyGoals = penaltyGoals
+                if(cleanSheets == '-'):
+                    cleanSheets = 0
 
-        # Minutes per goal
-        if(fieldIdx == 12):
-            minutesPerGoal = field.html()
+                pcs.cleanSheets = int(cleanSheets)
 
-            if(minutesPerGoal == '-'):
-                minutesPerGoal = 0
+            # Minutes played
+            if(fieldIdx == 12):
+                minutesPlayed = field.html()
 
-            pcs.minutesPerGoal = minutesPerGoal
+                if(minutesPlayed == '-'):
+                    minutesPlayed = 0
 
-        # Minutes played
-        if(fieldIdx == 13):
-            minutesPlayed = field.html()
+                pcs.minutesPlayed = int(minutesPlayed.replace('.','')[:-1])
 
-            if(minutesPlayed == '-'):
-                minutesPlayed = 0
+            fieldIdx += 1
 
-            pcs.minutesPlayed = minutesPlayed
+        # Not a goalkeeper
+        elif(fields == 14):
+            # Apps
+            if(fieldIdx == 2):
+                apps = field.html()
 
-        fieldIdx += 1
+                if(apps == '-'):
+                    apps = 0
+
+                pcs.apps = int(apps)
+
+            # Goals
+            if(fieldIdx == 3):
+                goals = field.html()
+
+                if(goals == '-'):
+                    goals = 0
+
+                pcs.goals = int(goals)
+
+            # Assists
+            if(fieldIdx == 4):
+                assists = field.html()
+
+                if(assists == '-'):
+                    assists = 0
+
+                pcs.assists = int(assists)
+
+            # Own goals
+            if(fieldIdx == 5):
+                ownGoals = field.html()
+
+                if(ownGoals == '-'):
+                    ownGoals = 0
+
+                pcs.ownGoals = int(ownGoals)
+
+            # On subs
+            if(fieldIdx == 6):
+                onSubs = field.html()
+
+                if(onSubs == '-'):
+                    onSubs = 0
+
+                pcs.onSubs = int(onSubs)
+
+            # Off subs
+            if(fieldIdx  == 7):
+                offSubs = field.html()
+
+                if(offSubs  == '-'):
+                    offSubs  = 0
+
+                pcs.offSubs = int(offSubs)
+
+            # Yellow cards
+            if(fieldIdx == 8):
+                yellowCards = field.html()
+
+                if(yellowCards == '-'):
+                    yellowCards = 0
+
+                pcs.yellowCards = int(yellowCards)
+
+            # Red cards
+            if(fieldIdx == 10):
+                redCards = field.html()
+
+                if(redCards == '-'):
+                    redCards = 0
+
+                pcs.redCards = int(redCards)
+
+            # Penalty goals
+            if(fieldIdx == 11):
+                penaltyGoals = field.html()
+
+                if(penaltyGoals == '-'):
+                    penaltyGoals = 0
+
+                pcs.penaltyGoals = int(penaltyGoals)
+
+            # Minutes per goal
+            if(fieldIdx == 12):
+                minutesPerGoal = field.html()
+
+                if(minutesPerGoal == '-'):
+                    minutesPerGoal = 0
+
+                pcs.minutesPerGoal = int(minutesPerGoal.replace('.','')[:-1])
+
+            # Minutes played
+            if(fieldIdx == 13):
+                minutesPlayed = field.html()
+
+                if(minutesPlayed == '-'):
+                    minutesPlayed = 0
+
+                pcs.minutesPlayed = int(minutesPlayed.replace('.','')[:-1])
+
+            fieldIdx += 1
 
     print "Inserting new player club season..."
 
-    #pcs.to_string()
+    # print pcs.apps
+    # print pcs.goals
+    # print pcs.assists
+    # print pcs.ownGoals
+    # print pcs.yellowCards
+    # print pcs.redCards
+    # print pcs.onSubs
+    # print pcs.offSubs
+    # print pcs.penaltyGoals
+    # print pcs.concededGoals
+    # print pcs.cleanSheets
+    # print pcs.minutesPerGoal
+    # print pcs.minutesPlayed
 
-    pcs.dbInsert(connection)
+    pcs.dbUpdate(connection)
 
     return
 
@@ -389,35 +506,35 @@ def parseFile(filename, league, season):
     print "Inserted %d new player(s)" % playersInserted
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
-rootDirectory = "../FileGetter/html/"
-
-for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
-
-    # loop through leagues
-    for leagueDirectory in dirnames1:
-        currentDirectory1 = os.path.join(dirname1, leagueDirectory)
-        for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
-
-            # loop through seasons
-            for seasonDirectory in dirnames2:
-                currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
-
-                # loop through clubs
-                for filename in os.listdir(currentDirectory2):
-                    print "Parsing file %s, legue: %s, season: %s..." %\
-                          (filename, leagueDirectory, seasonDirectory)
-
-                    startTime = time.time()
-                    parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
-                    endTime = time.time()
-
-                    print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
-                          (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
-
-                print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
-
-        print "\nParsed all seasons for league %s\n" % leagueDirectory
-
+# rootDirectory = "../FileGetter/html/"
+#
+# for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
+#
+#     # loop through leagues
+#     for leagueDirectory in dirnames1:
+#         currentDirectory1 = os.path.join(dirname1, leagueDirectory)
+#         for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
+#
+#             # loop through seasons
+#             for seasonDirectory in dirnames2:
+#                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
+#
+#                 # loop through clubs
+#                 for filename in os.listdir(currentDirectory2):
+#                     print "Parsing file %s, legue: %s, season: %s..." %\
+#                           (filename, leagueDirectory, seasonDirectory)
+#
+#                     startTime = time.time()
+#                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
+#                     endTime = time.time()
+#
+#                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
+#                           (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
+#
+#                 print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
+#
+#         print "\nParsed all seasons for league %s\n" % leagueDirectory
+#
 
 # --- PARSE ONE FILE ONLY --- #
 # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
@@ -425,4 +542,4 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
 
 # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
-# parseAllPlayerClubSeasonDetails()
+parseAllPlayerClubSeasonDetails(14)
