@@ -45,8 +45,6 @@ def fetchHTMLFiles(clubDict, league, season='15'):
 def main():
     for season in constants.seasons.keys():
         for country in constants.leagues.keys():
-            if(country != 'Greece'):
-                continue
             league = constants.leagues[country]
             fetchHTMLFiles(constants.clubs[league], league, constants.seasons[season])
 

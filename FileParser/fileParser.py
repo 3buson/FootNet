@@ -281,7 +281,7 @@ def parseFile(filename, league, season):
     playersList = list()
 
     # check if club squad table is present
-    if(len(document(".items")) < 1):
+    if(len(document(".items")) < 1 or len(document(".empty")) > 0):
         print "Club squad not available"
         return
 
@@ -320,7 +320,7 @@ def parseFile(filename, league, season):
         if playerNumber != '-' and playerNumber:
             player.playingNumber = int(playerNumber)
         else:
-            playerNumber      = '-1'
+            playerNumber = '-1'
 
         # check if player is already in the DB
         if(utils.checkIfPlayerExists(connection, playerId)):
@@ -536,7 +536,7 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
                 print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
 
-        print "\nParsed all seasons for league %s\n" % leagueDirectory
+            print "\nParsed all seasons for league %s\n" % leagueDirectory
 
 # --- PARSE ONE FILE ONLY --- #
 # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
