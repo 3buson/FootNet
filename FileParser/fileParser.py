@@ -154,6 +154,8 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
 
     print "Inserting new player club season..."
 
+    #pcs.to_string()
+
     pcs.dbInsert(connection)
 
     return

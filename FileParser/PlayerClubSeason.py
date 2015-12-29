@@ -26,6 +26,14 @@ class PlayerClubSeason:
         self.minutesPerGoal = minutesPerGoal
         self.minutesPlayed  = minutesPlayed
 
+    def to_string(self):
+        print "idP - %d;\nidClub - %d;\nidS - %d;\nvalue - %d;\nnumber - %d;\napps - %d;\ngoals - %d" \
+              "\nassists - %d\nown goals - %d\nyellow cards - %d\nred cards - %d\non subs - %d\n" \
+              "off subs - %d\npenalty goals - %d\nmin played - %d\nmin per goal - %d\n" % \
+              (self.idP, self.idClub, self.idS, self.playerValue, self.playerNumber, self.apps,
+               self.goals, self.assists, self.ownGoals, self.yellowCards, self.redCards, self.onSubs,
+               self.offSubs, self.penaltyGoals, self.minutesPlayed, self.minutesPerGoal)
+
     def dbInsert(self, connection):
         cursor = connection.cursor()
 
