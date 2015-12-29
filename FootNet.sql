@@ -360,7 +360,8 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(11, 246, 'PremierLeagueUkraine'),
 	(12, 225, 'SuperLeague'),
 	(13, 238, 'SuperLig'),
-	(14, 268, 'MajorLeagueSoccer');
+	(14, 268, 'MajorLeagueSoccer'),
+	(15, 90, 'SuperLeagueGreece');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 

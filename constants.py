@@ -352,6 +352,27 @@ clubDictUSA['DCU'] = 2440   # D.C. United
 clubDictUSA['VAW'] = 6321   # Vancouver Whitecaps
 clubDictUSA['CHF'] = 432    # Chicago Fire
 
+# GREEK SUPER LEAGUE
+clubDictGRE        = dict()
+clubDictGRE['OLY'] = 683    # Olympiacos Piraeus
+clubDictGRE['PAO'] = 1091   # PAOK Thessaloniki
+clubDictGRE['PAN'] = 265    # Panathinaikos Athens
+clubDictGRE['AEK'] = 2441   # AEK Athens
+clubDictGRE['AST'] = 6676   # Asteras Tripolis
+clubDictGRE['ATR'] = 3060   # Atromitos Athen
+clubDictGRE['PAS'] = 2671   # PAS Giannina
+clubDictGRE['SKO'] = 128    # Skoda Xanthi
+clubDictGRE['AGR'] = 6418   # Panetolikos Agrinio
+clubDictGRE['PLA'] = 21957  # Platanias Chania
+clubDictGRE['PAE'] = 2079   # PAE Veria
+clubDictGRE['ATH'] = 1079   # Panionios Athens
+clubDictGRE['PAE'] = 169    # PAE Veria
+clubDictGRE['AEL'] = 28956  # AEL Kalloni
+clubDictGRE['IRA'] = 47     # Iraklis Thessaloniki
+clubDictGRE['KOM'] = 7185   # Panthrakikos Komotini
+clubDictGRE['APO'] = 2672   # APO Levadiakos
+
+
 # DICT OF CLUB DICTS
 clubs                         = dict()
 clubs['PremierLeague']        = clubDictENG
@@ -368,3 +389,4 @@ clubs['PremierLeagueUkraine'] = clubDictUKR
 clubs['SuperLeague']          = clubDictSWI
 clubs['SuperLig']             = clubDictTUR
 clubs['MajorLeagueSoccer']    = clubDictUSA
+clubs['SuperLeagueGreece']    = clubDictGRE

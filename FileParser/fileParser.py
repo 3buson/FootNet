@@ -60,7 +60,7 @@ def parseFile(filename, league, season):
         playerNumber = pq(i.children()[0]).children().html()
 
         # if player does not have a number exclude him from the parsing
-        if playerNumber != '-':
+        if playerNumber != '-' and playerNumber:
             player.playingNumber = int(playerNumber)
         else:
             playerNumber      = '0'
@@ -144,7 +144,11 @@ def parseFile(filename, league, season):
 
                             player.nationality = nationality
                         else:
-                            player.birthDate = int(pq(column).html().split(" ")[2])
+                            date = pq(column).html().split(" ")
+                            if(len(date) > 2):
+                                player.birthDate = int(date[2])
+                            else:
+                                player.birthDate = 0
 
                     idx += 1
                     continue
