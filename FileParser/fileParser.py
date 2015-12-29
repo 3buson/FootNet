@@ -325,7 +325,7 @@ def parseFile(filename, league, season):
             playerObjectValid = False
 
         # check if player is already in the DB
-        if(utils.checkIfPlayerExists(playerId)):
+        if(utils.checkIfPlayerExists(connection, playerId)):
             playerExists = True
 
         pcs.idS          = int(season)

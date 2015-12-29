@@ -95,12 +95,11 @@ def getCountriesDics():
     finally:
         return cDict
 
-def checkIfPlayerExists(playerId):
+def checkIfPlayerExists(connection, playerId):
     exists = False
 
     try:
-        connection = connectToDB()
-        cursor     = connection.cursor()
+        cursor = connection.cursor()
 
         cursor.execute("SELECT * from player WHERE idP = ?", playerId)
         result = cursor.fetchall()
