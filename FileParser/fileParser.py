@@ -26,10 +26,10 @@ def parseAllPlayerClubSeasonDetails():
     playersSeasons = cursor.fetchall()
 
     for playerSeason in playersSeasons:
-        parsePlayerClubSeasonDetails(playerSeason[0], playersSeasons[1])
+        parsePlayerClubSeasonDetails(connection, playerSeason[0], playersSeasons[1])
 
 
-def parsePlayerClubSeasonDetails(playerId, seasonId):
+def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
     pcs     = PlayerClubSeason()
     pcs.idP = playerId
     pcs.idS = seasonId
@@ -150,7 +150,7 @@ def parsePlayerClubSeasonDetails(playerId, seasonId):
 
     print "Inserting new player club season..."
 
-    pcs.dbInsert()
+    pcs.dbInsert(connection)
 
     return
 
