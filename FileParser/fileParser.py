@@ -503,35 +503,34 @@ def parseFile(filename, league, season):
     print "Inserted %d new player(s)" % playersInserted
 
 # --- PARSE ALL FILES IN A DIRECTORY --- #
-# rootDirectory = "../FileGetter/html/"
-#
-# for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
-#
-#     # loop through leagues
-#     for leagueDirectory in dirnames1:
-#         currentDirectory1 = os.path.join(dirname1, leagueDirectory)
-#         for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
-#
-#             # loop through seasons
-#             for seasonDirectory in dirnames2:
-#                 currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
-#
-#                 # loop through clubs
-#                 for filename in os.listdir(currentDirectory2):
-#                     print "Parsing file %s, legue: %s, season: %s..." %\
-#                           (filename, leagueDirectory, seasonDirectory)
-#
-#                     startTime = time.time()
-#                     parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
-#                     endTime = time.time()
-#
-#                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
-#                           (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
-#
-#                 print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
-#
-#         print "\nParsed all seasons for league %s\n" % leagueDirectory
-#
+rootDirectory = "../FileGetter/html/"
+
+for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
+
+    # loop through leagues
+    for leagueDirectory in dirnames1:
+        currentDirectory1 = os.path.join(dirname1, leagueDirectory)
+        for dirname2, dirnames2, filenames2 in os.walk(currentDirectory1):
+
+            # loop through seasons
+            for seasonDirectory in dirnames2:
+                currentDirectory2 = os.path.join(currentDirectory1, seasonDirectory)
+
+                # loop through clubs
+                for filename in os.listdir(currentDirectory2):
+                    print "Parsing file %s, legue: %s, season: %s..." %\
+                          (filename, leagueDirectory, seasonDirectory)
+
+                    startTime = time.time()
+                    parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
+                    endTime = time.time()
+
+                    print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
+                          (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
+
+                print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
+
+        print "\nParsed all seasons for league %s\n" % leagueDirectory
 
 # --- PARSE ONE FILE ONLY --- #
 # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
@@ -539,4 +538,4 @@ def parseFile(filename, league, season):
 
 
 # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
-parseAllPlayerClubSeasonDetails(14)
+# parseAllPlayerClubSeasonDetails(14)
