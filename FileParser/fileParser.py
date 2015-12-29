@@ -311,8 +311,7 @@ def parseFile(filename, league, season):
         pcs    = PlayerClubSeason()
         idx    = 0
 
-        playerExists      = False
-        playerObjectValid = True
+        playerExists = False
 
         playerId     = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
         playerNumber = pq(i.children()[0]).children().html()
@@ -322,7 +321,6 @@ def parseFile(filename, league, season):
             player.playingNumber = int(playerNumber)
         else:
             playerNumber      = '-1'
-            playerObjectValid = False
 
         # check if player is already in the DB
         if(utils.checkIfPlayerExists(connection, playerId)):
@@ -333,7 +331,7 @@ def parseFile(filename, league, season):
         pcs.idClub       = club.idClub
         pcs.playerNumber = int(playerNumber)
 
-        if(not playerExists and playerObjectValid):
+        if(not playerExists):
             for j in range(0,len(i.children())):
                 column = i.children()[j]
 
@@ -449,14 +447,13 @@ def parseFile(filename, league, season):
 
                     pcs.playerValue = price
 
-            if(playerObjectValid):
-                # player.to_string()
-                playersList.append(player)
-                pcsList.append(pcs)
+            # player.to_string()
+            playersList.append(player)
+            pcsList.append(pcs)
 
-                playersInserted += 1
+            playersInserted += 1
 
-        elif(playerObjectValid):
+        else:
             # parse only player market value
             priceString = "0"
             multiplier  = 1
@@ -478,10 +475,6 @@ def parseFile(filename, league, season):
 
             pcs.playerValue = price
 
-            pcsList.append(pcs)
-
-        elif(not playerObjectValid and playerExists):
-            # only insert pcs
             pcsList.append(pcs)
 
         # cleanup
