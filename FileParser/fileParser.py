@@ -43,6 +43,8 @@ def parsePlayerClubSeasonDetails(playerId, seasonId):
         print "Player details not available"
         return
 
+    print "Parsing player club season details for player %d, season %d..." % (playerId, seasonId)
+
     fieldIdx = 0
 
     for field in document(document('tfoot')[0]).children()[0].children():
@@ -147,7 +149,9 @@ def parsePlayerClubSeasonDetails(playerId, seasonId):
 
         fieldIdx += 1
 
-    # TODO - insert updated playerclubseason
+    print "Inserting new player club season..."
+
+    pcs.dbInsert()
 
     return
 
@@ -413,3 +417,7 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 # --- PARSE ONE FILE ONLY --- #
 # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
 # parseFile(filename, 'LaLiga', '15')
+
+
+# --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
+# parseAllPlayerClubSeasonDetails()
