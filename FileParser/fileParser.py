@@ -34,7 +34,6 @@ def parsePlayerClubSeasonDetails(playerId, seasonId):
     pcs.idP = playerId
     pcs.idS = seasonId
 
-    # TODO - get html and parse it...
     url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + playerId + '/saison/20' + seasonId + '/plus/1'
     playerHTML = urlgrabber.urlopen()
     document   = pq(playerHTML)
