@@ -1,6 +1,7 @@
 __author__ = 'Matevz Lenic'
 
 from pyquery import PyQuery as pq
+import urlgrabber
 import time
 import sys
 import re
@@ -27,17 +28,128 @@ def parseAllPlayerClubSeasonDetails():
     for playerSeason in playersSeasons:
         parsePlayerClubSeasonDetails(playerSeason[0], playersSeasons[1])
 
+
 def parsePlayerClubSeasonDetails(playerId, seasonId):
     pcs     = PlayerClubSeason()
     pcs.idP = playerId
     pcs.idS = seasonId
 
     # TODO - get html and parse it...
+    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + playerId + '/saison/20' + seasonId + '/plus/1'
+    playerHTML = urlgrabber.urlopen()
+    document   = pq(playerHTML)
+
+    if(len(document(".items")) < 1):
+        print "Player details not available"
+        return
+
+    fieldIdx = 0
+
+    for field in document(document('tfoot')[0]).children()[0].children():
+        # Apps
+        if(fieldIdx == 2):
+            apps = field.html()
+
+            if(apps == '-'):
+                apps = 0
+
+            pcs.apps = apps
+
+        # Goals
+        if(fieldIdx == 3):
+            goals = field.html()
+
+            if(goals == '-'):
+                goals = 0
+
+            pcs.goals = goals
+
+        # Assists
+        if(fieldIdx == 4):
+            assists = field.html()
+
+            if(assists == '-'):
+                assists = 0
+
+            pcs.assists = assists
+
+        # Own goals
+        if(fieldIdx == 5):
+            ownGoals = field.html()
+
+            if(ownGoals == '-'):
+                ownGoals = 0
+
+            pcs.ownGoals = ownGoals
+
+        # On subs
+        if(fieldIdx == 6):
+            onSubs = field.html()
+
+            if(onSubs == '-'):
+                onSubs = 0
+
+            pcs.onSubs = onSubs
+
+        # Off subs
+        if(onSubs  == 7):
+            onSubs  = field.html()
+
+            if(onSubs  == '-'):
+                onSubs  = 0
+
+            pcs.onSubs  = onSubs
+
+        # Yellow cards
+        if(fieldIdx == 8):
+            yellowCards = field.html()
+
+            if(yellowCards == '-'):
+                yellowCards = 0
+
+            pcs.yellowCards = yellowCards
+
+        # Red cards
+        if(fieldIdx == 10):
+            redCards = field.html()
+
+            if(redCards == '-'):
+                redCards = 0
+
+            pcs.apps = redCards
+
+        # Penalty goals
+        if(fieldIdx == 11):
+            penaltyGoals = field.html()
+
+            if(penaltyGoals == '-'):
+                penaltyGoals = 0
+
+            pcs.penaltyGoals = penaltyGoals
+
+        # Minutes per goal
+        if(fieldIdx == 12):
+            minutesPerGoal = field.html()
+
+            if(minutesPerGoal == '-'):
+                minutesPerGoal = 0
+
+            pcs.minutesPerGoal = minutesPerGoal
+
+        # Minutes played
+        if(fieldIdx == 13):
+            minutesPlayed = field.html()
+
+            if(minutesPlayed == '-'):
+                minutesPlayed = 0
+
+            pcs.minutesPlayed = minutesPlayed
+
+        fieldIdx += 1
 
     # TODO - insert updated playerclubseason
 
     return
-
 
 def parseFile(filename, league, season):
     connection  = utils.connectToDB()
