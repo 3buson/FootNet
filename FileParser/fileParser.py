@@ -145,7 +145,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
                 minutesPlayed = field.html()
 
                 if(minutesPlayed == '-'):
-                    minutesPlayed = 0
+                    minutesPlayed = '0\''
 
                 pcs.minutesPlayed = int(minutesPlayed.replace('.','')[:-1])
 
@@ -239,7 +239,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
                 minutesPerGoal = field.html()
 
                 if(minutesPerGoal == '-'):
-                    minutesPerGoal = 0
+                    minutesPerGoal = '0\''
 
                 pcs.minutesPerGoal = int(minutesPerGoal.replace('.','')[:-1])
 
@@ -248,7 +248,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
                 minutesPlayed = field.html()
 
                 if(minutesPlayed == '-'):
-                    minutesPlayed = 0
+                    minutesPlayed = '0\''
 
                 pcs.minutesPlayed = int(minutesPlayed.replace('.','')[:-1])
 
