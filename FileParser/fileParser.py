@@ -16,6 +16,29 @@ from Season import Season
 from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
 
+
+def parseAllPlayerClubSeasonDetails():
+    connection = utils.connectToDB()
+    cursor     = connection.cursor()
+
+    cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs")
+    playersSeasons = cursor.fetchall()
+
+    for playerSeason in playersSeasons:
+        parsePlayerClubSeasonDetails(playerSeason[0], playersSeasons[1])
+
+def parsePlayerClubSeasonDetails(playerId, seasonId):
+    pcs     = PlayerClubSeason()
+    pcs.idP = playerId
+    pcs.idS = seasonId
+
+    # TODO - get html and parse it...
+
+    # TODO - insert updated playerclubseason
+
+    return
+
+
 def parseFile(filename, league, season):
     connection  = utils.connectToDB()
     document    = pq(filename=filename)
