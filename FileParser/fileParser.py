@@ -46,9 +46,6 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
 
     playerHTML.close()
 
-    print url
-    print playerHTML
-
     if(len(document(".items")) < 1):
         print "Player details not available"
         return
@@ -257,7 +254,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
 
             fieldIdx += 1
 
-    print "Inserting new player club season..."
+    print "Updating player club season..."
 
     # print pcs.apps
     # print pcs.goals
