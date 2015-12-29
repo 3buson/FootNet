@@ -317,7 +317,7 @@ def parseFile(filename, league, season):
         playerId     = pq(i.children()[1])(".spielprofil_tooltip").attr('id')
         playerNumber = pq(i.children()[0]).children().html()
 
-        # if player does not have a number exclude him from the parsing
+        # check if player does not have a number
         if playerNumber != '-' and playerNumber:
             player.playingNumber = int(playerNumber)
         else:
@@ -380,7 +380,7 @@ def parseFile(filename, league, season):
                         if(len(date) > 2):
                             player.birthDate = int(date[2])
                         else:
-                            player.birthDate = 0
+                            player.birthDate = -1
 
                         idx += 1
                         continue
@@ -444,6 +444,9 @@ def parseFile(filename, league, season):
 
                     clubValue += price
 
+                    if(price == 0):
+                        price = -1
+
                     pcs.playerValue = price
 
             if(playerObjectValid):
@@ -470,6 +473,9 @@ def parseFile(filename, league, season):
 
             clubValue += price
 
+            if(price == 0):
+                price = -1
+
             pcs.playerValue = price
 
             pcsList.append(pcs)
@@ -481,6 +487,9 @@ def parseFile(filename, league, season):
         # cleanup
         del pcs
         del player
+
+    if(clubValue == 0):
+        clubValue = -1
 
     cs         = ClubSeason()
     cs.idClub  = clubId
