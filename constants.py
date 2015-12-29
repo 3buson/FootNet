@@ -21,7 +21,7 @@ leagues['Germany']     = 'Bundesliga'
 leagues['Italy']       = 'SerieA'
 leagues['France']      = 'Ligue1'
 leagues['Portugal']    = 'PrimeraLiga'
-leagues['Netherlands'] = 'Eredevisie'
+leagues['Netherlands'] = 'Eredivisie'
 leagues['Belgium']     = 'ProLeague'
 leagues['Scotland']    = 'Premiership'
 leagues['Russia']      = 'PremierLeagueRussia'
@@ -39,7 +39,7 @@ leagueIds['Bundesliga']           = 3
 leagueIds['SerieA']               = 4
 leagueIds['Ligue1']               = 5
 leagueIds['PrimeraLiga']          = 6
-leagueIds['Eredevisie']           = 7
+leagueIds['Eredivisie']           = 7
 leagueIds['ProLeague']            = 8
 leagueIds['Premiership']          = 9
 leagueIds['PremierLeagueRussia']  = 10
@@ -205,7 +205,7 @@ clubDictPOR['MFC'] = 979   # Moreirense FC
 clubDictPOR['CDT'] = 7179  # CD Tondela
 clubDictPOR['UNM'] = 976   # CF Uniao Madeira
 
-# NETHERLANDS EREDIVISE
+# DUTCH EREDIVISIE
 clubDictNED        = dict()
 clubDictNED['PSV'] = 383   # PSV Eindhoven
 clubDictNED['AJA'] = 610   # AJAX Amsterdam
