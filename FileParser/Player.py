@@ -8,7 +8,7 @@ import constants
 class Player:
 
     def __init__(self, idP=0, nationality="", firstName="", lastName="",
-                 birthDate=0, playingPosition=0, playingNumber=0):
+                 birthDate=0, playingPosition=0, playingNumber=0, height=None):
         self.idP             = idP
         self.nationality     = nationality
         self.firstName       = firstName
@@ -16,6 +16,7 @@ class Player:
         self.birthDate       = birthDate
         self.playingPosition = playingPosition
         self.playingNumber   = playingNumber
+        self.height          = height
 
     def to_string(self):
         print "idP - %d;\nnationality - %s;\nfirstName - %s;\nlastName - %s;\n" \
@@ -36,8 +37,8 @@ class Player:
             idC = constants.countriesDict['Unknown']
 
         try:
-            cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                       self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber)
+            cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                       self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber, self.height)
 
         except pyodbc.DatabaseError, e:
             print "ERROR - DatabaseError", e
