@@ -321,7 +321,7 @@ def parseFile(filename, league, season):
         if playerNumber != '-' and playerNumber:
             player.playingNumber = int(playerNumber)
         else:
-            playerNumber      = '0'
+            playerNumber      = '-1'
             playerObjectValid = False
 
         # check if player is already in the DB
@@ -472,6 +472,10 @@ def parseFile(filename, league, season):
 
             pcs.playerValue = price
 
+            pcsList.append(pcs)
+
+        elif(not playerObjectValid and playerExists):
+            # only insert pcs
             pcsList.append(pcs)
 
         # cleanup
