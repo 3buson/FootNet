@@ -60,7 +60,7 @@ def parseFile(filename, league, season):
         playerNumber = pq(i.children()[0]).children().html()
 
         # if player does not have a number exclude him from the parsing
-        if playerNumber != '-':
+        if playerNumber != '-' and playerNumber:
             player.playingNumber = int(playerNumber)
         else:
             playerNumber      = '0'
