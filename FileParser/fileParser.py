@@ -537,7 +537,7 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
                 print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
 
-            print "\nParsed all seasons for league %s\n" % leagueDirectory
+        print "\nParsed all seasons for league %s\n" % leagueDirectory
 
 # --- PARSE ONE FILE ONLY --- #
 # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
@@ -545,4 +545,4 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
 
 # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
-# parseAllPlayerClubSeasonDetails(14)
+parseAllPlayerClubSeasonDetails()
