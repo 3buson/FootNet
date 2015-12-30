@@ -274,8 +274,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
 
     return
 
-def parseFile(filename, league, season):
-    connection  = utils.connectToDB()
+def parseFile(connection, filename, league, season):
     document    = pq(filename=filename)
     pcsList     = list()
     playersList = list()
@@ -508,6 +507,8 @@ def parseFile(filename, league, season):
 
     print "Inserted %d new player(s)" % playersInserted
 
+connection  = utils.connectToDB()
+
 # --- PARSE ALL FILES IN A DIRECTORY --- #
 rootDirectory = "../FileGetter/html/"
 
@@ -528,7 +529,7 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
                           (filename, leagueDirectory, seasonDirectory)
 
                     startTime = time.time()
-                    parseFile(currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
+                    parseFile(connection, currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
                     endTime = time.time()
 
                     print "Parsed file %s, legue: %s, season: %s | Time spent %f s" %\
