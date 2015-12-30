@@ -18,9 +18,8 @@ from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
 
 
-def parseAllPlayerClubSeasonDetails(seasonId='all'):
-    connection = utils.connectToDB()
-    cursor     = connection.cursor()
+def parseAllPlayerClubSeasonDetails(connection, seasonId='all'):
+    cursor = connection.cursor()
 
     if(seasonId != 'all'):
         cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs WHERE pcs.idS = ?", seasonId)
@@ -545,4 +544,4 @@ for dirname1, dirnames1, filenames1 in os.walk(rootDirectory):
 
 
 # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
-parseAllPlayerClubSeasonDetails()
+parseAllPlayerClubSeasonDetails(connection)
