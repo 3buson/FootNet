@@ -2,6 +2,8 @@
 *.png
 *.jpg
 *.adj
+*.net
+*.edge
 
 .idea/
 fileGetter/.idea/
