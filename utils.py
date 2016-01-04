@@ -134,7 +134,7 @@ def createPlayerEdgeListFromDB(filename):
 
     finally:
         endTime = time.time()
-        print "Edge list exported, time spend %f s" % (endTime - startTime)
+        print "Edge list exported, time spent %f s" % (endTime - startTime)
         file.close()
 
 def getCountriesDics():
