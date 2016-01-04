@@ -2,6 +2,7 @@ __author__ = 'matic'
 
 import time
 import pyodbc
+from datetime import date
 
 import constants
 
@@ -18,6 +19,45 @@ def connectToDB():
         time.sleep(1)
 
     return connection
+
+
+def calculatePlayersWeight(playerId1, playerId2, playersInfo):
+    weight         = 0
+    inflationRatio = 2.11 / 100 # average inflation ratio per year (percent)
+
+
+    if(len(playersInfo[playerId1]) > len(playersInfo[playerId2])):
+        playedMoreSeasons = playerId1
+        playedLessSeasons = playerId2
+    else:
+        playedMoreSeasons = playerId2
+        playedLessSeasons = playerId1
+
+
+    for currentSeason in playersInfo[playedLessSeasons]:
+        if(playersInfo[playedMoreSeasons].has_key(currentSeason)):
+            if(playersInfo[playedMoreSeasons][currentSeason][2] == playersInfo[playedLessSeasons][currentSeason][2]):
+
+                playerValue1 = playersInfo[playedLessSeasons][currentSeason][4]
+                playerValue2 = playersInfo[playedMoreSeasons][currentSeason][4]
+
+                inflation = 1 + (inflationRatio * (date.today().year - 2000 - currentSeason))
+
+                if(not playerValue1):
+                    playerValue1 = 1
+                # take inflation into account
+                else:
+                    playerValue1 = float(playerValue1) * inflation
+
+                if(not playerValue2):
+                    playerValue2 = 1
+                # take inflation into account
+                else:
+                    playerValue2 = float(playerValue2) * inflation
+
+                weight += (playerValue1 + playerValue2) / 1000000.0
+
+    return weight
 
 def createPlayerEdgeListFromDB(filename):
     print "Exporting edge list"
@@ -36,11 +76,28 @@ def createPlayerEdgeListFromDB(filename):
         playerIndices = dict()
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
-        # output all the player IDs and their names
+        # get all player info
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM footballnetwork.playerclubseason pcs JOIN player p USING (idP) ORDER BY idP, idS")
+        playersData = cursor.fetchall()
+        playersInfo = dict()
+
+        # rearange player info into a dict
+        for playerData in playersData:
+            seasonId         = int(playerData[1])
+            currentPlayerIdx = int(playerData[0])
+
+            if(not playersInfo.has_key(currentPlayerIdx)):
+                playersInfo[currentPlayerIdx] = dict()
+
+            playersInfo[currentPlayerIdx][seasonId] = playerData
+
+
+        # output all the player IDs, their names and age
         for player in players:
             if(player[0] > 0):
+                playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                file.write("# %d \"%s\"\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])])))
+                file.write("# %d \"%s\" %d\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])]), playerAge))
 
                 playerIdx += 1
 
@@ -65,7 +122,11 @@ def createPlayerEdgeListFromDB(filename):
                 for linkedPlayer in linkedPlayerIds:
                     if(linkedPlayer > 0):
                         if playerIndices[playerId] < playerIndices[linkedPlayer]:
-                            file.write("%s %s\n" % (playerIndices[playerId], playerIndices[linkedPlayer]))
+                            playerId1 = playerIndices[playerId]
+                            playerId2 = playerIndices[linkedPlayer]
+                            weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo)
+
+                            file.write("%s %s %f\n" % (playerId1, playerId2, weight))
 
     except Exception, e:
         print "Exception occurred!", e
@@ -115,4 +176,8 @@ def checkIfPlayerExists(connection, playerId):
         return exists
 
 
-# createPlayerEdgeListFromDB("EPLLaLiga131415")
+def main():
+    createPlayerEdgeListFromDB("FootNet.adj")
+
+if __name__ == "__main__":
+    main()
