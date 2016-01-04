@@ -136,11 +136,11 @@ def analyzeMisc(FNGraph):
 
 def main():
     FNGraph = snap.LoadEdgeList(snap.PUNGraph, "EPLLaLiga131415")
-    analyzeCloseness(FNGraph)
-    analyzePageRank(FNGraph)
-    analyzeBetweenness(FNGraph)
-    analyzeDegrees(FNGraph)
-    analyzeMisc(FNGraph)
+    #analyzeCloseness(FNGraph)
+    #analyzePageRank(FNGraph)
+    #analyzeBetweenness(FNGraph)
+    #analyzeDegrees(FNGraph)
+    #analyzeMisc(FNGraph)
 
 
 if __name__ == "__main__":

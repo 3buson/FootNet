@@ -28,13 +28,15 @@ class Player:
     def dbInsert(self, connection):
         cursor = connection.cursor()
 
+        countriesDict = utils.getCountriesDics()
+
         if(self.nationality == ''):
             self.nationality = 'Unknown'
 
-        if(constants.countriesDict.has_key(self.nationality)):
-            idC = constants.countriesDict[self.nationality]
+        if(countriesDict.has_key(self.nationality)):
+            idC = countriesDict[self.nationality]
         else:
-            idC = constants.countriesDict['Unknown']
+            idC = countriesDict['Unknown']
 
         try:
             cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

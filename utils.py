@@ -3,6 +3,7 @@ __author__ = 'matic'
 import time
 import pyodbc
 from datetime import date
+import networkx as nx
 
 import constants
 
@@ -174,6 +175,29 @@ def checkIfPlayerExists(connection, playerId):
 
     finally:
         return exists
+
+
+def createGraphFromEdgeList(filename):
+    undirectedGraph = nx.Graph()
+
+    with open(filename) as f:
+        skipped = 0
+        edges = 0
+        for line in f:
+            if(line[0] != '#'):
+                edges += 1
+                [node1, node2] = line.split()
+                undirectedGraph.add_edge(int(node1), int(node2), weight=0)
+            else:
+                skipped += 1
+
+    print "Read filename %s, skipped %d lines" %\
+          (filename, skipped)
+    print "Graph has %d nodes and %d edges" %\
+          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
+    print "Edges in edge list %d" % edges
+
+    return undirectedGraph
 
 
 def main():
