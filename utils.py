@@ -65,7 +65,6 @@ def createPlayerEdgeListFromDB(filename):
 
     startTime = time.time()
 
-    file       = open(filename, 'w')
     connection = connectToDB()
 
     try:
@@ -74,7 +73,11 @@ def createPlayerEdgeListFromDB(filename):
 
         players       = cursor.fetchall()
         playerIdx     = 1
+        numNodes      = 0
+        numEdges      = 0
         playerIndices = dict()
+        playerList    = list()
+        edgeList      = list()
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
@@ -92,17 +95,16 @@ def createPlayerEdgeListFromDB(filename):
 
             playersInfo[currentPlayerIdx][seasonId] = playerData
 
-
-        # output all the player IDs, their names and age
+        # save all the player IDs, their names and age to a list of strings
         for player in players:
             if(player[0] > 0):
                 playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                file.write("# %d \"%s\" %d\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])]), playerAge))
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])]), playerAge))
 
                 playerIdx += 1
 
-        # output adjacency list
+        # save adjacency list to a list of strings
         for player in players:
             playerId = player[0]
 
@@ -127,7 +129,25 @@ def createPlayerEdgeListFromDB(filename):
                             playerId2 = playerIndices[linkedPlayer]
                             weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo)
 
-                            file.write("%s %s %f\n" % (playerId1, playerId2, weight))
+                            edgeList.append("%s %s %f\n" % (playerId1, playerId2, weight))
+                            numEdges += 1
+
+        # output starting comments - number of nodes and edges, format
+        # output player list
+        # output edge list
+        cursor.execute("SELECT COUNT(idP) FROM footballnetwork.player")
+        numNodes = cursor.fetchone()
+
+        file = open(filename, 'w')
+        file.write("# 'FootNet' undirected weighted network\n")
+        file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
+        file.write("# By Matevz Lenic & Matic Tribuson\n")
+
+        for playerEntry in playerList:
+            file.write(playerEntry)
+
+        for edgeEntry in edgeList:
+            file.write(edgeEntry)
 
     except Exception, e:
         print "Exception occurred!", e
