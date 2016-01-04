@@ -1,6 +1,7 @@
 *.pyc
 *.png
 *.jpg
+*.adj
 
 .idea/
 fileGetter/.idea/
