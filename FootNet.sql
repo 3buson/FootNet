@@ -361,7 +361,9 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(12, 225, 'SuperLeague'),
 	(13, 238, 'SuperLig'),
 	(14, 268, 'MajorLeagueSoccer'),
-	(15, 90, 'SuperLeagueGreece');
+	(15, 90, 'SuperLeagueGreece'),
+	(16, 30, 'SerieABrazil'),
+	(17, 10, 'TorneoInicial');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 

@@ -25,6 +25,8 @@ leagues['Switzerland'] = 'SuperLeague'
 leagues['Turkey']      = 'SuperLig'
 leagues['USA']         = 'MajorLeagueSoccer'
 leagues['Greece']      = 'SuperLeagueGreece'
+leagues['Brazil']      = 'SerieABrazil'
+leagues['Argentina']   = 'TorneoInicial'
 
 
 leagueIds                         = dict()
@@ -43,6 +45,8 @@ leagueIds['SuperLeague']          = 12
 leagueIds['SuperLig']             = 13
 leagueIds['MajorLeagueSoccer']    = 14
 leagueIds['SuperLeagueGreece']    = 15
+leagueIds['SerieABrazil']         = 16
+leagueIds['TorneoInicial']        = 17
 
 
 # --- SEASONS --- #
