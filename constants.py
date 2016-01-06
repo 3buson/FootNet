@@ -368,6 +368,52 @@ clubDictGRE['IRA'] = 47     # Iraklis Thessaloniki
 clubDictGRE['KOM'] = 7185   # Panthrakikos Komotini
 clubDictGRE['APO'] = 2672   # APO Levadiakos
 
+# BRAZILIAN SERIE A
+clubDictBRA        = dict()
+clubDictBRA['COR'] = 199    # Sport Club Corinthians Paulista
+clubDictBRA['PAL'] = 1023   # Sociedade Esportiva Palmeiras
+clubDictBRA['CRU'] = 609    # Cruzeiro Esporte Clube
+clubDictBRA['MIN'] = 330    # Clube Atletico Mineiro
+clubDictBRA['FLU'] = 2462   # Fluminense Football Club
+clubDictBRA['INT'] = 6600   # Sport Club Internacional
+clubDictBRA['SAO'] = 585    # Sao Paulo Futebol Clube
+clubDictBRA['GRE'] = 210    # Gremio Foot-Ball Porto Alegrense
+clubDictBRA['SAN'] = 221    # Santos FC
+clubDictBRA['FLA'] = 614    # Clube de Regatas do Flamengo
+clubDictBRA['PAR'] = 679    # Atletico Paranaense
+clubDictBRA['COT'] = 776    # Coritiba Foot Ball Club
+clubDictBRA['FIG'] = 4064   # Figueirense Futebol Clube
+clubDictBRA['REC'] = 8718   # Sport Club do Recife
+clubDictBRA['BOT'] = 537    # Botafogo de Futebol e Regatas
+clubDictBRA['PON'] = 1134   # Associacao Atletica Ponte Preta
+clubDictBRA['VIT'] = 2125   # Esporte Clube Vitoria
+clubDictBRA['CHA'] = 17776  # Associacao Chapecoense de Futebol
+clubDictBRA['AME'] = 2863   # America Futebol Clube (MG)
+clubDictBRA['SCR'] = 1785   # Santa Cruz Futebol Clube (PE)
+
+# ARGENTINIAN TORNEO INICIAL
+clubDictARG        = dict()
+clubDictARG['BOC'] = 189    # Club Atletico Boca Juniors
+clubDictARG['SLO'] = 1775   # Club Atletico San Lorenzo de Almagro
+clubDictARG['RPL'] = 209    # Club Atletico River Plate
+clubDictARG['NOB'] = 1286   # Club Atletico Newell's Old Boys
+clubDictARG['EST'] = 288    # Estudiantes de La Plata
+clubDictARG['AVS'] = 1029   # Club Atletico Velez Sarsfield
+clubDictARG['LAN'] = 333    # Club Atletico Lanus
+clubDictARG['RAC'] = 1444   # Racing Club de Avellaneda
+clubDictARG['ROS'] = 1418   # Club Atletico Rosario Central
+clubDictARG['ATI'] = 11831  # Club Atletico Tigre
+clubDictARG['ARS'] = 4673   # Arsenal de Sarandi FC
+clubDictARG['QUI'] = 1826   # Quilmes Atletico Club
+clubDictARG['BAN'] = 830    # Club Atletico Banfield
+clubDictARG['DEP'] = 12574  # Club Deportivo Godoy Cruz
+clubDictARG['IND'] = 1234   # CA Independiente de Avellaneda
+clubDictARG['RAF'] = 10233  # Atletice de Rafaela
+clubDictARG['COR'] = 2417   # Belgrano de Cordoba
+clubDictARG['BLA'] = 7468   # Olimpo de Bahia Blanca
+clubDictARG['JUS'] = 2402   # Debensa Y Justicia
+clubDictARG['ESG'] = 1106   # Club de Gimnasia Y Esgrima La PLata
+
 
 # DICT OF CLUB DICTS
 clubs                         = dict()
@@ -386,3 +432,5 @@ clubs['SuperLeague']          = clubDictSWI
 clubs['SuperLig']             = clubDictTUR
 clubs['MajorLeagueSoccer']    = clubDictUSA
 clubs['SuperLeagueGreece']    = clubDictGRE
+clubs['SerieABrazil']         = clubDictBRA
+clubs['TorneoInicial']        = clubDictARG
