@@ -40,7 +40,7 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         if(league == 'MajorLeagueSoccer'):
             url = baseURL + `clubId` + '?saison_id=' + `(int('20' + season) - 1)`
 
-        urlgrabber.urlgrab(url, filename)
+        urlgrabber.urlgrab(url, filename, retries=5)
 
 def main():
     for season in constants.seasons.keys():

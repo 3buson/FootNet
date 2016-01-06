@@ -40,7 +40,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
     pcs.idS = seasonId
 
     url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + `seasonId` + '/plus/1'
-    playerHTML = urlgrabber.urlopen(url)
+    playerHTML = urlgrabber.urlopen(url, retries=10)
     document   = pq(playerHTML.read())
 
     playerHTML.close()
