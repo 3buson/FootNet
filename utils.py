@@ -2,8 +2,9 @@ __author__ = 'matic'
 
 import time
 import pyodbc
-from datetime import date
 import networkx as nx
+from datetime import date
+from collections import deque
 
 import constants
 
@@ -233,7 +234,9 @@ def calculatePageRank(graph):
     return ranking
 
 
-def calculateBetweennessCentrality(graph, N):
+def calculateBetweennessCentrality(graph):
+    N = graph.number_of_nodes()
+
     cb = dict()
 
     # initialaze cb to zero
@@ -295,7 +298,9 @@ def calculateBetweennessCentrality(graph, N):
     return cb
 
 
-def calculateBridgenessCentrality(graph, N):
+def calculateBridgenessCentrality(graph):
+    N = graph.number_of_nodes()
+
     cb = dict()
 
     # initialaze cb to zero
