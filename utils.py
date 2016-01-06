@@ -60,6 +60,7 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo):
 
     return weight
 
+
 def createPlayerEdgeListFromDB(filename):
     print "Exporting edge list"
 
@@ -157,6 +158,7 @@ def createPlayerEdgeListFromDB(filename):
         print "Edge list exported, time spent %f s" % (endTime - startTime)
         file.close()
 
+
 def getCountriesDics():
     cDict = dict()
 
@@ -177,6 +179,7 @@ def getCountriesDics():
     finally:
         return cDict
 
+
 def checkIfPlayerExists(connection, playerId):
     exists = False
 
@@ -195,6 +198,165 @@ def checkIfPlayerExists(connection, playerId):
 
     finally:
         return exists
+
+
+def calculatePageRank(graph):
+    ranking    = dict()
+    newRanking = dict()
+
+    # set all ranking to 1
+    for node in graph.nodes():
+        ranking[node] = 1
+
+    iterations = 0
+
+    while iterations < 50:
+        if(iterations % 10 == 0):
+            print "Iteration %d" % iterations
+
+        sum = 0
+
+        for i in graph.nodes():
+            value = 0
+            for j in graph.neighbors(i):
+                value += 0.85 * ranking[j] / graph.degree(j)
+
+            sum += value
+            newRanking[i] = value
+
+        for k in graph.nodes():
+            ranking[k] = ranking[k] + (1.0 - sum) / graph.number_of_nodes()
+
+        ranking = newRanking
+
+        iterations += 1
+    return ranking
+
+
+def calculateBetweennessCentrality(graph, N):
+    cb = dict()
+
+    # initialaze cb to zero
+    for i in range(1, N):
+        cb[i] = 0
+
+    for node in graph.nodes():
+        if(node % 500 == 0):
+            print "Processed %d nodes" % (node)
+
+        S = list()
+        P = list()
+        Q = deque()
+
+        sigma = dict()
+        d     = dict()
+
+        Q.append(node)
+
+        # initialize structures for each node
+        for i in range(1, N):
+            P.append(list())
+            sigma[i] = 0
+            d[i]     = -1
+
+        # just append another empty list because nodes start with 1
+        # we will never use P[0] but that's fine
+        P.append(list())
+
+        sigma[node] = 1
+        d[node]     = 0
+
+        while len(Q) > 0:
+            v = Q.popleft()
+            S.append(v)
+
+            for neighbor in graph.neighbors(v):
+                # has neighbor been traversed before?
+                if(d[neighbor] < 0):
+                    Q.append(neighbor)
+                    d[neighbor] = d[v] + 1
+
+                # is shortest path to neighbor through v?
+                if(d[neighbor] == d[v] + 1):
+                    sigma[neighbor] += sigma[v]
+                    P[neighbor].append(v)
+
+        delta = dict()
+        for i in range(1, N):
+            delta[i] = 0
+
+        while len(S) > 0:
+            w = S.pop()
+            for v in P[w]:
+                delta[v] += (sigma[v] / float(sigma[w])) * (1 + delta[w])
+                if(w != node):
+                    cb[w] += delta[w]
+
+    return cb
+
+
+def calculateBridgenessCentrality(graph, N):
+    cb = dict()
+
+    # initialaze cb to zero
+    for i in range(1, N):
+        cb[i] = 0
+
+    for node in graph.nodes():
+        sp = nx.shortest_path_length(graph, node)
+
+        if(node % 500 == 0):
+            print "Processed %d nodes" % (node)
+
+        S = list()
+        P = list()
+        Q = deque()
+
+        sigma = dict()
+        d     = dict()
+
+        Q.append(node)
+
+        # initialize structures for each node
+        for i in range(1, N):
+            P.append(list())
+            sigma[i] = 0
+            d[i]     = -1
+
+        # just append another empty list because nodes start with 1
+        # we will never use P[0] but that's fine
+        P.append(list())
+
+        sigma[node] = 1
+        d[node]     = 0
+
+        while len(Q) > 0:
+            v = Q.popleft()
+            S.append(v)
+
+            for neighbor in graph.neighbors(v):
+                # has neighbor been traversed before?
+                if(d[neighbor] < 0):
+                    Q.append(neighbor)
+                    d[neighbor] = d[v] + 1
+
+                # is shortest path to neighbor through v?
+                if(d[neighbor] == d[v] + 1):
+                    sigma[neighbor] += sigma[v]
+                    P[neighbor].append(v)
+
+        delta = dict()
+        for i in range(1, N):
+            delta[i] = 0
+
+        while len(S) > 0:
+            w = S.pop()
+            for v in P[w]:
+                delta[v] += (sigma[v] / float(sigma[w])) * (1 + delta[w])
+                if(sp[w] > 1):
+                    cb[w] += delta[w]
+
+    return cb
 
 
 def createGraphFromEdgeList(filename):
