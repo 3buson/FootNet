@@ -62,6 +62,52 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo):
     return weight
 
 
+def createGraphFromEdgeList(filename):
+    undirectedGraph = nx.Graph()
+
+    with open(filename) as f:
+        skipped = 0
+        edges = 0
+        for line in f:
+            if(line[0] != '#'):
+                edges += 1
+                [node1, node2] = line.split()
+                undirectedGraph.add_edge(int(node1), int(node2), weight=0)
+            else:
+                skipped += 1
+
+    print "Read filename %s, skipped %d lines" %\
+          (filename, skipped)
+    print "Graph has %d nodes and %d edges" %\
+          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
+    print "Edges in edge list %d" % edges
+
+    return undirectedGraph
+
+
+def createWeightedGraphFromEdgeList(filename):
+    undirectedGraph = nx.Graph()
+
+    with open(filename) as f:
+        skipped = 0
+        edges = 0
+        for line in f:
+            if(line[0] != '#'):
+                edges += 1
+                [node1, node2, weight] = line.split()
+                undirectedGraph.add_edge(int(node1), int(node2), weight=weight)
+            else:
+                skipped += 1
+
+    print "Read filename %s, skipped %d lines" %\
+          (filename, skipped)
+    print "Graph has %d nodes and %d edges" %\
+          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
+    print "Edges in edge list %d" % edges
+
+    return undirectedGraph
+
+
 def createPlayerEdgeListFromDB(filename):
     print "Exporting edge list"
 
@@ -362,29 +408,6 @@ def calculateBridgenessCentrality(graph):
                     cb[w] += delta[w]
 
     return cb
-
-
-def createGraphFromEdgeList(filename):
-    undirectedGraph = nx.Graph()
-
-    with open(filename) as f:
-        skipped = 0
-        edges = 0
-        for line in f:
-            if(line[0] != '#'):
-                edges += 1
-                [node1, node2] = line.split()
-                undirectedGraph.add_edge(int(node1), int(node2), weight=0)
-            else:
-                skipped += 1
-
-    print "Read filename %s, skipped %d lines" %\
-          (filename, skipped)
-    print "Graph has %d nodes and %d edges" %\
-          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
-    print "Edges in edge list %d" % edges
-
-    return undirectedGraph
 
 
 def main():
