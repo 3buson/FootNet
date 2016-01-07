@@ -67,7 +67,8 @@ def createGraphFromEdgeList(filename):
 
     with open(filename) as f:
         skipped = 0
-        edges = 0
+        edges   = 0
+
         for line in f:
             if(line[0] != '#'):
                 edges += 1
@@ -258,7 +259,7 @@ def calculatePageRank(graph):
 
     iterations = 0
 
-    while iterations < 50:
+    while iterations < 30:
         if(iterations % 10 == 0):
             print "[PageRank]  Iteration %d" % iterations
 

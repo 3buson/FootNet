@@ -15,7 +15,7 @@ def main():
 
     print FNetwork.edges(data=True)[0]
 
-    print "[Analyzer] calculating pagerank..."
+    print "[Analyzer]  calculating pagerank..."
     # pagerank = nx.pagerank(FNetwork)
     pagerank = utils.calculatePageRank(FNetwork)
 
