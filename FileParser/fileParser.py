@@ -27,11 +27,21 @@ def parseAllPlayerClubSeasonDetails(connection, seasonId='all'):
         cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs")
 
     playersSeasons = cursor.fetchall()
+    entries        = len(playersSeasons)
+    processed      = 0
 
-    print "Entries to process: %d" % len(playersSeasons)
+    print "Entries to process: %d" % entries
 
     for playerSeason in playersSeasons:
-        parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1])
+        percent = float(processed) / entries * 100.0
+
+        if(processed % 50 == 0):
+            print "\nParsed %f%% player club season details\n" % (percent)
+
+        if(percent > 14.8):
+            if(playerSeason[0] != 26461):
+                parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1])
+        processed += 1
 
 
 def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
@@ -39,9 +49,15 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
     pcs.idP = playerId
     pcs.idS = seasonId
 
-    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + `seasonId` + '/plus/1'
+    if(seasonId < 10):
+        seasonId = '0' + `seasonId`
+    else:
+        seasonId = `seasonId`
+
+    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + seasonId + '/plus/1'
     playerHTML = urlgrabber.urlopen(url, retries=10)
     document   = pq(playerHTML.read())
+
 
     playerHTML.close()
 
@@ -49,7 +65,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
         print "Player details not available"
         return
 
-    print "Parsing player club season details for player %d, season %d..." % (playerId, seasonId)
+    print "Parsing player club season details for player %d, season %s..." % (playerId, seasonId)
 
     fieldIdx = 0
 
