@@ -111,7 +111,7 @@ def createWeightedGraphFromEdgeList(filename):
 
 
 def createPlayerEdgeListFromDB(filename):
-    print "Exporting edge list"
+    print "Exporting player edge list"
 
     startTime = time.time()
 
@@ -123,7 +123,6 @@ def createPlayerEdgeListFromDB(filename):
 
         players       = cursor.fetchall()
         playerIdx     = 1
-        numNodes      = 0
         numEdges      = 0
         playerIndices = dict()
         playerList    = list()
@@ -189,7 +188,7 @@ def createPlayerEdgeListFromDB(filename):
         numNodes = cursor.fetchone()
 
         file = open(filename, 'w')
-        file.write("# 'FootNet' undirected weighted network\n")
+        file.write("# 'FootNetPlayer' undirected weighted network\n")
         file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
         file.write("# By Matevz Lenic & Matic Tribuson\n")
 
@@ -207,6 +206,85 @@ def createPlayerEdgeListFromDB(filename):
         print "Edge list exported, time spent %f s" % (endTime - startTime)
         file.close()
 
+
+def createClubEdgeListFromDB(filename):
+    print "Exporting club transfer edge list"
+
+    startTime = time.time()
+
+    connection = connectToDB()
+
+    try:
+        file = open(filename, 'w')
+
+        cursor = connection.cursor()
+        cursor.execute("SELECT idClub, nameClub FROM club ORDER BY idClub")
+
+        clubs = cursor.fetchall()
+
+        numEdges         = 0
+        clubList         = list()
+        edgeList         = list()
+        clubNames        = dict()
+        clubTransfersIn  = dict()
+        clubTransfersOut = dict()
+
+        for club in clubs:
+            clubNames[club[0]]        = club[1]
+            clubTransfersIn[club[0]]  = dict()
+            clubTransfersOut[club[0]] = dict()
+
+            for club2 in clubs:
+                clubTransfersIn[club[0]][club2[0]]  = 0
+                clubTransfersOut[club[0]][club2[0]] = 0
+
+        cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
+
+        playerClubSeasons = cursor.fetchall()
+
+        for i in range(0, len(playerClubSeasons) - 1):
+            playerId1 = playerClubSeasons[i][0]
+            clubId1   = playerClubSeasons[i][1]
+
+            playerId2 = playerClubSeasons[i+1][0]
+            clubId2   = playerClubSeasons[i+1][1]
+
+            if(playerId1 == playerId2 and clubId1 != clubId2):
+                clubTransfersIn[clubId1][clubId2]  += 1
+                clubTransfersOut[clubId2][clubId1] += 1
+
+        for club in clubs:
+            clubList.append("# %d \"%s\"\n" % (club[0], club[1]))
+
+        for clubInEntry1 in clubTransfersIn:
+            for clubInEntry2 in clubTransfersIn:
+                if(clubTransfersIn[clubInEntry1][clubInEntry2] != 0):
+                    edgeList.append("%d %d %d\n" % (clubInEntry1, clubInEntry2, clubTransfersIn[clubInEntry1][clubInEntry2]))
+                    numEdges += 1
+
+        # output starting comments - number of nodes and edges, format
+        # output player list
+        # output edge list
+        cursor.execute("SELECT COUNT(idClub) FROM footballnetwork.club")
+        numNodes = cursor.fetchone()
+
+        file.write("# 'FootNetClub' undirected weighted network\n")
+        file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
+        file.write("# By Matevz Lenic & Matic Tribuson\n")
+
+        for playerEntry in clubList:
+            file.write(playerEntry)
+
+        for edgeEntry in edgeList:
+            file.write(edgeEntry)
+
+    except Exception, e:
+        print "Exception occurred!", e
+
+    finally:
+        endTime = time.time()
+        print "Edge list exported, time spent %f s" % (endTime - startTime)
+        file.close()
 
 def getCountriesDics():
     cDict = dict()
