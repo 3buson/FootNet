@@ -9,8 +9,6 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    #utils.createPlayerEdgeListFromDB("FootNet.adj")
-
     # FNetwork = utils.createWeightedGraphFromEdgeList('../FootNet.adj')
     #
     # print FNetwork.edges(data=True)[0]
@@ -25,6 +23,8 @@ def main():
     # # print top 25
     # for i in range(0, 25):
     #     print pagerank[i]
+
+    #utils.createPlayerEdgeListFromDB("FootNet.adj")
 
     utils.createClubEdgeListFromDB('ClubNet.adj')
 
