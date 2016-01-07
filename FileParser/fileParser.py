@@ -18,11 +18,16 @@ from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
 
 
-def parseAllPlayerClubSeasonDetails(connection, seasonId='all'):
+def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
     cursor = connection.cursor()
 
     if(seasonId != 'all'):
-        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs WHERE pcs.idS = ?", seasonId)
+        if(leagueId == 'all'):
+            cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs WHERE pcs.idS = ?", seasonId)
+        else:
+            cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? AND c.idL = ?", seasonId, leagueId)
+    elif(leagueId != 'all'):
+        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL = ?", leagueId)
     else:
         cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs")
 
