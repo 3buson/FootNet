@@ -408,10 +408,3 @@ def calculateBridgenessCentrality(graph):
                     cb[w] += delta[w]
 
     return cb
-
-
-def main():
-    createPlayerEdgeListFromDB("FootNet.adj")
-
-if __name__ == "__main__":
-    main()
