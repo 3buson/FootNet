@@ -90,7 +90,8 @@ def createWeightedGraphFromEdgeList(filename):
 
     with open(filename) as f:
         skipped = 0
-        edges = 0
+        edges   = 0
+
         for line in f:
             if(line[0] != '#'):
                 edges += 1
@@ -259,7 +260,7 @@ def calculatePageRank(graph):
 
     while iterations < 50:
         if(iterations % 10 == 0):
-            print "Iteration %d" % iterations
+            print "[PageRank]  Iteration %d" % iterations
 
         sum = 0
 
@@ -291,7 +292,7 @@ def calculateBetweennessCentrality(graph):
 
     for node in graph.nodes():
         if(node % 500 == 0):
-            print "Processed %d nodes" % (node)
+            print "[Betweenness]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
@@ -357,7 +358,7 @@ def calculateBridgenessCentrality(graph):
         sp = nx.shortest_path_length(graph, node)
 
         if(node % 500 == 0):
-            print "Processed %d nodes" % (node)
+            print "[Bridgeness]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
