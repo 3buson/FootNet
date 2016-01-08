@@ -23,13 +23,13 @@ def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
 
     if(seasonId != 'all'):
         if(leagueId == 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs WHERE pcs.idS = ?", seasonId)
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? ORDER BY pcs.idP", seasonId)
         else:
-            cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? AND c.idL = ?", seasonId, leagueId)
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? AND c.idL = ? ORDER BY pcs.idP", seasonId, leagueId)
     elif(leagueId != 'all'):
-        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL = ?", leagueId)
+        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL = ? ORDER BY pcs.idP", leagueId)
     else:
-        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs")
+        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs ORDER BY pcs.idP")
 
     playersSeasons = cursor.fetchall()
     entries        = len(playersSeasons)
@@ -43,25 +43,34 @@ def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
         if(processed % 50 == 0):
             print "\nParsed %f%% player club season details\n" % (percent)
 
-        if(percent > 14.8):
-            if(playerSeason[0] != 26461):
-                parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1])
+        if(playerSeason[0] != 26461):
+            parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1], playerSeason[2])
         processed += 1
 
 
-def parsePlayerClubSeasonDetails(connection, playerId, seasonId):
+def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
     pcs     = PlayerClubSeason()
     pcs.idP = playerId
     pcs.idS = seasonId
+
+    # Major League Soccer season fix
+    if(leagueId == 14):
+        seasonId -= 1
 
     if(seasonId < 10):
         seasonId = '0' + `seasonId`
     else:
         seasonId = `seasonId`
 
-    url        = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + seasonId + '/plus/1'
-    playerHTML = urlgrabber.urlopen(url, retries=10)
-    document   = pq(playerHTML.read())
+    url = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + seasonId + '/plus/1'
+
+    try:
+        playerHTML = urlgrabber.urlopen(url, retries=10)
+    except Exception, e:
+        time.sleep(60)
+        playerHTML = urlgrabber.urlopen(url, retries=10)
+
+    document = pq(playerHTML.read())
 
 
     playerHTML.close()
