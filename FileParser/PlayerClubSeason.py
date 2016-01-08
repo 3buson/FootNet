@@ -38,7 +38,7 @@ class PlayerClubSeason:
                        self.penaltyGoals, self.concededGoals, self.cleanSheets, self.minutesPerGoal, self.minutesPlayed)
 
         except pyodbc.DatabaseError, e:
-            print "ERROR - DatabaseError", e
+            print "[PlayerClubSeason class]  ERROR - DatabaseError", e
             pass
 
         connection.commit()
@@ -53,7 +53,7 @@ class PlayerClubSeason:
                        self.cleanSheets, self.minutesPerGoal, self.minutesPlayed, self.idP, self.idS)
 
         except pyodbc.DatabaseError, e:
-            print "ERROR - DatabaseError", e
+            print "[PlayerClubSeason class]  ERROR - DatabaseError", e
             pass
 
         connection.commit()

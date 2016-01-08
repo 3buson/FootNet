@@ -20,7 +20,7 @@ class ClubSeason:
                        self.idS, self.idClub, self.ranking, self.value)
 
         except pyodbc.DatabaseError, e:
-            print "ERROR - DatabaseError", e
+            print "[ClubSeason class]  ERROR - DatabaseError", e
             pass
 
         connection.commit()

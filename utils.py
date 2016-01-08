@@ -1,6 +1,7 @@
 __author__ = 'matic'
 
 import time
+import traceback
 import pyodbc
 import networkx as nx
 from datetime import date
@@ -16,7 +17,8 @@ def connectToDB():
             connection = pyodbc.connect('DSN=FootNet')
 
         except Exception, e:
-            print "Error connecting to database. Trying again in 1 sec !", e
+            print "[DB connector]  Error connecting to database. Trying again in 1 sec !", e
+            traceback.print_exc()
 
         time.sleep(1)
 
@@ -77,11 +79,11 @@ def createGraphFromEdgeList(filename):
             else:
                 skipped += 1
 
-    print "Read filename %s, skipped %d lines" %\
+    print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
-    print "Graph has %d nodes and %d edges" %\
+    print "[Graph Creator]  Graph has %d nodes and %d edges" %\
           (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
-    print "Edges in edge list %d" % edges
+    print "[Graph Creator]  Edges in edge list %d" % edges
 
     return undirectedGraph
 
@@ -101,11 +103,11 @@ def createWeightedGraphFromEdgeList(filename):
             else:
                 skipped += 1
 
-    print "Read filename %s, skipped %d lines" %\
+    print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
-    print "Graph has %d nodes and %d edges" %\
+    print "[Graph Creator]  Graph has %d nodes and %d edges" %\
           (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
-    print "Edges in edge list %d" % edges
+    print "[Graph Creator]  Edges in edge list %d" % edges
 
     return undirectedGraph
 
@@ -118,6 +120,8 @@ def createPlayerEdgeListFromDB(filename):
     connection = connectToDB()
 
     try:
+        file = open(filename, 'w')
+
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM player")
 
@@ -149,7 +153,7 @@ def createPlayerEdgeListFromDB(filename):
             if(player[0] > 0):
                 playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([str(player[2]) , str(player[3])]), playerAge))
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('utf-8'), playerAge))
 
                 playerIdx += 1
 
@@ -187,7 +191,6 @@ def createPlayerEdgeListFromDB(filename):
         cursor.execute("SELECT COUNT(idP) FROM footballnetwork.player")
         numNodes = cursor.fetchone()
 
-        file = open(filename, 'w')
         file.write("# 'FootNetPlayer' undirected weighted network\n")
         file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
         file.write("# By Matevz Lenic & Matic Tribuson\n")
@@ -199,16 +202,17 @@ def createPlayerEdgeListFromDB(filename):
             file.write(edgeEntry)
 
     except Exception, e:
-        print "Exception occurred!", e
+        print "[Exporter]  Exception occurred!", e
+        traceback.print_exc()
 
     finally:
         endTime = time.time()
-        print "Edge list exported, time spent %f s" % (endTime - startTime)
+        print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
         file.close()
 
 
 def createClubEdgeListFromDB(filename):
-    print "Exporting club transfer edge list"
+    print "[Exporter]  Exporting club transfer edge list"
 
     startTime = time.time()
 
@@ -279,14 +283,15 @@ def createClubEdgeListFromDB(filename):
             file.write(edgeEntry)
 
     except Exception, e:
-        print "Exception occurred!", e
+        print "[Exporter]  Exception occurred!", e
+        traceback.print_exc()
 
     finally:
         endTime = time.time()
-        print "Edge list exported, time spent %f s" % (endTime - startTime)
+        print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
         file.close()
 
-def getCountriesDics():
+def getCountriesDict():
     cDict = dict()
 
     try:
@@ -300,7 +305,7 @@ def getCountriesDics():
             cDict[resultRow[1]] = resultRow[0]
 
     except pyodbc.DatabaseError, e:
-        print "ERROR - DatabaseError", e
+        print "[Countries mapper]  ERROR - DatabaseError", e
         pass
 
     finally:
@@ -320,7 +325,7 @@ def checkIfPlayerExists(connection, playerId):
             exists = True
 
     except pyodbc.DatabaseError, e:
-        print "ERROR - DatabaseError", e
+        print "[Player existance checker]  ERROR - DatabaseError", e
         pass
 
     finally:

@@ -48,9 +48,9 @@ def main():
             league = constants.leagues[country]
             fetchHTMLFiles(constants.clubs[league], league, constants.seasons[season])
 
-            print "\nFetched all HTML files for league %s\n" % league
+            print "\n[File Getter]  Fetched all HTML files for league %s\n" % league
 
-        print "\nFetched all HTML files for all leagues for season %s\n" % season
+        print "\n[File Getter]  Fetched all HTML files for all leagues for season %s\n" % season
 
 if __name__ == "__main__":
     main()

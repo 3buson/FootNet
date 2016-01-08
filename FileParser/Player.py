@@ -43,7 +43,7 @@ class Player:
                        self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber, self.height)
 
         except pyodbc.DatabaseError, e:
-            print "ERROR - DatabaseError", e
+            print "[Player class]  ERROR - DatabaseError", e
             pass
 
         connection.commit()

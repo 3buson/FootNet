@@ -35,13 +35,13 @@ def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
     entries        = len(playersSeasons)
     processed      = 0
 
-    print "Entries to process: %d" % entries
+    print "[File Parser - details parser]  Entries to process: %d" % entries
 
     for playerSeason in playersSeasons:
         percent = float(processed) / entries * 100.0
 
         if(processed % 50 == 0):
-            print "\nParsed %f%% player club season details\n" % (percent)
+            print "\n[File Parser - details parser]  Parsed %f%% player club season details\n" % (percent)
 
         if(playerSeason[0] != 26461):
             parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1], playerSeason[2])
@@ -76,10 +76,10 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
     playerHTML.close()
 
     if(len(document(".items")) < 1):
-        print "Player details not available"
+        print "[File Parser - details parser]  Player details not available"
         return
 
-    print "Parsing player club season details for player %d, season %s..." % (playerId, seasonId)
+    print "[File Parser - details parser]  Parsing player club season details for player %d, season %s..." % (playerId, seasonId)
 
     fieldIdx = 0
 
@@ -283,7 +283,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
 
             fieldIdx += 1
 
-    print "Updating player club season..."
+    print "[File Parser - details parser]  Updating player club season..."
 
     # print pcs.apps
     # print pcs.goals
@@ -310,7 +310,7 @@ def parseFile(connection, filename, league, season):
 
     # check if club squad table is present
     if(len(document(".items")) < 1 or len(document(".empty")) > 0):
-        print "Club squad not available"
+        print "[File Parser]  Club squad not available"
         return
 
     clubId          = filename.split("_",2)[1]
@@ -556,19 +556,19 @@ def main():
 
                     # loop through clubs
                     for filename in os.listdir(currentDirectory2):
-                        print "Parsing file %s, league: %s, season: %s..." %\
+                        print "[File Parser]  Parsing file %s, league: %s, season: %s..." %\
                               (filename, leagueDirectory, seasonDirectory)
 
                         startTime = time.time()
                         parseFile(connection, currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
                         endTime = time.time()
 
-                        print "Parsed file %s, league: %s, season: %s | Time spent %f s" %\
+                        print "[File Parser]  Parsed file %s, league: %s, season: %s | Time spent %f s" %\
                               (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
 
-                    print "\nParsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
+                    print "\n[File Parser]  Parsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
 
-            print "\nParsed all seasons for league %s\n" % leagueDirectory
+            print "\n[File Parser]  Parsed all seasons for league %s\n" % leagueDirectory
 
     # --- PARSE ONE FILE ONLY --- #
     # filename = "../FileGetter/html/LaLiga/15/VCF_1049"

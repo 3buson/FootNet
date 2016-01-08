@@ -18,6 +18,6 @@ class Club:
             cursor.execute("INSERT IGNORE INTO club(idClub, idL, nameClub) VALUES (?, ?, ?)",
                        self.idClub, self.idL, self.nameClub)
         except pyodbc.DatabaseError, e:
-            print "ERROR - DatabaseError", e
+            print "[Club class]  ERROR - DatabaseError", e
 
         connection.commit()
