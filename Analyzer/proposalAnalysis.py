@@ -19,7 +19,7 @@ def analyzeCloseness(FNGraph):
 
     # print top 25
     for i in range(0, 25):
-        print "\tMode %d \t Closeness: %f" %\
+        print "\tNode %d \t Closeness: %f" %\
             (nodesSortedByCloseness[i], closeness[nodesSortedByCloseness[i]])
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)

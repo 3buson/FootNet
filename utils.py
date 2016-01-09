@@ -162,7 +162,7 @@ def createPlayerEdgeListFromDB(filename):
             if(player[0] > 0):
                 playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('utf-8'), playerAge))
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('latin-1'), playerAge))
 
                 playerIdx += 1
 
@@ -267,7 +267,7 @@ def createClubEdgeListFromDB(filename):
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-            clubList.append("# %d \"%s\"\n" % (club[0], club[1].encode('utf-8')))
+            clubList.append("# %d \"%s\"\n" % (club[0], club[1].encode('latin-1')))
 
         for clubInEntry1 in clubTransfersIn:
             for clubInEntry2 in clubTransfersIn:
