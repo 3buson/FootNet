@@ -28,7 +28,7 @@ class Player:
     def dbInsert(self, connection):
         cursor = connection.cursor()
 
-        countriesDict = utils.getCountriesDics()
+        countriesDict = utils.getCountriesDict()
 
         if(self.nationality == ''):
             self.nationality = 'Unknown'
