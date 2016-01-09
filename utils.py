@@ -264,7 +264,7 @@ def createPlayerEdgeListFromDB(filename):
         file.close()
 
 
-def createClubEdgeListFromDB(filename, weightedByClubImportance=True):
+def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
 
     startTime = time.time()
@@ -307,7 +307,11 @@ def createClubEdgeListFromDB(filename, weightedByClubImportance=True):
 
 
         # add club average value to clubsInfo
-        cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 GROUP BY idClub ORDER BY idClub, idS")
+        if(seasons != 'all'):
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 GROUP BY idClub ORDER BY idClub, idS")
+        else:
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 AND cs.isS IN [?] GROUP BY idClub ORDER BY idClub, idS", ','.join(map(str, seasons)))
+
         clubValues = cursor.fetchall()
 
         for clubValue in clubValues:
@@ -318,15 +322,22 @@ def createClubEdgeListFromDB(filename, weightedByClubImportance=True):
             clubsInfo[currentClubIdx]['importance'].append(clubValue[2])
 
         # add club average ranking to clubsInfo
-        cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
+        if(seasons != 'all'):
+            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
+        else:
+            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND cs.isS IN [?] GROUP BY idClub ORDER BY idClub", ','.join(map(str, seasons)))
+
         clubRankings = cursor.fetchall()
 
         for clubRanking in clubRankings:
             currentClubIdx = clubIndices[clubRanking[0]]
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
+        if(seasons != 'all'):
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
+        else:
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in [?] ORDER BY idP, idS", ','.join(map(str, seasons)))
 
-        cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
         playerClubSeasons = cursor.fetchall()
 
         for i in range(0, len(playerClubSeasons) - 1):
