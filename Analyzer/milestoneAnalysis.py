@@ -9,24 +9,23 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    utils.createPlayerEdgeListFromDB("PlayerNet.adj")
-
     # utils.createClubEdgeListFromDB('ClubNet.adj')
+    # utils.createPlayerEdgeListFromDB("PlayerNet.adj")
 
-    FNetwork = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
+    playersNetwork = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
 
-    print FNetwork.edges(data=True)[0]
+    print playersNetwork.edges(data=True)[0]
 
-    print "[Analyzer]  calculating pagerank..."
-    pagerank = nx.pagerank(FNetwork)
-    # pagerank = utils.calculatePageRank(FNetwork)
+    print "[Analyzer]  calculating PageRank..."
+    playersPagerank = nx.pagerank(playersNetwork)
+    # playersPagerank = utils.calculatePageRank(FNetwork)
 
-    print "[Analyzer]  sorting pagerank dictionary..."
-    pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
+    print "[Analyzer]  sorting PageRank dictionary..."
+    playersPagerank = sorted(playersPagerank.items(), key=itemgetter(1), reverse=True)
 
     # print top 25
     for i in range(0, 25):
-        print pagerank[i]
+        print playersPagerank[i]
 
 if __name__ == "__main__":
     main()

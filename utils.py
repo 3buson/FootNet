@@ -99,7 +99,7 @@ def createWeightedGraphFromEdgeList(filename):
             if(line[0] != '#'):
                 edges += 1
                 [node1, node2, weight] = line.split()
-                undirectedGraph.add_edge(int(node1), int(node2), weight=weight)
+                undirectedGraph.add_edge(int(node1), int(node2), weight=float(weight))
             else:
                 skipped += 1
 
