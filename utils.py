@@ -137,9 +137,9 @@ def createPlayerEdgeListFromDB(filename):
         players       = cursor.fetchall()
         playerIdx     = 1
         numEdges      = 0
-        playerIndices = dict()
         playerList    = list()
         edgeList      = list()
+        playerIndices = dict()
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
@@ -236,13 +236,18 @@ def createClubEdgeListFromDB(filename):
         clubs = cursor.fetchall()
 
         numEdges         = 0
+        clubIdx          = 1
         clubList         = list()
         edgeList         = list()
         clubNames        = dict()
         clubTransfersIn  = dict()
         clubTransfersOut = dict()
+        clubIndices      = dict()
+        # clubIndices dictionary will be used to map consecutive ids for use in the network to real club ids
 
         for club in clubs:
+            clubIndices[club[0]] = clubIdx
+
             clubNames[club[0]]        = club[1]
             clubTransfersIn[club[0]]  = dict()
             clubTransfersOut[club[0]] = dict()
@@ -250,6 +255,8 @@ def createClubEdgeListFromDB(filename):
             for club2 in clubs:
                 clubTransfersIn[club[0]][club2[0]]  = 0
                 clubTransfersOut[club[0]][club2[0]] = 0
+
+            clubIdx += 1
 
         cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
 
@@ -267,12 +274,15 @@ def createClubEdgeListFromDB(filename):
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-            clubList.append("# %d \"%s\"\n" % (club[0], club[1].encode('latin-1')))
+            clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1].encode('latin-1')))
 
         for clubInEntry1 in clubTransfersIn:
             for clubInEntry2 in clubTransfersIn:
                 if(clubTransfersIn[clubInEntry1][clubInEntry2] != 0):
-                    edgeList.append("%d %d %d\n" % (clubInEntry1, clubInEntry2, clubTransfersIn[clubInEntry1][clubInEntry2]))
+                    clubId1 = clubIndices[clubInEntry1]
+                    clubId2 = clubIndices[clubInEntry2]
+
+                    edgeList.append("%d %d %d\n" % (clubId1, clubId2, clubTransfersIn[clubInEntry1][clubInEntry2]))
                     numEdges += 1
 
         # output starting comments - number of nodes and edges, format
@@ -375,11 +385,11 @@ def calculatePageRank(graph):
 
 
 def calculateBetweennessCentrality(graph):
-    N = graph.number_of_nodes()
+    N = graph.number_of_nodes() + 1
 
     cb = dict()
 
-    # initialaze cb to zero
+    # initialize cb to zero
     for i in range(1, N):
         cb[i] = 0
 
@@ -438,12 +448,78 @@ def calculateBetweennessCentrality(graph):
     return cb
 
 
-def calculateBridgenessCentrality(graph):
-    N = graph.number_of_nodes()
+def calculateWeightedBetweennessCentrality(graph):
+    N = graph.number_of_nodes() + 1
 
     cb = dict()
 
-    # initialaze cb to zero
+    # initialize cb to zero
+    for i in range(1, N):
+        cb[i] = 0
+
+    for node in graph.nodes():
+        if(node % 500 == 0):
+            print "[Betweenness]  Processed %d nodes" % (node)
+
+        S = list()
+        P = list()
+        Q = deque()
+
+        sigma = dict()
+        d     = dict()
+
+        Q.append(node)
+
+        # initialize structures for each node
+        for i in range(1, N):
+            P.append(list())
+            sigma[i] = 0
+            d[i]     = -1
+
+        # just append another empty list because nodes start with 1
+        # we will never use P[0] but that's fine
+        P.append(list())
+
+        sigma[node] = 1
+        d[node]     = 0
+
+        while len(Q) > 0:
+            v = Q.popleft()
+            S.append(v)
+
+            for neighbor in graph.neighbors(v):
+                # has neighbor been traversed before?
+                if(d[neighbor] < 0):
+                    Q.append(neighbor)
+                    # add inverse of price of the edge between neighbor and v
+                    # inverse because higher weight here is better
+                    d[neighbor] = d[v] + (1.0 / graph[v][neighbor]['weight'])
+
+                # is shortest path to neighbor through v?
+                if(d[neighbor] == d[v] + (1.0 / graph[v][neighbor]['weight'])):
+                    sigma[neighbor] += sigma[v]
+                    P[neighbor].append(v)
+
+        delta = dict()
+        for i in range(1, N):
+            delta[i] = 0
+
+        while len(S) > 0:
+            w = S.pop()
+            for v in P[w]:
+                delta[v] += (sigma[v] / float(sigma[w])) * (1 + delta[w])
+                if(w != node):
+                    cb[w] += delta[w]
+
+    return cb
+
+
+def calculateBridgenessCentrality(graph):
+    N = graph.number_of_nodes() + 1
+
+    cb = dict()
+
+    # initialize cb to zero
     for i in range(1, N):
         cb[i] = 0
 
