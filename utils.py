@@ -68,11 +68,7 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
                     playerValue2 = float(playerValue2) * inflation
 
                 if(withAge):
-                    print playerAge1
-                    print playerAge2
-                    print ((playerAge1 + playerAge2) / (constants.perspectiveAge * 2))
-                    exit()
-                    weight += ((playerValue1 + playerValue2) / 100000.0) / ((playerAge1 + playerAge2) / (constants.perspectiveAge * 2))
+                    weight += ((playerValue1 + playerValue2) / 100000.0) * ((playerAge1 + playerAge2) / (constants.careerMidAge * 2.0))
                 else:
                     weight += (playerValue1 + playerValue2) / 100000.0
 
@@ -227,7 +223,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
             if(player[0] > 0):
                 playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('utf-8'), playerAge))
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]), playerAge))
 
                 playerIdx += 1
 
@@ -259,7 +255,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
                         if playerIndices[playerId] < playerIndices[linkedPlayer]:
                             playerId1 = playerIndices[playerId]
                             playerId2 = playerIndices[linkedPlayer]
-                            weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo)
+                            weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo, withAge=True)
 
                             edgeList.append("%s %s %f\n" % (playerId1, playerId2, weight))
                             numEdges += 1
