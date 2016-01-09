@@ -17,7 +17,7 @@ def connectToDB():
             connection = pyodbc.connect('DSN=FootNet')
 
         except Exception, e:
-            print "[DB connector]  Error connecting to database. Trying again in 1 sec !", e
+            print "[DB connector]  Error connecting to database. Trying again in 1 sec.", e
             traceback.print_exc()
 
         time.sleep(1)
@@ -25,9 +25,14 @@ def connectToDB():
     return connection
 
 
-def calculatePlayersWeight(playerId1, playerId2, playersInfo):
+def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, withInflation=True):
     weight         = 0
-    inflationRatio = 2.11 / 100 # average inflation ratio per year (percent)
+    perspectiveAge = 18
+
+    if(withInflation):
+        inflationRatio = 2.11 / 100 # average inflation ratio per year (percent)
+    else:
+        inflationRatio = 0
 
 
     if(len(playersInfo[playerId1]) > len(playersInfo[playerId2])):
@@ -45,6 +50,9 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo):
                 playerValue1 = playersInfo[playedLessSeasons][currentSeason][4]
                 playerValue2 = playersInfo[playedMoreSeasons][currentSeason][4]
 
+                playerAge1 = date.today().year - playersInfo[playedLessSeasons][currentSeason][3]
+                playerAge2 = date.today().year - playersInfo[playedMoreSeasons][currentSeason][3]
+
                 inflation = 1 + (inflationRatio * (date.today().year - 2000 - currentSeason))
 
                 if(not playerValue1):
@@ -59,7 +67,14 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo):
                 else:
                     playerValue2 = float(playerValue2) * inflation
 
-                weight += (playerValue1 + playerValue2) / 1000000.0
+                if(withAge):
+                    print playerAge1
+                    print playerAge2
+                    print ((playerAge1 + playerAge2) / (perspectiveAge * 2))
+                    exit()
+                    weight += ((playerValue1 + playerValue2) / 100000.0) / ((playerAge1 + playerAge2) / (perspectiveAge * 2))
+                else:
+                    weight += (playerValue1 + playerValue2) / 100000.0
 
     return weight
 
@@ -79,8 +94,13 @@ def createGraphFromEdgeList(filename):
                 undirectedGraph.add_edge(int(node1), int(node2), weight=0)
             else:
                 skipped += 1
-                [nodeId, nodeName, nodeProperty] = line.split('"')
-                nodeData[int(nodeId)] = (nodeName, nodeProperty)
+                slicedLine = line.split('"')
+
+                if(len(slicedLine) > 2):
+                    [nodeId, nodeName, nodeProperty] = line.split('"')
+                    nodeData[int(nodeId)] = (nodeName, nodeProperty)
+
+                    undirectedGraph.add_node(nodeId)
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -112,6 +132,8 @@ def createWeightedGraphFromEdgeList(filename):
                     [nodeId, nodeName, nodeProperty] = slicedLine
                     nodeData[int(nodeId[2:])] = (nodeName, nodeProperty)
 
+                    undirectedGraph.add_node(nodeId)
+
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
     print "[Graph Creator]  Graph has %d nodes and %d edges" %\
@@ -122,7 +144,7 @@ def createWeightedGraphFromEdgeList(filename):
 
 
 def createPlayerEdgeListFromDB(filename):
-    print "Exporting player edge list"
+    print "[Exporter]  Exporting player edge list"
 
     startTime = time.time()
 
@@ -162,7 +184,7 @@ def createPlayerEdgeListFromDB(filename):
             if(player[0] > 0):
                 playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('latin-1'), playerAge))
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]).encode('utf-8'), playerAge))
 
                 playerIdx += 1
 
@@ -488,15 +510,25 @@ def calculateWeightedBetweennessCentrality(graph):
             S.append(v)
 
             for neighbor in graph.neighbors(v):
+                weight = graph[v][neighbor]['weight']
+
                 # has neighbor been traversed before?
                 if(d[neighbor] < 0):
                     Q.append(neighbor)
                     # add inverse of price of the edge between neighbor and v
                     # inverse because higher weight here is better
-                    d[neighbor] = d[v] + (1.0 / graph[v][neighbor]['weight'])
+                    if(weight != 0):
+                        d[neighbor] = d[v] + (1.0 / weight)
+                    else:
+                        d[neighbor] = d[v] + 1000
+
+                if(weight != 0):
+                    shortestPath = d[v] + (1.0 / weight)
+                else:
+                    shortestPath = d[v] + 1000
 
                 # is shortest path to neighbor through v?
-                if(d[neighbor] == d[v] + (1.0 / graph[v][neighbor]['weight'])):
+                if(d[neighbor] == shortestPath):
                     sigma[neighbor] += sigma[v]
                     P[neighbor].append(v)
 
