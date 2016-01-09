@@ -175,6 +175,9 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
 def createPlayerEdgeListFromDB(filename, seasons='all'):
     print "[Exporter]  Exporting player edge list"
 
+    if(seasons != 'all'):
+        seasonsString = ','.join(map(str, seasons))
+
     startTime = time.time()
 
     connection = connectToDB()
@@ -185,8 +188,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
         cursor = connection.cursor()
 
         if(seasons != 'all'):
-            cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (?)",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP" %
+                           seasonsString)
         else:
             cursor.execute("SELECT * FROM player")
 
@@ -200,8 +203,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
 
         # get all player info
         if(seasons != 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS IN (?) ORDER BY idP, idS",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP ORDER BY idP, idS" %
+                           seasonsString)
         else:
             cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) ORDER BY idP, idS")
 
@@ -234,8 +237,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
                 if(seasons != 'all'):
-                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? AND pcs.idS IN (?)",
-                                   playerId, ','.join(map(str, seasons)))
+                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = %d AND pcs.idS IN (%s)" %
+                                   (int(playerId), seasonsString))
                 else:
                     cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ?", playerId)
 
@@ -264,8 +267,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
         # output player list
         # output edge list
         if(seasons != 'all'):
-            cursor.execute("SELECT COUNT(p.idP) FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (?)",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s)" %
+                           seasonsString)
         else:
             cursor.execute("SELECT COUNT(idP) FROM player")
 
@@ -288,11 +291,15 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
     finally:
         endTime = time.time()
         print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
+        connection.close()
         file.close()
 
 
 def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
+
+    if(seasons != 'all'):
+        seasonsString = ','.join(map(str, seasons))
 
     startTime = time.time()
 
@@ -304,8 +311,8 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
         cursor = connection.cursor()
 
         if(seasons != 'all'):
-            cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (?) GROUP BY idClub ORDER BY idClub",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (%s) GROUP BY idClub ORDER BY idClub" %
+                           seasonsString)
         else:
             cursor.execute("SELECT idClub, nameClub FROM club ORDER BY idClub")
 
@@ -340,8 +347,8 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average value to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (?) GROUP BY idClub ORDER BY idClub, idS",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
+                           seasonsString)
         else:
             cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 GROUP BY idClub ORDER BY idClub, idS")
 
@@ -356,8 +363,8 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average ranking to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND idS IN (?) GROUP BY idClub ORDER BY idClub",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND idS IN (%s) GROUP BY idClub ORDER BY idClub" %
+                           seasonsString)
         else:
             cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
 
@@ -372,8 +379,8 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
         if(seasons != 'all'):
-            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (?) ORDER BY idP, idS",
-                           ','.join(map(str, seasons)))
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (%s) ORDER BY idP, idS",
+                           seasonsString)
         else:
             cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
 
@@ -431,6 +438,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
     finally:
         endTime = time.time()
         print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
+        connection.close()
         file.close()
 
 def getCountriesDict():
@@ -451,6 +459,7 @@ def getCountriesDict():
         pass
 
     finally:
+        connection.close()
         return cDict
 
 

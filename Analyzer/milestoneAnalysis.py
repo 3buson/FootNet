@@ -9,11 +9,11 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    filename = 'ClubNet.adj'
-    seasons  = 'all'
+    filename = 'PlayerNet.adj'
+    seasons  = [1,2,3,4,5,6,7,8,9]
 
-    utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
-    # utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
+    # utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
+    utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
 
     # [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
     [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename, directed=True)
@@ -26,9 +26,9 @@ def main():
 
     print "[Analyzer]  calculating Betweenness centrality..."
     # betweenness = nx.betweenness_centrality(network)
-    betweenness = utils.calculateWeightedBetweennessCentrality(network)
-    print "[Analyzer]  sorting Betweenness centrality dictionary..."
-    betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
+    # betweenness = utils.calculateWeightedBetweennessCentrality(network)
+    # print "[Analyzer]  sorting Betweenness centrality dictionary..."
+    # betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
 
     # print top 25
 
@@ -36,9 +36,9 @@ def main():
     for i in range(0, 100):
         print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
 
-    print "\n[Results]  Betweenness centrality"
-    for i in range(0, 100):
-        print "Node name: %s, score: %f" % (nodeData[betweenness[i][0]][0], betweenness[i][1])
+    # print "\n[Results]  Betweenness centrality"
+    # for i in range(0, 100):
+    #     print "Node name: %s, score: %f" % (nodeData[betweenness[i][0]][0], betweenness[i][1])
 
 if __name__ == "__main__":
     main()
