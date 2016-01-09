@@ -10,12 +10,13 @@ import utils
 
 def main():
     filename = 'ClubNet.adj'
-    seasons  = [10,11,12,13,14,15]
+    seasons  = 'all'
 
     utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
-    utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
+    # utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
 
-    [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
+    # [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
+    [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename, directed=True)
 
     print "[Analyzer]  calculating PageRank..."
     pagerank = nx.pagerank(network)

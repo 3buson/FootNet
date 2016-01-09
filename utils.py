@@ -87,7 +87,7 @@ def calculateClubWeight(clubId, clubsInfo, byValue=True):
         if(byValue):
             destinationClubValue = clubsInfo[clubId]['importance'][0]
 
-            weight = float(destinationClubValue) / 1000000
+            weight = float(destinationClubValue) * 2 / 1000000
         # weight is defined by club ranking
         else:
             destinationClubRanking = clubsInfo[clubId]['importance'][1]
@@ -96,17 +96,21 @@ def calculateClubWeight(clubId, clubsInfo, byValue=True):
 
             if(destinationClubRanking != 0):
                 fixedRanking = max((float(destinationClubRanking) / 2), 1)
-                weight = (1 / fixedRanking) * clubLeagueRanking
+                weight = (1 / fixedRanking) * clubLeagueRanking * 2
             else:
-                weight = (1 / constants.noRankingPenalty) * clubLeagueRanking
+                weight = (1 / constants.noRankingPenalty) * clubLeagueRanking * 2
     else:
         weight = constants.defaultClubWeight
 
     return weight
 
-def createGraphFromEdgeList(filename):
+def createGraphFromEdgeList(filename, directed=False):
     nodeData        = dict()
-    undirectedGraph = nx.Graph()
+
+    if(directed):
+        graph = nx.DiGraph()
+    else:
+        graph = nx.Graph()
 
     with open(filename) as f:
         skipped = 0
@@ -116,7 +120,7 @@ def createGraphFromEdgeList(filename):
             if(line[0] != '#'):
                 edges += 1
                 [node1, node2] = line.split()
-                undirectedGraph.add_edge(int(node1), int(node2), weight=0)
+                graph.add_edge(int(node1), int(node2), weight=0)
             else:
                 skipped += 1
                 slicedLine = line.split('"')
@@ -125,20 +129,24 @@ def createGraphFromEdgeList(filename):
                     [nodeId, nodeName, nodeProperty] = line.split('"')
                     nodeData[int(nodeId)] = (nodeName, nodeProperty)
 
-                    undirectedGraph.add_node(int(nodeId[1:]))
+                    graph.add_node(int(nodeId[1:]))
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
     print "[Graph Creator]  Graph has %d nodes and %d edges" %\
-          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
+          (graph.number_of_nodes(), graph.number_of_edges())
     print "[Graph Creator]  Edges in edge list %d" % edges
 
-    return undirectedGraph, nodeData
+    return graph, nodeData
 
 
-def createWeightedGraphFromEdgeList(filename):
-    nodeData        = dict()
-    undirectedGraph = nx.Graph()
+def createWeightedGraphFromEdgeList(filename, directed=False):
+    nodeData = dict()
+
+    if(directed):
+        graph = nx.DiGraph()
+    else:
+        graph = nx.Graph()
 
     with open(filename) as f:
         skipped = 0
@@ -148,7 +156,7 @@ def createWeightedGraphFromEdgeList(filename):
             if(line[0] != '#'):
                 edges += 1
                 [node1, node2, weight] = line.split()
-                undirectedGraph.add_edge(int(node1), int(node2), weight=float(weight))
+                graph.add_edge(int(node1), int(node2), weight=float(weight))
             else:
                 skipped += 1
                 slicedLine = line.split('"')
@@ -157,15 +165,15 @@ def createWeightedGraphFromEdgeList(filename):
                     [nodeId, nodeName, nodeProperty] = slicedLine
                     nodeData[int(nodeId[2:])] = (nodeName, nodeProperty)
 
-                    undirectedGraph.add_node(int(nodeId[2:]))
+                    graph.add_node(int(nodeId[2:]))
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
     print "[Graph Creator]  Graph has %d nodes and %d edges" %\
-          (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
+          (graph.number_of_nodes(), graph.number_of_edges())
     print "[Graph Creator]  Edges in edge list %d" % edges
 
-    return undirectedGraph, nodeData
+    return graph, nodeData
 
 
 def createPlayerEdgeListFromDB(filename, seasons='all'):
@@ -377,9 +385,8 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         for i in range(0, len(playerClubSeasons) - 1):
             playerId1 = playerClubSeasons[i][0]
-            clubId1   = playerClubSeasons[i][1]
-
             playerId2 = playerClubSeasons[i+1][0]
+            clubId1   = playerClubSeasons[i][1]
             clubId2   = playerClubSeasons[i+1][1]
 
             if(playerId1 == playerId2 and clubId1 != clubId2):
@@ -400,7 +407,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
                     else:
                         clubImportance = 1
 
-                    numOfTransfers = clubTransfersIn[clubInEntry1][clubInEntry2]
+                    numOfTransfers = clubTransfersOut[clubInEntry1][clubInEntry2]
 
                     edgeList.append("%d %d %f\n" % (clubId1, clubId2, numOfTransfers * clubImportance))
                     numEdges += 1
