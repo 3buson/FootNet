@@ -9,18 +9,18 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    filename = 'PlayerNet.adj'
+    filename = 'ClubNet.adj'
 
-    # utils.createClubEdgeListFromDB('ClubNet.adj')
+    utils.createClubEdgeListFromDB('ClubNet.adj')
     # utils.createPlayerEdgeListFromDB("PlayerNet.adj")
 
     [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
 
     print "[Analyzer]  calculating PageRank..."
-    # pagerank = nx.pagerank(network)
+    pagerank = nx.pagerank(network)
     # pagerank = utils.calculatePageRank(network)
     print "[Analyzer]  sorting PageRank dictionary..."
-    # pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
+    pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
 
     print "[Analyzer]  calculating Betweenness centrality..."
     # betweenness = nx.betweenness_centrality(network)

@@ -5,6 +5,7 @@ import traceback
 import pyodbc
 import networkx as nx
 from datetime import date
+from operator import itemgetter
 from collections import deque
 
 import constants
@@ -26,11 +27,10 @@ def connectToDB():
 
 
 def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, withInflation=True):
-    weight         = 0
-    perspectiveAge = 18
+    weight = 0
 
     if(withInflation):
-        inflationRatio = 2.11 / 100 # average inflation ratio per year (percent)
+        inflationRatio = constants.inflationRatio / 100 # average inflation ratio per year (percent)
     else:
         inflationRatio = 0
 
@@ -70,14 +70,36 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
                 if(withAge):
                     print playerAge1
                     print playerAge2
-                    print ((playerAge1 + playerAge2) / (perspectiveAge * 2))
+                    print ((playerAge1 + playerAge2) / (constants.perspectiveAge * 2))
                     exit()
-                    weight += ((playerValue1 + playerValue2) / 100000.0) / ((playerAge1 + playerAge2) / (perspectiveAge * 2))
+                    weight += ((playerValue1 + playerValue2) / 100000.0) / ((playerAge1 + playerAge2) / (constants.perspectiveAge * 2))
                 else:
                     weight += (playerValue1 + playerValue2) / 100000.0
 
     return weight
 
+
+def calculateClubWeight(clubId, clubsInfo, byValue=True):
+    weight = 0
+
+    # weight is defined by club value
+    if(byValue):
+        destinationClubValue = clubsInfo[clubId]['importance'][0]
+
+        weight = float(destinationClubValue) / 1000000
+    # weight is defined by club ranking
+    else:
+        destinationClubRanking = clubsInfo[clubId]['importance'][1]
+        clubLeague             = clubsInfo[clubId]['league']
+        clubLeagueRanking      = constants.leagueRankings[clubLeague]
+
+        if(destinationClubRanking != 0):
+            fixedRanking = max((float(destinationClubRanking) / 2), 1)
+            weight = (1 / fixedRanking) * clubLeagueRanking
+        else:
+            weight = (1 / constants.noRankingPenalty) * clubLeagueRanking
+
+    return weight
 
 def createGraphFromEdgeList(filename):
     nodeData        = dict()
@@ -100,7 +122,7 @@ def createGraphFromEdgeList(filename):
                     [nodeId, nodeName, nodeProperty] = line.split('"')
                     nodeData[int(nodeId)] = (nodeName, nodeProperty)
 
-                    undirectedGraph.add_node(nodeId)
+                    undirectedGraph.add_node(int(nodeId[1:]))
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -132,7 +154,7 @@ def createWeightedGraphFromEdgeList(filename):
                     [nodeId, nodeName, nodeProperty] = slicedLine
                     nodeData[int(nodeId[2:])] = (nodeName, nodeProperty)
 
-                    undirectedGraph.add_node(nodeId)
+                    undirectedGraph.add_node(int(nodeId[2:]))
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -242,7 +264,7 @@ def createPlayerEdgeListFromDB(filename):
         file.close()
 
 
-def createClubEdgeListFromDB(filename):
+def createClubEdgeListFromDB(filename, weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
 
     startTime = time.time()
@@ -262,13 +284,16 @@ def createClubEdgeListFromDB(filename):
         clubList         = list()
         edgeList         = list()
         clubNames        = dict()
+        clubsInfo        = dict()
         clubTransfersIn  = dict()
         clubTransfersOut = dict()
         clubIndices      = dict()
-        # clubIndices dictionary will be used to map consecutive ids for use in the network to real club ids
+        # clubIndices dictionary will be used to map real ids to consecutive ids for use in the network
 
         for club in clubs:
             clubIndices[club[0]] = clubIdx
+
+            clubsInfo[clubIdx] = dict()
 
             clubNames[club[0]]        = club[1]
             clubTransfersIn[club[0]]  = dict()
@@ -280,8 +305,28 @@ def createClubEdgeListFromDB(filename):
 
             clubIdx += 1
 
-        cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
 
+        # add club average value to clubsInfo
+        cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 GROUP BY idClub ORDER BY idClub, idS")
+        clubValues = cursor.fetchall()
+
+        for clubValue in clubValues:
+            currentClubIdx = clubIndices[clubValue[0]]
+            clubsInfo[currentClubIdx]['league']     = clubValue[1]
+            clubsInfo[currentClubIdx]['importance'] = list()
+
+            clubsInfo[currentClubIdx]['importance'].append(clubValue[2])
+
+        # add club average ranking to clubsInfo
+        cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
+        clubRankings = cursor.fetchall()
+
+        for clubRanking in clubRankings:
+            currentClubIdx = clubIndices[clubRanking[0]]
+            clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
+
+
+        cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
         playerClubSeasons = cursor.fetchall()
 
         for i in range(0, len(playerClubSeasons) - 1):
@@ -295,6 +340,8 @@ def createClubEdgeListFromDB(filename):
                 clubTransfersIn[clubId1][clubId2]  += 1
                 clubTransfersOut[clubId2][clubId1] += 1
 
+        clubRankingByRanking = dict()
+
         for club in clubs:
             clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1].encode('latin-1')))
 
@@ -304,7 +351,14 @@ def createClubEdgeListFromDB(filename):
                     clubId1 = clubIndices[clubInEntry1]
                     clubId2 = clubIndices[clubInEntry2]
 
-                    edgeList.append("%d %d %d\n" % (clubId1, clubId2, clubTransfersIn[clubInEntry1][clubInEntry2]))
+                    if(weightedByClubImportance):
+                        clubImportance = calculateClubWeight(clubId2, clubsInfo)
+                    else:
+                        clubImportance = 1
+
+                    numOfTransfers = clubTransfersIn[clubInEntry1][clubInEntry2]
+
+                    edgeList.append("%d %d %f\n" % (clubId1, clubId2, numOfTransfers * clubImportance))
                     numEdges += 1
 
         # output starting comments - number of nodes and edges, format
@@ -520,12 +574,12 @@ def calculateWeightedBetweennessCentrality(graph):
                     if(weight != 0):
                         d[neighbor] = d[v] + (1.0 / weight)
                     else:
-                        d[neighbor] = d[v] + 1000
+                        d[neighbor] = d[v] + constants.noWeightPathPenalty
 
                 if(weight != 0):
                     shortestPath = d[v] + (1.0 / weight)
                 else:
-                    shortestPath = d[v] + 1000
+                    shortestPath = d[v] + constants.noWeightPathPenalty
 
                 # is shortest path to neighbor through v?
                 if(d[neighbor] == shortestPath):

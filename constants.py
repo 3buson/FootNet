@@ -2,10 +2,34 @@ __author__ = 'matic'
 
 
 # --- VARIOUS CONSTANTS --- #
-currentSeason = '15'
+currentSeason       = '15'
+inflationRatio      = 2.11
+perspectiveAge      = 18
+noRankingPenalty    = 25
+noWeightPathPenalty = 1000
 
 # --- DATABASE --- #
 databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
+
+# --- LEAGUE RANKINGS --- #
+leagueRankings     = dict()
+leagueRankings[1]  = 95
+leagueRankings[2]  = 100
+leagueRankings[3]  = 75
+leagueRankings[4]  = 85
+leagueRankings[5]  = 50
+leagueRankings[6]  = 40
+leagueRankings[7]  = 40
+leagueRankings[8]  = 25
+leagueRankings[9]  = 20
+leagueRankings[10] = 25
+leagueRankings[11] = 20
+leagueRankings[12] = 20
+leagueRankings[13] = 15
+leagueRankings[14] = 5
+leagueRankings[15] = 10
+leagueRankings[16] = 20
+leagueRankings[17] = 15
 
 
 # --- LEAGUES --- #
