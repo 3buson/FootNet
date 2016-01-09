@@ -9,10 +9,11 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    filename = 'ClubNet.adj'
+    filename = 'PlayerNet.adj'
+    seasons  = 'all'
 
     utils.createClubEdgeListFromDB('ClubNet.adj')
-    # utils.createPlayerEdgeListFromDB("PlayerNet.adj")
+    utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
 
     [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
 

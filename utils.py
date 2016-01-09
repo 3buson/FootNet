@@ -165,7 +165,7 @@ def createWeightedGraphFromEdgeList(filename):
     return undirectedGraph, nodeData
 
 
-def createPlayerEdgeListFromDB(filename):
+def createPlayerEdgeListFromDB(filename, seasons='all'):
     print "[Exporter]  Exporting player edge list"
 
     startTime = time.time()
@@ -176,7 +176,12 @@ def createPlayerEdgeListFromDB(filename):
         file = open(filename, 'w')
 
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM player")
+
+        if(seasons != 'all'):
+            cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (?)",
+                           ','.join(map(str, seasons)))
+        else:
+            cursor.execute("SELECT * FROM player")
 
         players       = cursor.fetchall()
         playerIdx     = 1
@@ -187,7 +192,12 @@ def createPlayerEdgeListFromDB(filename):
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM footballnetwork.playerclubseason pcs JOIN player p USING (idP) ORDER BY idP, idS")
+        if(seasons != 'all'):
+            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS IN (?) ORDER BY idP, idS",
+                           ','.join(map(str, seasons)))
+        else:
+            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) ORDER BY idP, idS")
+
         playersData = cursor.fetchall()
         playersInfo = dict()
 
@@ -216,7 +226,12 @@ def createPlayerEdgeListFromDB(filename):
 
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
-                cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? ", playerId)
+                if(seasons != 'all'):
+                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? AND pcs.idS IN (?)",
+                                   playerId, ','.join(map(str, seasons)))
+                else:
+                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ?", playerId)
+
                 clubsBySeasons = cursor.fetchall()
 
                 # link all the players from all the clubs to the current player
@@ -241,7 +256,7 @@ def createPlayerEdgeListFromDB(filename):
         # output starting comments - number of nodes and edges, format
         # output player list
         # output edge list
-        cursor.execute("SELECT COUNT(idP) FROM footballnetwork.player")
+        cursor.execute("SELECT COUNT(idP) FROM player")
         numNodes = cursor.fetchone()
 
         file.write("# 'FootNetPlayer' undirected weighted network\n")
@@ -308,9 +323,10 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average value to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 GROUP BY idClub ORDER BY idClub, idS")
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 AND cs.idS IN (?) GROUP BY idClub ORDER BY idClub, idS",
+                           ','.join(map(str, seasons)))
         else:
-            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 AND cs.isS IN [?] GROUP BY idClub ORDER BY idClub, idS", ','.join(map(str, seasons)))
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE value != -1 GROUP BY idClub ORDER BY idClub, idS")
 
         clubValues = cursor.fetchall()
 
@@ -323,9 +339,10 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average ranking to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
+            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND idS IN (?) GROUP BY idClub ORDER BY idClub",
+                           ','.join(map(str, seasons)))
         else:
-            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND cs.isS IN [?] GROUP BY idClub ORDER BY idClub", ','.join(map(str, seasons)))
+            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
 
         clubRankings = cursor.fetchall()
 
@@ -334,9 +351,10 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
         if(seasons != 'all'):
-            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (?) ORDER BY idP, idS",
+                           ','.join(map(str, seasons)))
         else:
-            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in [?] ORDER BY idP, idS", ','.join(map(str, seasons)))
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
 
         playerClubSeasons = cursor.fetchall()
 
@@ -350,8 +368,6 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
             if(playerId1 == playerId2 and clubId1 != clubId2):
                 clubTransfersIn[clubId1][clubId2]  += 1
                 clubTransfersOut[clubId2][clubId1] += 1
-
-        clubRankingByRanking = dict()
 
         for club in clubs:
             clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1].encode('latin-1')))
