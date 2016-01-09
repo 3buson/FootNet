@@ -1,6 +1,7 @@
 __author__ = 'Matevz Lenic'
 
 import pyodbc
+import traceback
 
 import utils
 
@@ -21,6 +22,8 @@ class ClubSeason:
 
         except pyodbc.DatabaseError, e:
             print "[ClubSeason class]  ERROR - DatabaseError", e
+            traceback.print_exc()
+
             pass
 
         connection.commit()

@@ -1,6 +1,7 @@
 __author__ = 'Matevz Lenic'
 
 import pyodbc
+import traceback
 
 import utils
 import constants
@@ -44,6 +45,8 @@ class Player:
 
         except pyodbc.DatabaseError, e:
             print "[Player class]  ERROR - DatabaseError", e
+            traceback.print_exc()
+
             pass
 
         connection.commit()
