@@ -7,6 +7,7 @@ inflationRatio      = 2.11
 perspectiveAge      = 18
 noRankingPenalty    = 25
 noWeightPathPenalty = 1000
+defaultClubWeight   = 0.1
 
 # --- DATABASE --- #
 databaseString = 'DRIVER={MySQL};SERVER=localhost;DATABASE=footballnetwork;UID=root;PWD=*****'
