@@ -65,6 +65,7 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo):
 
 
 def createGraphFromEdgeList(filename):
+    nodeData        = dict()
     undirectedGraph = nx.Graph()
 
     with open(filename) as f:
@@ -78,6 +79,8 @@ def createGraphFromEdgeList(filename):
                 undirectedGraph.add_edge(int(node1), int(node2), weight=0)
             else:
                 skipped += 1
+                [nodeId, nodeName, nodeProperty] = line.split('"')
+                nodeData[int(nodeId)] = (nodeName, nodeProperty)
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -85,10 +88,11 @@ def createGraphFromEdgeList(filename):
           (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
     print "[Graph Creator]  Edges in edge list %d" % edges
 
-    return undirectedGraph
+    return undirectedGraph, nodeData
 
 
 def createWeightedGraphFromEdgeList(filename):
+    nodeData        = dict()
     undirectedGraph = nx.Graph()
 
     with open(filename) as f:
@@ -102,6 +106,11 @@ def createWeightedGraphFromEdgeList(filename):
                 undirectedGraph.add_edge(int(node1), int(node2), weight=float(weight))
             else:
                 skipped += 1
+                slicedLine = line.split('"')
+
+                if(len(slicedLine) > 2):
+                    [nodeId, nodeName, nodeProperty] = slicedLine
+                    nodeData[int(nodeId[2:])] = (nodeName, nodeProperty)
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -109,7 +118,7 @@ def createWeightedGraphFromEdgeList(filename):
           (undirectedGraph.number_of_nodes(), undirectedGraph.number_of_edges())
     print "[Graph Creator]  Edges in edge list %d" % edges
 
-    return undirectedGraph
+    return undirectedGraph, nodeData
 
 
 def createPlayerEdgeListFromDB(filename):

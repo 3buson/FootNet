@@ -12,9 +12,7 @@ def main():
     # utils.createClubEdgeListFromDB('ClubNet.adj')
     # utils.createPlayerEdgeListFromDB("PlayerNet.adj")
 
-    playersNetwork = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
-
-    print playersNetwork.edges(data=True)[0]
+    [playersNetwork, playersData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
 
     print "[Analyzer]  calculating PageRank..."
     playersPagerank = nx.pagerank(playersNetwork)
@@ -25,7 +23,7 @@ def main():
 
     # print top 25
     for i in range(0, 25):
-        print playersPagerank[i]
+        print "Player name: %s, score: %f" % (playersData[playersPagerank[i][0]][0], playersPagerank[i][1])
 
 if __name__ == "__main__":
     main()
