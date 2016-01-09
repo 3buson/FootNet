@@ -267,7 +267,7 @@ def createClubEdgeListFromDB(filename):
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-            clubList.append("# %d \"%s\"\n" % (club[0], club[1]))
+            clubList.append("# %d \"%s\"\n" % (club[0], club[1].encode('utf-8')))
 
         for clubInEntry1 in clubTransfersIn:
             for clubInEntry2 in clubTransfersIn:
@@ -285,8 +285,8 @@ def createClubEdgeListFromDB(filename):
         file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
         file.write("# By Matevz Lenic & Matic Tribuson\n")
 
-        for playerEntry in clubList:
-            file.write(playerEntry)
+        for clubEntry in clubList:
+            file.write(clubEntry)
 
         for edgeEntry in edgeList:
             file.write(edgeEntry)
