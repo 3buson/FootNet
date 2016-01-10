@@ -40,6 +40,8 @@ class PlayerClubSeason:
 
         except pyodbc.DatabaseError, e:
             print "[PlayerClubSeason class]  ERROR - DatabaseError", e
+            traceback.print_exc()
+
             pass
 
         connection.commit()
