@@ -46,8 +46,7 @@ def main():
     for season in constants.seasons.keys():
         for country in constants.leagues.keys():
             league = constants.leagues[country]
-            if(league in ['Liga1', 'HNL1', 'BundesligaAustria', 'SynotLiga', 'AlkaSuperligaen', 'Championship', 'SegundaDivision', 'Bundesliga2', 'SerieB']):
-                fetchHTMLFiles(constants.clubs[league], league, constants.seasons[season])
+            fetchHTMLFiles(constants.clubs[league], league, constants.seasons[season])
 
             print "\n[File Getter]  Fetched all HTML files for league %s\n" % league
 
