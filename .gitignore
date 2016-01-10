@@ -1,5 +1,6 @@
 *.pyc
 *.png
+*.svg
 *.jpg
 *.adj
 *.net
@@ -11,5 +12,6 @@ FileGetter/html
 FileGetter/done
 FileParser/html
 FileGetter/htmlTest
+Visualizer/
 
 EPLLaLiga131415
