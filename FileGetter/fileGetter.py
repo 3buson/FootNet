@@ -1,9 +1,10 @@
 __author__ = 'matic'
 
 import os
+import sys
+import time
 import urlgrabber
 
-import sys
 sys.path.insert(0, '../')
 import constants
 
@@ -28,7 +29,7 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         os.makedirs(dir)
 
     for clubName, clubId in clubDict.iteritems():
-        print "Getting HTML for club: %s\tleague: %s\tseason: 20%s" % (clubName, league, season)
+        print "[File Getter]  Getting HTML for club: %s\tleague: %s\tseason: 20%s" % (clubName, league, season)
 
         url      = baseURL + `clubId`
         filename = baseDirname + league + '/' + season + '/' + clubName + '_' + `clubId`
@@ -40,7 +41,16 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         if(league == 'MajorLeagueSoccer'):
             url = baseURL + `clubId` + '?saison_id=' + `(int('20' + season) - 1)`
 
-        urlgrabber.urlgrab(url, filename, retries=5)
+        try:
+            urlgrabber.urlgrab(url, filename, retries=5)
+        except Exception, e:
+            time.sleep(60)
+            urlgrabber.urlgrab(url, filename, retries=5)
+
+            print "Exception occurred!", e
+            print "URL: ", url
+
+            pass
 
 def main():
     for season in constants.seasons.keys():
