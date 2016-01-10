@@ -28,9 +28,18 @@ leagueRankings[11] = 20
 leagueRankings[12] = 20
 leagueRankings[13] = 15
 leagueRankings[14] = 5
-leagueRankings[15] = 10
+leagueRankings[15] = 13
 leagueRankings[16] = 20
 leagueRankings[17] = 15
+leagueRankings[18] = 12
+leagueRankings[19] = 10
+leagueRankings[20] = 10
+leagueRankings[21] = 10
+leagueRankings[22] = 10
+leagueRankings[23] = 15
+leagueRankings[24] = 13
+leagueRankings[25] = 13
+leagueRankings[26] = 10
 
 
 # --- LEAGUES --- #
@@ -90,6 +99,7 @@ leagueIds['Championship']         = 23
 leagueIds['SegundaDivision']      = 24
 leagueIds['Bundesliga2']          = 25
 leagueIds['SerieB']               = 26
+
 
 leagueURLIds         = dict()
 leagueURLIds['ROM']  = 'RO1'
