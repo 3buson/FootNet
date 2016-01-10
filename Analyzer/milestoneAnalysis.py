@@ -9,14 +9,28 @@ sys.path.insert(0, '../')
 import utils
 
 def main():
-    filename = 'PlayerNet.adj'
-    seasons  = [10,11,12,13]
+    export       = raw_input('Do you want to do an edge list export first? (Y/N): ')
+    filename     = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
+    seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
 
-    # utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
-    utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
+    if(seasonsInput != 'all'):
+        seasons = seasonsInput.split(',')
 
-    # [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename)
-    [network, nodeData] = utils.createWeightedGraphFromEdgeList(filename, directed=True)
+        seasons = [int(season) for season in seasons]
+    else:
+        seasons = seasonsInput
+
+
+    if(export == 'Y'):
+        if(filename == 'Clubs'):
+            utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
+        else:
+            utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
+
+    if(filename == 'Clubs'):
+        [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
+    else:
+        [network, nodeData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
 
     print "[Analyzer]  calculating PageRank..."
     pagerank = nx.pagerank(network)
@@ -25,10 +39,10 @@ def main():
     pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
 
     print "[Analyzer]  calculating Betweenness centrality..."
-    # betweenness = nx.betweenness_centrality(network)
+    betweenness = nx.betweenness_centrality(network)
     # betweenness = utils.calculateWeightedBetweennessCentrality(network)
-    # print "[Analyzer]  sorting Betweenness centrality dictionary..."
-    # betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
+    print "[Analyzer]  sorting Betweenness centrality dictionary..."
+    betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
 
     # print top 25
 
@@ -36,9 +50,9 @@ def main():
     for i in range(0, 100):
         print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
 
-    # print "\n[Results]  Betweenness centrality"
-    # for i in range(0, 100):
-    #     print "Node name: %s, score: %f" % (nodeData[betweenness[i][0]][0], betweenness[i][1])
+    print "\n[Results]  Betweenness centrality"
+    for i in range(0, 100):
+        print "Node name: %s, score: %f" % (nodeData[betweenness[i][0]][0], betweenness[i][1])
 
 if __name__ == "__main__":
     main()

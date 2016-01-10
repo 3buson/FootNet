@@ -71,7 +71,7 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
 
                 if(withAge):
                     weight += ((playerValue1 + playerValue2) / 100000.0) +\
-                              ((1 / abs((playerAge1 + playerAge2) - (constants.perspectiveAge * 2 + 0.5) / 2.0)) * 100)
+                              ((1 / abs((playerAge1 + playerAge2) - (constants.perspectiveAge * 2 + 0.5) / 2.0)) * 1000)
                 else:
                     weight += (playerValue1 + playerValue2) / 100000.0
 
@@ -387,7 +387,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
         if(seasons != 'all'):
-            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (%s) ORDER BY idP, idS",
+            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (%s) ORDER BY idP, idS" %
                            seasonsString)
         else:
             cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
@@ -405,7 +405,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-            clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1].encode('latin-1')))
+            clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1]))
 
         for clubInEntry1 in clubTransfersIn:
             for clubInEntry2 in clubTransfersIn:
