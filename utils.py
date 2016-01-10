@@ -54,7 +54,7 @@ def calculateClubsSums(connection):
 
     print "[Clubs Sum Calculator]  Updating clubs stats..."
 
-    cursor.execute("SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), SUM(minutesPerGoal), SUM(minutesPlayed) FROM playerclubseason GROUP BY idClub")
+    cursor.execute("SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), AVG(minutesPerGoal), SUM(minutesPlayed) FROM playerclubseason GROUP BY idClub")
     playersCareerStats = cursor.fetchall()
 
     for pcs in playersCareerStats:
