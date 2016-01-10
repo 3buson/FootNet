@@ -4,7 +4,7 @@ __author__ = 'matic'
 # --- VARIOUS CONSTANTS --- #
 currentSeason       = '15'
 inflationRatio      = 2.11
-careerMidAge        = 25
+perspectiveAge      = 18
 noRankingPenalty    = 25
 noWeightPathPenalty = 1000
 defaultClubWeight   = 0.1

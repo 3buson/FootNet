@@ -44,7 +44,9 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
 
 
     for currentSeason in playersInfo[playedLessSeasons]:
+        # players have common season
         if(playersInfo[playedMoreSeasons].has_key(currentSeason)):
+            # players have played in the same club in this season
             if(playersInfo[playedMoreSeasons][currentSeason][2] == playersInfo[playedLessSeasons][currentSeason][2]):
 
                 playerValue1 = playersInfo[playedLessSeasons][currentSeason][4]
@@ -68,7 +70,8 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
                     playerValue2 = float(playerValue2) * inflation
 
                 if(withAge):
-                    weight += ((playerValue1 + playerValue2) / 100000.0) * ((playerAge1 + playerAge2) / (constants.careerMidAge * 2.0))
+                    weight += ((playerValue1 + playerValue2) / 100000.0) +\
+                              ((1 / abs((playerAge1 + playerAge2) - (constants.perspectiveAge * 2 + 0.5) / 2.0)) * 100)
                 else:
                     weight += (playerValue1 + playerValue2) / 100000.0
 
@@ -101,7 +104,9 @@ def calculateClubWeight(clubId, clubsInfo, byValue=True):
     return weight
 
 def createGraphFromEdgeList(filename, directed=False):
-    nodeData        = dict()
+    print "[Graph Creator]  Reading filename %s..." % filename
+
+    nodeData = dict()
 
     if(directed):
         graph = nx.DiGraph()
@@ -137,6 +142,8 @@ def createGraphFromEdgeList(filename, directed=False):
 
 
 def createWeightedGraphFromEdgeList(filename, directed=False):
+    print "[Graph Creator]  Reading filename %s..." % filename
+
     nodeData = dict()
 
     if(directed):
@@ -237,12 +244,13 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
                 if(seasons != 'all'):
-                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = %d AND pcs.idS IN (%s)" %
-                                   (int(playerId), seasonsString))
+                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? AND pcs.idS IN (%s)" %
+                                   seasonsString, playerId)
                 else:
                     cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ?", playerId)
 
                 clubsBySeasons = cursor.fetchall()
+
 
                 # link all the players from all the clubs to the current player
                 linkedPlayerIds = list()
