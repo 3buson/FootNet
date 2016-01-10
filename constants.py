@@ -74,6 +74,19 @@ leagueIds['SerieABrazil']         = 16
 leagueIds['TorneoInicial']        = 17
 
 
+leagueURLIds         = dict()
+leagueURLIds['ROM']  = 'RO1'
+leagueURLIds['CRO']  = 'KR1'
+leagueURLIds['AUT']  = 'A1'
+leagueURLIds['CZE']  = 'TS1'
+leagueURLIds['DEN']  = 'DK1'
+leagueURLIds['SRB']  = 'SER1'
+leagueURLIds['ENG2'] = 'GB2'
+leagueURLIds['SPA2'] = 'IT2'
+leagueURLIds['GER2'] = 'L2'
+leagueURLIds['ITA2'] = 'ES2'
+
+
 # --- SEASONS --- #
 seasons = dict()
 seasons[2015] = '15'
@@ -97,26 +110,26 @@ seasons[2001] = '01'
 
 # SPANISH LA LIGA
 clubDictESP         = dict()
-clubDictESP['RMA']  = 418   # Real Madrid
-clubDictESP['FCB']  = 131   # Barcelona
-clubDictESP['ATM']  = 13    # Atletico Madrid
-clubDictESP['VCF']  = 1049  # Valencia
-clubDictESP['SEV']  = 368   # Sevilla
-clubDictESP['ATH']  = 621   # Athletic Bilbao
-clubDictESP['VIL']  = 1050  # Villareal
-clubDictESP['RSC']  = 681   # Real Sociedad
-clubDictESP['CVCF'] = 940   # Celta vigo
-clubDictESP['ESP']  = 714   # Espanyol
-clubDictESP['GRCF'] = 16795 # Granada
-clubDictESP['DLC']  = 897   # Deportivo la Coruna
-clubDictESP['MCF']  = 1084  # Malaga
-clubDictESP['RBCF'] = 150   # Betis
-clubDictESP['GECF'] = 3709  # Getafe
-clubDictESP['LCF']  = 3368  # Levante
-clubDictESP['RVCF'] = 367   # Rayo Vallecano
-clubDictESP['SGCF'] = 2448  # Sporting Gijon
-clubDictESP['ECF']  = 1533  # Eibar
-clubDictESP['LPCF'] = 472   # Las Palmas
+clubDictESP['RMA']  = 418    # Real Madrid
+clubDictESP['FCB']  = 131    # Barcelona
+clubDictESP['ATM']  = 13     # Atletico Madrid
+clubDictESP['VCF']  = 1049   # Valencia
+clubDictESP['SEV']  = 368    # Sevilla
+clubDictESP['ATH']  = 621    # Athletic Bilbao
+clubDictESP['VIL']  = 1050   # Villareal
+clubDictESP['RSC']  = 681    # Real Sociedad
+clubDictESP['CVCF'] = 940    # Celta vigo
+clubDictESP['ESP']  = 714    # Espanyol
+clubDictESP['GRCF'] = 16795  # Granada
+clubDictESP['DLC']  = 897    # Deportivo la Coruna
+clubDictESP['MCF']  = 1084   # Malaga
+clubDictESP['RBCF'] = 150    # Betis
+clubDictESP['GECF'] = 3709   # Getafe
+clubDictESP['LCF']  = 3368   # Levante
+clubDictESP['RVCF'] = 367    # Rayo Vallecano
+clubDictESP['SGCF'] = 2448   # Sporting Gijon
+clubDictESP['ECF']  = 1533   # Eibar
+clubDictESP['LPCF'] = 472    # Las Palmas
 
 # ENGLISH PREMIER LEAGUE
 clubDictENG          = dict()
