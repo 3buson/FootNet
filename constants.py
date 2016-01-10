@@ -82,9 +82,9 @@ leagueURLIds['CZE']  = 'TS1'
 leagueURLIds['DEN']  = 'DK1'
 leagueURLIds['SRB']  = 'SER1'
 leagueURLIds['ENG2'] = 'GB2'
-leagueURLIds['SPA2'] = 'IT2'
+leagueURLIds['ESP2'] = 'ES2'
 leagueURLIds['GER2'] = 'L2'
-leagueURLIds['ITA2'] = 'ES2'
+leagueURLIds['ITA2'] = 'IT2'
 
 
 # --- SEASONS --- #
@@ -456,6 +456,199 @@ clubDictARG['BLA'] = 7468   # Olimpo de Bahia Blanca
 clubDictARG['JUS'] = 2402   # Debensa Y Justicia
 clubDictARG['ESG'] = 1106   # Club de Gimnasia Y Esgrima La PLata
 
+# SERBIAN SUPERLIGA
+clubDictSRB       = dict()
+clubDictSRB['FKPA'] = 669    # FK Partizan Belgrade
+clubDictSRB['REDS'] = 159    # Red Star Belgrade
+clubDictSRB['FKVO'] = 448    # FK Vojvodina
+clubDictSRB['FKCU'] = 6621   # FK Cukaricki
+clubDictSRB['OFKB'] = 53     # OFK Beograd
+clubDictSRB['MLAD'] = 6622   # Mladost Lucani
+clubDictSRB['FKRA'] = 902    # FK Rad
+clubDictSRB['FKRA'] = 7567   # FK Radnicki Nis
+clubDictSRB['FKBO'] = 2209   # FK Borac Cacak
+clubDictSRB['FKVO'] = 4634   # FK Vozdovac
+clubDictSRB['FKJA'] = 12132  # FK Jagodina
+clubDictSRB['FKSP'] = 15276  # FK Spartak Subotica
+clubDictSRB['FKNO'] = 4633   # FK Novi Pazar
+clubDictSRB['FKRA'] = 33328  # FK Radnik Surdulica
+clubDictSRB['FKJA'] = 8819   # FK Javor Ivanjica
+clubDictSRB['FKME'] = 12135  # FK Metalac Gornji Milanovac
+
+# ROMANIAN LIGA 1
+clubDictROM       = dict()
+clubDictROM['STEA'] = 301    # Steaua Bucharest
+clubDictROM['ASTR'] = 13499  # Astra Giurgiu
+clubDictROM['DINA'] = 312    # Dinamo Bukarest
+clubDictROM['FCVI'] = 29831  # FC Viitorul
+clubDictROM['CSUC'] = 40812  # CS U Craiova
+clubDictROM['ASAT'] = 16650  # ASA Tirgu Mures
+clubDictROM['PAND'] = 8715   # Pandurii Targu Jiu
+clubDictROM['CFRC'] = 7769   # CFR Cluj
+clubDictROM['FCBO'] = 8818   # FC Botosani
+clubDictROM['PETR'] = 9465   # Petrolul Ploiesti
+clubDictROM['CONC'] = 15945  # Concordia Chiajna
+clubDictROM['ACSP'] = 36590  # ACS Poli Timisoara
+clubDictROM['CSMS'] = 33966  # CSMS Iasi
+clubDictROM['FCVO'] = 40843  # FC Voluntari
+
+# GERMAN BUNDESLIGA 2
+clubDictGER2       = dict()
+clubDictGER2['RASE'] = 23826  # RasenBallsport Leipzig
+clubDictGER2['SCFR'] = 60     # SC Freiburg
+clubDictGER2['1.FC'] = 2      # 1.FC Kaiserslautern
+clubDictGER2['1.FC'] = 4      # 1.FC Nuremberg
+clubDictGER2['FORT'] = 38     # Fortuna Dusseldorf
+clubDictGER2['1.FC'] = 89     # 1.FC Union Berlin
+clubDictGER2['KARL'] = 48     # Karlsruher SC
+clubDictGER2['SCPA'] = 127    # SC Paderborn 07
+clubDictGER2['EINT'] = 23     # Eintracht Braunschweig
+clubDictGER2['SPVG'] = 65     # SpVgg Greuther Furth
+clubDictGER2['VFLB'] = 80     # VfL Bochum
+clubDictGER2['TSV1'] = 72     # TSV 1860 Munich
+clubDictGER2['FCST'] = 35     # FC St. Pauli
+clubDictGER2['FSVF'] = 293    # FSV Frankfurt
+clubDictGER2['1.FC'] = 2036   # 1.FC Heidenheim 1846
+clubDictGER2['MSVD'] = 52     # MSV Duisburg
+clubDictGER2['SVSA'] = 254    # SV Sandhausen
+clubDictGER2['ARMI'] = 10     # Arminia Bielefeld
+
+# ITALIAN SERIE B
+clubDictESP2         = dict()
+clubDictESP2['UDAL'] = 3302   # UD Almeria
+clubDictESP2['REAL'] = 366    # Real Valladolid CF
+clubDictESP2['REAL'] = 142    # Real Zaragoza
+clubDictESP2['CORD'] = 993    # Cordoba CF
+clubDictESP2['CDLE'] = 1244   # CD Leganes
+clubDictESP2['ELCH'] = 1531   # Elche CF
+clubDictESP2['BILB'] = 6688   # Bilbao Athletic
+clubDictESP2['RCDM'] = 237    # RCD Mallorca
+clubDictESP2['SDPO'] = 4032   # SD Ponferradina
+clubDictESP2['CAOS'] = 331    # CA Osasuna
+clubDictESP2['GIRO'] = 12321  # Girona FC
+clubDictESP2['ADAL'] = 11596  # AD Alcorcon
+clubDictESP2['CDLU'] = 11000  # CD Lugo
+clubDictESP2['CDNU'] = 2296   # CD Numancia
+clubDictESP2['ALBA'] = 1532   # Albacete Balompie
+clubDictESP2['CDTE'] = 648    # CD Tenerife
+clubDictESP2['REAL'] = 2497   # Real Oviedo
+clubDictESP2['GIMN'] = 5648   # Gimnastic de Tarragona
+clubDictESP2['UELL'] = 26132  # UE Llagostera
+clubDictESP2['DEPO'] = 1108   # Deportivo Alaves
+clubDictESP2['CDMI'] = 13222  # CD Mirandes
+clubDictESP2['SDHU'] = 5358   # SD Huesca
+
+# AUSTRIAN BUNDESLIGA
+clubDictAUT       = dict()
+clubDictAUT['REDB'] = 409    # Red Bull Salzburg
+clubDictAUT['RAPI'] = 170    # Rapid Vienna
+clubDictAUT['AUST'] = 14     # Austria Vienna
+clubDictAUT['SKST'] = 122    # SK Sturm Graz
+clubDictAUT['SVRI'] = 266    # SV Ried
+clubDictAUT['SCRH'] = 3551   # SC Rheindorf Altach
+clubDictAUT['WOLF'] = 4441   # Wolfsberger AC
+clubDictAUT['FCAD'] = 503    # FC Admira Wacker Modling
+clubDictAUT['SVMA'] = 856    # SV Mattersburg
+clubDictAUT['SVGR'] = 10131  # SV Grodig
+
+# DANNISH ALKA SUPERLIGAEN
+clubDictDEN       = dict()
+clubDictDEN['FCCO'] = 190   # FC Copenhagen
+clubDictDEN['FCMI'] = 865   # FC Midtjylland
+clubDictDEN['BRON'] = 206   # Brondby IF
+clubDictDEN['ODEN'] = 173   # Odense Boldklub
+clubDictDEN['AALB'] = 1053  # Aalborg BK
+clubDictDEN['ESBJ'] = 3426  # Esbjerg fB
+clubDictDEN['FCNO'] = 2778  # FC Nordsjaelland
+clubDictDEN['RAND'] = 5724  # Randers FC
+clubDictDEN['AARH'] = 678   # Aarhus GF
+clubDictDEN['HOBR'] = 5818  # Hobro IK
+clubDictDEN['SOND'] = 5817  # SonderiyskE
+clubDictDEN['VIBO'] = 1063  # Viborg FF
+
+# SPANISH SEGUNDA DIVISION
+clubDictITA2       = dict()
+clubDictITA2['CAGL'] = 1390   # Cagliari Calcio
+clubDictITA2['DELF'] = 2921   # Delfino Pescara 1936
+clubDictITA2['ACCE'] = 1429   # AC Cesena
+clubDictITA2['SPEZ'] = 3522   # Spezia Calcio
+clubDictITA2['ASLI'] = 1210   # AS Livorno
+clubDictITA2['FCBA'] = 332    # FC Bari 1908
+clubDictITA2['ACPE'] = 839    # AC Perugia Calcio
+clubDictITA2['USAV'] = 2331   # US Avellino 1912
+clubDictITA2['CALC'] = 1047   # Calcio Como
+clubDictITA2['NOVA'] = 6692   # Novara Calcio 1908
+clubDictITA2['VICE'] = 2655   # Vicenza Calcio
+clubDictITA2['USLA'] = 22045  # US Latina Calcio
+clubDictITA2['TERN'] = 1103   # Ternana Calcio
+clubDictITA2['FCCR'] = 4083   # FC Crotone
+clubDictITA2['ASCO'] = 408    # Ascoli Picchio
+clubDictITA2['FCPR'] = 26789  # FC Pro Vercelli 1892
+clubDictITA2['BRES'] = 19     # Brescia Calcio
+clubDictITA2['MODE'] = 1385   # Modena FC 1912
+clubDictITA2['TRAP'] = 4331   # Trapani Calcio
+clubDictITA2['VIRT'] = 20519  # Virtus Entella
+clubDictITA2['USSA'] = 380    # US Salernitana 1919
+clubDictITA2['SSVI'] = 4718   # SS Virtus Lanciano
+
+# ENGLISH CHAMPIONSHIP
+clubDictENG2       = dict()
+clubDictENG2['QUEE'] = 1039  # Queens Park Rangers
+clubDictENG2['HULL'] = 3008  # Hull City
+clubDictENG2['DERB'] = 22    # Derby County
+clubDictENG2['MIDD'] = 641   # Middlesbrough FC
+clubDictENG2['BURN'] = 1132  # Burnley FC
+clubDictENG2['NOTT'] = 703   # Nottingham Forest
+clubDictENG2['READ'] = 1032  # Reading FC
+clubDictENG2['CARD'] = 603   # Cardiff City
+clubDictENG2['SHEF'] = 1035  # Sheffield Wednesday
+clubDictENG2['BRIG'] = 1237  # Brighton & Hove Albion
+clubDictENG2['FULH'] = 931   # Fulham FC
+clubDictENG2['WOLV'] = 543   # Wolverhampton Wanderers
+clubDictENG2['BLAC'] = 164   # Blackburn Rovers
+clubDictENG2['LEED'] = 399   # Leeds United
+clubDictENG2['CHAR'] = 358   # Charlton Athletic
+clubDictENG2['BREN'] = 1148  # Brentford FC
+clubDictENG2['IPSW'] = 677   # Ipswich Town
+clubDictENG2['BOLT'] = 355   # Bolton Wanderers
+clubDictENG2['HUDD'] = 1110  # Huddersfield Town
+clubDictENG2['BIRM'] = 337   # Birmingham City
+clubDictENG2['ROTH'] = 1194  # Rotherham United
+clubDictENG2['BRIS'] = 698   # Bristol City
+clubDictENG2['PRES'] = 466   # Preston North End
+clubDictENG2['MILT'] = 991   # Milton Keynes Dons
+
+# CROATIAN 1.HNL
+clubDictCRO       = dict()
+clubDictCRO['GNKD'] = 419    # GNK Dinamo Zagreb
+clubDictCRO['HNKH'] = 447    # HNK Hajduk Split
+clubDictCRO['HNKR'] = 144    # HNK Rijeka
+clubDictCRO['NKLO'] = 11194  # NK Lokomotiva Zagreb
+clubDictCRO['RNKS'] = 420    # RNK Split
+clubDictCRO['SLAV'] = 2362   # Slaven Belupo Koprivnica
+clubDictCRO['NKIS'] = 999    # NK Istra 1961
+clubDictCRO['NKZA'] = 5107   # NK Zagreb
+clubDictCRO['NKIN'] = 918    # NK Inter Zapresic
+clubDictCRO['NKOS'] = 327    # NK Osijek
+
+# CZECH SYNOT LIGA
+clubDictCZE       = dict()
+clubDictCZE['ACSP'] = 197   # AC Sparta Praha
+clubDictCZE['FCVI'] = 941   # FC Viktoria Plzen
+clubDictCZE['SKSL'] = 62    # SK Slavia Prag
+clubDictCZE['FCSL'] = 697   # FC Slovan Liberec
+clubDictCZE['FKJA'] = 1322  # FK Jablonec
+clubDictCZE['FKML'] = 5546  # FK Mlada Boleslav
+clubDictCZE['FKTE'] = 814   # FK Teplice
+clubDictCZE['SKSI'] = 2311  # SK Sigma Olomouc
+clubDictCZE['DUKL'] = 450   # Dukla Prag
+clubDictCZE['FCBA'] = 377   # FC Banik Ostrava
+clubDictCZE['1.FC'] = 5544  # 1.FC Slovacko
+clubDictCZE['FCBO'] = 715   # FC Bohemians Prag 1905
+clubDictCZE['1.FK'] = 2598  # 1.FK Pribram
+clubDictCZE['FCVY'] = 7975  # FC Vysocina Jihlava
+clubDictCZE['FCFA'] = 5545  # FC FASTAV Zlin
+clubDictCZE['FCZB'] = 5225  # FC Zbrojovka Brno
 
 # DICT OF CLUB DICTS
 clubs                         = dict()
@@ -475,4 +668,13 @@ clubs['SuperLig']             = clubDictTUR
 clubs['MajorLeagueSoccer']    = clubDictUSA
 clubs['SuperLeagueGreece']    = clubDictGRE
 clubs['SerieABrazil']         = clubDictBRA
-clubs['TorneoInicial']        = clubDictARG
+clubs['Liga1']                = clubDictROM
+clubs['HNL1']                 = clubDictCRO
+clubs['BundesligaAustria']    = clubDictAUT
+clubs['SynotLiga']            = clubDictCZE
+clubs['AlkaSuperligaen']      = clubDictDEN
+clubs['SuperLiga']            = clubDictSRB
+clubs['Championship']         = clubDictENG2
+clubs['Segundadivision']      = clubDictESP2
+clubs['Bundesliga2']          = clubDictGER2
+clubs['SerieB']               = clubDictITA2

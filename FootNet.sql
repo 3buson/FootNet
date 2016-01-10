@@ -363,7 +363,16 @@ INSERT INTO `leagues` (`idL`, `idC`, `nameLeague`) VALUES
 	(14, 268, 'MajorLeagueSoccer'),
 	(15, 90, 'SuperLeagueGreece'),
 	(16, 30, 'SerieABrazil'),
-	(17, 10, 'TorneoInicial');
+	(17, 10, 'TorneoInicial'),
+	(18, 193, 'Liga1'),
+	(19, 57, 'HNL'),
+	(20, 14, 'BundesligaAustria'),
+	(21, 60, 'SynotLiga'),
+	(22, 62, 'AlkaSuperligaen'),
+	(23, 265, 'Championship'),
+	(24, 218, 'SegundaDivision'),
+	(25, 86, 'Bundesliga2'),
+	(26, 112, 'SerieB');
 /*!40000 ALTER TABLE `leagues` ENABLE KEYS */;
 
 

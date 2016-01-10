@@ -21,7 +21,7 @@ for league, leagueURL in leaguesDict.items():
         time.sleep(10)
         leagueHTML = urlgrabber.urlopen(url, retries=10)
 
-    outputString += 'clubDict' + league + ' = dict()\n'
+    outputString += 'clubDict' + league + '       = dict()\n'
 
     document = pq(leagueHTML.read())
 
@@ -39,10 +39,10 @@ for league, leagueURL in leaguesDict.items():
         endClubURLIdx   = clubURL.index('/saison_id/', startClubURLIdx)
         clubId          = clubURL[startClubURLIdx:endClubURLIdx]
 
-        outputString += 'clubDict' + league + '[' + clubNameNoSpace[0:4] + '] = ' + clubId + ' # ' + clubName + '\n'
+        outputString += 'clubDict' + league + '[\'' + clubNameNoSpace[0:4] + '\'] = ' + clubId + ' # ' + clubName + '\n'
 
     outputString += '\n\n'
 
-print "[ID Mappper]  Finished mapping IDs for all leagues"
+print "[ID Mappper]  Finished mapping IDs for all leagues\n\n"
 
 print outputString
