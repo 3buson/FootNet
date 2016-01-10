@@ -7,7 +7,7 @@ import utils
 def main():
     connection = utils.connectToDB()
 
-    utils.calculatePlayersCareerSums(connection)
+    utils.calculateClubsSums(connection)
 
 if __name__ == "__main__":
     main()

@@ -49,6 +49,29 @@ def calculatePlayersCareerSums(connection):
     print "[Players Career Sum Calculator]  Finished updating players career stats"
 
 
+def calculateClubsSums(connection):
+    cursor = connection.cursor()
+
+    print "[Clubs Sum Calculator]  Updating clubs stats..."
+
+    cursor.execute("SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), SUM(minutesPerGoal), SUM(minutesPlayed) FROM playerclubseason GROUP BY idClub")
+    playersCareerStats = cursor.fetchall()
+
+    for pcs in playersCareerStats:
+        try:
+            cursor.execute("UPDATE club SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? WHERE idClub = ?",
+                       pcs[1], pcs[2], pcs[3], pcs[4], pcs[5], pcs[6], pcs[7], pcs[8], pcs[9], pcs[10], pcs[11], pcs[12], pcs[13], pcs[0])
+        except pyodbc.DatabaseError, e:
+            print "[Clubs Sum Calculator]  ERROR - DatabaseError", e
+            traceback.print_exc()
+
+            pass
+        finally:
+            connection.commit()
+
+    print "[Clubs Sum Calculator]  Finished updating players career stats"
+
+
 def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, withInflation=True):
     weight = 0
 
