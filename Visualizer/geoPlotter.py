@@ -1,3 +1,5 @@
+from twisted.python.constants import _Constant
+
 __author__ = 'matic'
 
 import csv
@@ -6,6 +8,7 @@ import traceback
 from BeautifulSoup import BeautifulSoup
 
 sys.path.insert(0, '../')
+import constants
 import utils
 
 
@@ -15,20 +18,24 @@ def main():
     weightByApps = raw_input('Do you want to weight metric sums by sum of appearances? (Y/N): ')
 
     if(seasonsInput == 'all'):
-        seasons       = seasonsInput
-        seasonsString = seasonsInput
+        seasons              = seasonsInput
+        seasonsString        = constants.allSeasonsString
+        seasonsStringCompact = seasonsInput
     else:
-        seasons       = seasonsInput.split(',')
-        seasons       = [int(season) for season in seasons]
-        seasonsString = ','.join(map(str, seasons))
+        seasons              = seasonsInput.split(',')
+        seasons              = [int(season) for season in seasons]
+        seasonsString        = ','.join(map(str, seasons))
+        seasonsStringCompact = seasonsString
 
     if(leaguesInput == 'all'):
-        leagues       = leaguesInput
-        leaguesString = leaguesInput
+        leagues              = leaguesInput
+        leaguesString        = constants.allLeaguesString
+        leaguesStringCompact = leaguesInput
     else:
-        leagues       = leaguesInput.split(',')
-        leagues       = [int(league) for league in leagues]
-        leaguesString = ','.join(map(str, leagues))
+        leagues              = leaguesInput.split(',')
+        leagues              = [int(league) for league in leagues]
+        leaguesString        = ','.join(map(str, leagues))
+        leaguesStringCompact = leaguesString
 
     if(weightByApps == 'N'):
         weightByApps = False
@@ -56,33 +63,43 @@ def main():
     for metric in ['apps', 'goals', 'assists', 'ownGoals', 'yellowCards', 'redCards', 'onSubs', 'offSubs', 'penaltyGoals', 'concededGoals', 'cleanSheets']:
         print "[Vizualizer GeoPlotter]  Generating image for metric %s..." % metric
 
-        if(metric != 'apps' and weightByApps):
+        gkMetric = (metric == 'concededGoals' or metric == 'cleanSheets')
+
+        if((metric != 'apps' and not gkMetric) and weightByApps):
             weightByAppsString = '/SUM(pcs.apps)'
         else:
             weightByAppsString = ''
 
-        if(seasons != 'all'):
-            if(leagues != 'all'):
-                cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
-                                (metric, weightByAppsString, metric, seasonsString, leaguesString))
-            else:
-                cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) WHERE pcs.idS IN (%s) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
-                                (metric, weightByAppsString, metric, seasonsString))
-        elif(leagues != 'all'):
-            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE cl.idL IN (%s) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
-                           (metric, weightByAppsString, metric, leaguesString))
-        else:
-            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
-                           (metric, weightByAppsString, metric))
+        if(gkMetric):
+            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps) FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC" %
+                                            (seasonsString, leaguesString))
+
+            goalKeeperAppsArray = cursor.fetchall()
+
+        cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
+                        (metric, weightByAppsString, seasonsString, leaguesString, metric))
 
         stats = cursor.fetchall()
 
         # rearange stats into a dictionary
-        statsByCountry = dict()
-        maxValue       = 0
+        goalKeeperAppsByCountry = dict()
+        statsByCountry          = dict()
+        maxValue                = 0
+
+        if(gkMetric):
+            for goalKeeperApps in goalKeeperAppsArray:
+                value = goalKeeperApps[1]
+
+                if(not value):
+                    value = 0
+                else:
+                    value = int(value)
+
+                goalKeeperAppsByCountry[goalKeeperApps[0]] = value
 
         for stat in stats:
-            value = stat[2]
+            value   = stat[2]
+            country = stat[0]
 
             if(weightByApps and metric != 'apps'):
                 absoluteValue = stat[1]
@@ -98,7 +115,10 @@ def main():
                     if(absoluteValue < 400 and (len(seasonsString) > 6 or seasonsString == 'all') and (len(leaguesString) > 6 or seasonsString == 'all')):
                          value = 0.0
                     else:
-                        value = float(value)
+                        if(gkMetric):
+                            value = float(value) / float(goalKeeperAppsByCountry[country])
+                        else:
+                            value = float(value)
                 else:
                     value = int(value)
 
@@ -190,9 +210,9 @@ def main():
 
         # write everything to svg file
         if(weightByApps and metric != 'apps'):
-            filename = metric + 'ByCountry_leagues_' + leaguesString + '_seasons_' + seasonsString + '_weighted.svg'
+            filename = metric + 'ByCountry_leagues_' + leaguesStringCompact + '_seasons_' + seasonsStringCompact + '_weighted.svg'
         else:
-            filename = metric + 'ByCountry_leagues_' + leaguesString + '_seasons_' + seasonsString + '.svg'
+            filename = metric + 'ByCountry_leagues_' + leaguesStringCompact + '_seasons_' + seasonsStringCompact + '.svg'
 
         f = open('Visualizations/' + filename, "w")
 
