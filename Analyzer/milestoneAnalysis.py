@@ -85,9 +85,8 @@ def main():
     else:
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
 
-    directed = (filename == 'Clubs')
-    printNetworkProperties(network, directed)
-    exit()
+    # directed = (filename == 'Clubs')
+    # printNetworkProperties(network, directed)
 
     print "[Analyzer]  calculating PageRank..."
     pagerank = nx.pagerank(network)

@@ -72,7 +72,7 @@ def main():
 
         if(gkMetric):
             cursor.execute("SELECT c.nameCountry, SUM(pcs.apps) FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC" %
-                                            (seasonsString, leaguesString))
+                            (seasonsString, leaguesString))
 
             goalKeeperAppsArray = cursor.fetchall()
 
