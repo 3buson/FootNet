@@ -169,7 +169,7 @@ def createGraphFromEdgeList(filename, directed=False):
                 [node1, node2] = line.split()
                 graph.add_edge(int(node1), int(node2), weight=0)
             else:
-                skipped += 1
+                skipped   += 1
                 slicedLine = line.split('"')
 
                 if(len(slicedLine) > 2):
@@ -207,7 +207,7 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
                 [node1, node2, weight] = line.split()
                 graph.add_edge(int(node1), int(node2), weight=float(weight))
             else:
-                skipped += 1
+                skipped   += 1
                 slicedLine = line.split('"')
 
                 if(len(slicedLine) > 2):
@@ -277,9 +277,11 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
         # save all the player IDs, their names and age to a list of strings
         for player in players:
             if(player[0] > 0):
-                playerAge = date.today().year - player[4]
                 playerIndices[player[0]] = playerIdx
-                playerList.append("# %d \"%s\" %d\n" % (playerIdx, " ".join([player[2] , player[3]]), playerAge))
+                playerAge                = date.today().year - player[4]
+                playerName               = unicode(" ".join([player[2] , player[3]])).encode('utf-8').replace('"', '')
+
+                playerList.append("# %d \"%s\" %d\n" % (playerIdx, playerName, playerAge))
 
                 playerIdx += 1
 
@@ -349,11 +351,14 @@ def createPlayerEdgeListFromDB(filename, seasons='all'):
         file.close()
 
 
-def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=True):
+def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByClubValue=True, weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
 
     if(seasons != 'all'):
         seasonsString = ','.join(map(str, seasons))
+
+    if(leagues != 'all'):
+        leaguesString = ','.join(map(str, leagues))
 
     startTime = time.time()
 
@@ -365,8 +370,15 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
         cursor = connection.cursor()
 
         if(seasons != 'all'):
-            cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (%s) GROUP BY idClub ORDER BY idClub" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+                               (seasonsString, leaguesString))
+            else:
+                cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (%s) GROUP BY idClub ORDER BY idClub" %
+                               seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+                               leaguesString)
         else:
             cursor.execute("SELECT idClub, nameClub FROM club ORDER BY idClub")
 
@@ -401,8 +413,15 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average value to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
+                               (seasonsString, leaguesString))
+            else:
+                cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
+                               seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
+                           leaguesString)
         else:
             cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 GROUP BY idClub ORDER BY idClub, idS")
 
@@ -417,8 +436,15 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
 
         # add club average ranking to clubsInfo
         if(seasons != 'all'):
-            cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND idS IN (%s) GROUP BY idClub ORDER BY idClub" %
+            if(leagues != 'all'):
+                cursor.execute("SELECT cs.idClub, AVG(cs.ranking) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.ranking != -1 AND cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+                                (seasonsString, leaguesString))
+            else:
+                cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 AND idS IN (%s) GROUP BY idClub ORDER BY idClub" %
                            seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT cs.idClub, AVG(cs.ranking) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.ranking != -1 AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+                           leaguesString)
         else:
             cursor.execute("SELECT idClub, AVG(ranking) FROM clubseason WHERE ranking != -1 GROUP BY idClub ORDER BY idClub")
 
@@ -433,8 +459,15 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
         if(seasons != 'all'):
-            cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (%s) ORDER BY idP, idS" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT pcs.idP, pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS in (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
+                               (seasonsString, leaguesString))
+            else:
+                cursor.execute("SELECT idP, idClub, idS FROM playerclubseason WHERE idS in (%s) ORDER BY idP, idS" %
+                               seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT pcs.idP, pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL IN (%s) ORDER BY idP, idS" %
+                               leaguesString)
         else:
             cursor.execute("SELECT idP, idClub, idS FROM playerclubseason ORDER BY idP, idS")
 
@@ -451,7 +484,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-            clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1]))
+            clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], unicode(club[1]).encode('utf-8')))
 
         for clubInEntry1 in clubTransfersIn:
             for clubInEntry2 in clubTransfersIn:
@@ -460,7 +493,7 @@ def createClubEdgeListFromDB(filename, seasons='all', weightedByClubImportance=T
                     clubId2 = clubIndices[clubInEntry2]
 
                     if(weightedByClubImportance):
-                        clubImportance = calculateClubWeight(clubId2, clubsInfo)
+                        clubImportance = calculateClubWeight(clubId2, clubsInfo, weightedByClubValue)
                     else:
                         clubImportance = 1
 

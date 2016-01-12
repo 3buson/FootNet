@@ -587,7 +587,7 @@ def main():
 
 
     # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
-    parseAllPlayerClubSeasonDetails(connection, leagueIds=[18,19,20,21,22,23,24,25,26])
+    parseAllPlayerClubSeasonDetails(connection)
 
 if __name__ == "__main__":
     main()

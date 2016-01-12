@@ -8,29 +8,86 @@ import sys
 sys.path.insert(0, '../')
 import utils
 
-def main():
-    export       = raw_input('Do you want to do an edge list export first? (Y/N): ')
-    filename     = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
-    seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
 
-    if(seasonsInput != 'all'):
-        seasons = seasonsInput.split(',')
+def printNetworkProperties(network, directed):
+    print "[Analyzer]  Calculating average degrees..."
+    degrees          = network.degree()
+    averageDegree    = sum(degrees.values()) / float(len(degrees.values()))
+    print "[Analyzer]  Average degree: %f" % averageDegree
 
-        seasons = [int(season) for season in seasons]
+    if(directed):
+        inDegrees        = network.in_degree()
+        outDegrees       = network.out_degree()
+        averageInDegree  = sum(inDegrees.values())  / float(len(inDegrees.values()))
+        averageOutDegree = sum(outDegrees.values()) / float(len(outDegrees.values()))
+        print "[Analyzer]  Average in degree: %f"  % averageInDegree
+        print "[Analyzer]  Average out degree: %f" % averageOutDegree
+
+    print "[Analyzer]  Calculating percentage of nodes in LCC..."
+    numOfNodes = network.number_of_nodes()
+    if(directed):
+        lcc     = max(nx.strongly_connected_component_subgraphs(network), key=len)
+        lccSize = len(lcc)
     else:
-        seasons = seasonsInput
+        lcc     = max(nx.connected_component_subgraphs(network), key=len)
+        lccSize = len(lcc)
+    print "[Analyzer]  Percentage of nodes in LCC: %f" % (lccSize / float(numOfNodes))
 
+    print "[Analyzer]  Calculating average distance..."
+    averageDistance = nx.average_shortest_path_length(lcc)
+    print "[Analyzer]  Average distance: %f" % averageDistance
+
+
+    if(not directed):
+        print "[Analyzer]  Calculating average clustering..."
+        averageClustering = nx.average_clustering(network)
+        print "[Analyzer]  Average clustering: %f" % averageClustering
+
+        print "[Analyzer]  Calculating diameter..."
+        diameter = nx.diameter(lcc)
+        print "[Analyzer]  Diameter: %d" % diameter
+
+
+def main():
+    export   = raw_input('Do you want to do an edge list export first? (Y/N): ')
+    filename = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
 
     if(export == 'Y'):
-        if(filename == 'Clubs'):
-            utils.createClubEdgeListFromDB('ClubNet.adj', seasons)
-        else:
+        seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
+        leaguesInput = raw_input('Please enter IDs of desired leagues separated by comma (all for all of them): ')
+    else:
+        seasonsInput = 'all'
+        leaguesInput = 'all'
+
+    if(seasonsInput == 'all'):
+        seasons = seasonsInput
+    else:
+        seasons = seasonsInput.split(',')
+        seasons = [int(season) for season in seasons]
+
+    if(leaguesInput == 'all'):
+        leagues = leaguesInput
+    # for easier testing
+    elif(leaguesInput == 'INA'):
+        leagues = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    else:
+        leagues = leaguesInput.split(',')
+        leagues = [int(league) for league in leagues]
+
+    if(export == 'Y'):
+        if(filename == 'Players'):
             utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons)
+        else:
+            utils.createClubEdgeListFromDB('ClubNet.adj', seasons, leagues, False)
 
     if(filename == 'Clubs'):
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
     else:
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
+
+    directed = (filename == 'Clubs')
+    printNetworkProperties(network, directed)
+    exit()
 
     print "[Analyzer]  calculating PageRank..."
     pagerank = nx.pagerank(network)
