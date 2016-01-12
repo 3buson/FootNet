@@ -79,25 +79,33 @@ def main():
 
         # rearange stats into a dictionary
         statsByCountry = dict()
+        maxValue       = 0
 
         for stat in stats:
             value = stat[2]
 
-            if(weightByApps):
-                abosluteValue = stat[1]
+            if(weightByApps and metric != 'apps'):
+                absoluteValue = stat[1]
 
             if(not value):
-                if(weightByApps or abosluteValue < 300):
-                    statsByCountry[stat[0].lower()] = 0.0
-                else:
-                    statsByCountry[stat[0].lower()] = 0
-            else:
                 if(weightByApps):
-                    statsByCountry[stat[0].lower()] = float(value)
+                    value = 0.0
                 else:
-                    statsByCountry[stat[0].lower()] = int(value)
+                    value = 0
+            else:
+                if(weightByApps and metric != 'apps'):
+                    # ignore countries with less than 300 apperances (if enough leagues and seasons are selected)
+                    if(absoluteValue < 400 and (len(seasonsString) > 6 or seasonsString == 'all') and (len(leaguesString) > 6 or seasonsString == 'all')):
+                         value = 0.0
+                    else:
+                        value = float(value)
+                else:
+                    value = int(value)
 
-        maxValue = int(stats[4][1])
+            if(value > maxValue):
+                maxValue = value
+
+            statsByCountry[stat[0].lower()] = value
 
         sum = 0
         num = 0
@@ -141,6 +149,7 @@ def main():
                             color_class  = min(14, color_class)
                     else:
                         color_class = int(round(value / float(maxValue) * 14))
+                        color_class = min(14, color_class)
 
                 except:
                     continue
@@ -155,7 +164,7 @@ def main():
             try:
                 value = statsByCountry[countries[g['id']]]
 
-                if(weightByApps):
+                if(weightByApps and metric != 'apps'):
                     if(value < avgValue):
                         color_class = int(round(value / float(avgValue) * 10))
                     else:
@@ -164,6 +173,7 @@ def main():
                         color_class  = min(14, color_class)
                 else:
                     color_class = int(round(value / float(maxValue) * 14))
+                    color_class = min(14, color_class)
 
             except:
                 continue
@@ -179,7 +189,7 @@ def main():
 
 
         # write everything to svg file
-        if(weightByApps):
+        if(weightByApps and metric != 'apps'):
             filename = metric + 'ByCountry_leagues_' + leaguesString + '_seasons_' + seasonsString + '_weighted.svg'
         else:
             filename = metric + 'ByCountry_leagues_' + leaguesString + '_seasons_' + seasonsString + '.svg'
