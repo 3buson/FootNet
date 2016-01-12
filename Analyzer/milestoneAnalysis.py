@@ -80,10 +80,10 @@ def main():
         else:
             utils.createClubEdgeListFromDB('ClubNet.adj', seasons, leagues, False)
 
-    if(filename == 'Clubs'):
-        [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
-    else:
+    if(filename == 'Players'):
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
+    else:
+        [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
 
     directed = (filename == 'Clubs')
     printNetworkProperties(network, directed)
