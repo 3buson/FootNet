@@ -225,11 +225,14 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
     return graph, nodeData
 
 
-def createPlayerEdgeListFromDB(filename, seasons='all'):
+def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
     print "[Exporter]  Exporting player edge list"
 
     if(seasons != 'all'):
         seasonsString = ','.join(map(str, seasons))
+
+    if(leagues != 'all'):
+        leaguesString = ','.join(map(str, leagues))
 
     startTime = time.time()
 
