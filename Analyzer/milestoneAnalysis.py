@@ -65,10 +65,10 @@ def main():
         seasons = seasonsInput.split(',')
         seasons = [int(season) for season in seasons]
 
-    if(leaguesInput == 'all'):
+    if(leaguesInput.lower() == 'all'):
         leagues = leaguesInput
     # for easier testing
-    elif(leaguesInput == 'INA'):
+    elif(leaguesInput.lower() == 'ina'):
         leagues = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     else:
         leagues = leaguesInput.split(',')
