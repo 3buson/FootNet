@@ -18,16 +18,19 @@ from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
 
 
-def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
+def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'):
     cursor = connection.cursor()
 
-    if(seasonId != 'all'):
-        if(leagueId == 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? ORDER BY pcs.idP", seasonId)
+    if(seasonIds != 'all'):
+        if(leagueIds == 'all'):
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS IN (%s) ORDER BY pcs.idP" %
+                           ','.join(map(str, seasonIds)))
         else:
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS = ? AND c.idL = ? ORDER BY pcs.idP", seasonId, leagueId)
-    elif(leagueId != 'all'):
-        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL = ? ORDER BY pcs.idP", leagueId)
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL = %s ORDER BY pcs.idP" %
+                           (','.join(map(str, seasonIds)), ','.join(map(str, leagueIds))))
+    elif(leagueIds != 'all'):
+        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL IN (%s) ORDER BY pcs.idP" %
+                       ','.join(map(str, leagueIds)))
     else:
         cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs ORDER BY pcs.idP")
 
@@ -43,8 +46,8 @@ def parseAllPlayerClubSeasonDetails(connection, seasonId='all', leagueId='all'):
         if(processed % 50 == 0):
             print "\n[File Parser - details parser]  Parsed %f%% player club season details\n" % (percent)
 
-        if(playerSeason[0] != 26461):
-            parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1], playerSeason[2])
+        parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1], playerSeason[2])
+
         processed += 1
 
 
@@ -64,14 +67,22 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
 
     url = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + seasonId + '/plus/1'
 
+    print "[File Parser - details parser]  Getting player club season details from %s..." % url
+
     try:
         playerHTML = urlgrabber.urlopen(url, retries=10)
     except Exception, e:
-        time.sleep(60)
-        playerHTML = urlgrabber.urlopen(url, retries=10)
+        # try again after half a minute
+        time.sleep(30)
+
+        try:
+            playerHTML = urlgrabber.urlopen(url, retries=10)
+        except Exception, e:
+            # if exception occurred twice just skip this url
+            print "[File Parser - details parser]  Getting player club season details faild twice, skipping this one..."
+            return
 
     document = pq(playerHTML.read())
-
 
     playerHTML.close()
 
