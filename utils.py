@@ -244,8 +244,15 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         cursor = connection.cursor()
 
         if(seasons != 'all'):
-            cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP" %
+                               seasonsString, leaguesString)
+            else:
+                cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP" %
+                               seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE c.idL IN (%s) GROUP BY idP" %
+                           leaguesString)
         else:
             cursor.execute("SELECT * FROM player")
 
@@ -259,8 +266,15 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
         # get all player info
         if(seasons != 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP ORDER BY idP, idS" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP ORDER BY idP, idS" %
+                               seasonsString, leaguesString)
+            else:
+                cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS IN (%s) GROUP BY idP ORDER BY idP, idS" %
+                               seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE c.idL IN (%s) GROUP BY idP ORDER BY idP, idS" %
+                           leaguesString)
         else:
             cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) ORDER BY idP, idS")
 
@@ -295,8 +309,15 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
                 if(seasons != 'all'):
-                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ? AND pcs.idS IN (%s)" %
-                                   seasonsString, playerId)
+                    if(leagues != 'all'):
+                        cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idP = %s AND pcs.idS IN (%s) AND c.idL IN (%s)" %
+                                       playerId, seasonsString, leaguesString)
+                    else:
+                        cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = %s AND pcs.idS IN (%s)" %
+                                       playerId, seasonsString)
+                elif(leagues != 'all'):
+                    cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idP = %s AND c.idL IN (%s)" %
+                                       playerId, leaguesString)
                 else:
                     cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs WHERE pcs.idP = ?", playerId)
 
@@ -326,8 +347,15 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # output player list
         # output edge list
         if(seasons != 'all'):
-            cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s)" %
-                           seasonsString)
+            if(leagues != 'all'):
+                cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s)" %
+                               seasonsString, leaguesString)
+            else:
+                cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) WHERE pcs.idS IN (%s)" %
+                                seasonsString)
+        elif(leagues != 'all'):
+            cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE c.idL IN (%s)" %
+                           leaguesString)
         else:
             cursor.execute("SELECT COUNT(idP) FROM player")
 
