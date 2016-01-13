@@ -59,7 +59,7 @@ def main():
     cursor     = connection.cursor()
 
     # loop through metrics, fetch the data, and color the map
-    for metric in ['apps', 'goals', 'assists', 'ownGoals', 'yellowCards', 'redCards', 'onSubs', 'offSubs', 'penaltyGoals', 'concededGoals', 'cleanSheets']:
+    for metric in ['apps', 'goals', 'assists', 'ownGoals', 'yellowCards', 'redCards', 'penaltyGoals', 'concededGoals', 'cleanSheets']:
         print "[Visualizer GeoPlotter]  Generating image for metric %s..." % metric
 
         gkMetric = (metric == 'concededGoals' or metric == 'cleanSheets')
@@ -137,6 +137,8 @@ def main():
             avgValue = sum / float(num)
         else:
             avgValue = 0
+
+        print "[Visualizer GeoPlotter]  Metric %s maximum value: %f, average value: %f" % (metric, maxValue, avgValue)
 
 
         # load the SVG map and load it into Beautiful Soup
