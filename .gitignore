@@ -5,6 +5,8 @@
 *.adj
 *.net
 *.edge
+*.rar
+*.zip
 
 .idea/
 fileGetter/.idea/
