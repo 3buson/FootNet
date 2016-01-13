@@ -1,7 +1,6 @@
-from twisted.python.constants import _Constant
-
 __author__ = 'matic'
 
+import os
 import csv
 import sys
 import traceback
@@ -51,7 +50,7 @@ def main():
         try:
             countries[row[1]] = row[0].lower()
         except Exception, e:
-            print "[Vizualizer GeoPlotter]  Exception occurred!", e
+            print "[Visualizer GeoPlotter]  Exception occured!", e
             traceback.print_exc()
 
             pass
@@ -61,7 +60,7 @@ def main():
 
     # loop through metrics, fetch the data, and color the map
     for metric in ['apps', 'goals', 'assists', 'ownGoals', 'yellowCards', 'redCards', 'onSubs', 'offSubs', 'penaltyGoals', 'concededGoals', 'cleanSheets']:
-        print "[Vizualizer GeoPlotter]  Generating image for metric %s..." % metric
+        print "[Visualizer GeoPlotter]  Generating image for metric %s..." % metric
 
         gkMetric = (metric == 'concededGoals' or metric == 'cleanSheets')
 
@@ -214,13 +213,18 @@ def main():
         else:
             filename = metric + 'ByCountry_leagues_' + leaguesStringCompact + '_seasons_' + seasonsStringCompact + '.svg'
 
+        # check if directory 'Visualizations' exists and create it if necessary
+        directory = 'Visualizations'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         f = open('Visualizations/' + filename, "w")
 
         # it's really important that "viewBox" is correctly capitalized and BeautifulSoup kills the capitalization in my tests
         f.write(str(soup).replace('viewbox', 'viewBox', 1))
         f.close()
 
-        print "[Vizualizer GeoPlotter]  Image for metric %s generated" % metric
+        print "[Visualizer GeoPlotter]  Image for metric %s generated" % metric
 
 if __name__ == "__main__":
     main()
