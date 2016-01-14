@@ -16,6 +16,8 @@ def main():
     leaguesInput = raw_input('Please enter IDs of desired leagues separated by comma (all for all of them): ')
     weightByApps = raw_input('Do you want to weight metric sums by sum of appearances? (Y/N): ')
 
+    print "\n"
+
     if(seasonsInput == 'all'):
         seasons              = seasonsInput
         seasonsString        = constants.allSeasonsString
@@ -101,7 +103,13 @@ def main():
             country = stat[0]
 
             if(weightByApps and metric != 'apps'):
-                absoluteValue = stat[1]
+                if(gkMetric):
+                    if(country in goalKeeperAppsByCountry):
+                        appearances = goalKeeperAppsByCountry[country]
+                    else:
+                        appearances = 0
+                else:
+                    appearances = stat[1]
 
             if(not value):
                 if(weightByApps):
@@ -110,8 +118,8 @@ def main():
                     value = 0
             else:
                 if(weightByApps and metric != 'apps'):
-                    # ignore countries with less than 300 apperances (if enough leagues and seasons are selected)
-                    if(absoluteValue < 400 and (len(seasonsString) > 6 or seasonsString == 'all') and (len(leaguesString) > 6 or seasonsString == 'all')):
+                    # ignore countries with less than 300 appearances (if enough leagues and seasons are selected)
+                    if(appearances < 400 and (len(seasonsInput) > 6 or seasonsInput == 'all') and (len(leaguesInput) > 6 or leaguesInput == 'all')):
                          value = 0.0
                     else:
                         if(gkMetric):

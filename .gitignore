@@ -7,6 +7,7 @@
 *.edge
 *.rar
 *.zip
+*.txt
 
 .idea/
 fileGetter/.idea/
