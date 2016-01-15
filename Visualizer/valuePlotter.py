@@ -1,6 +1,7 @@
 __author__ = 'matic'
 
 import matplotlib.pyplot as plt
+from random import shuffle
 import sys
 import os
 
@@ -36,19 +37,21 @@ def main():
     allSeasons    = constants.allSeasons[0:-1]
     allSeasons    = [season + 2000 for season in allSeasons]
 
-    # 26 RGB colors for chart
-    colors = constants.rgb26
+    # 30 RGB colors for chart
+    colors = constants.rgb30
+    shuffle(colors)
 
     # scale RGB values to the [0, 1] interval
     for i in range(len(colors)):
         r, g, b   = colors[i]
         colors[i] = (r / 255.0, g / 255.0, b / 255.0)
 
-    plt.figure(figsize=(12,14))
+    plt.figure(figsize=(20,14))
 
     # prepare the data
     playersDataDict    = dict()
     lastSeasonDataDict = dict()
+    sortedPlayers      = list()
     playersNames       = dict()
 
     if(byClubs):
@@ -56,7 +59,7 @@ def main():
                          currentSeason, clubId)
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY idP, idS",
+        cursor.execute("SELECT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY playerValue",
                         currentSeason, clubId, currentSeason)
         lastSeasonData = cursor.fetchall()
     else:
@@ -74,6 +77,7 @@ def main():
         playerId = lastSeasonDataForPlayer[0]
         value    = lastSeasonDataForPlayer[1]
 
+        sortedPlayers.append(playerId)
         lastSeasonDataDict[playerId] = float(value) / 1000000
 
     for playerData in playersData:
@@ -88,11 +92,10 @@ def main():
             if(playerId not in players):
                 players.append(playerId)
 
-        # we want values in millions of pounds
         if(not value):
             value = 0
         else:
-            value = float(value) / 1000000
+            value = int(round(value))
 
         if(value > maxValue):
             maxValue = value
@@ -129,7 +132,7 @@ def main():
     maximum = int(round(maxValue))
     step    = int(round(maxValue / 10))
 
-    plt.yticks(range(0, maximum, step), [u"\xA3"  + str(x) + " mil" for x in range(0, maximum, step)], fontsize=14)
+    plt.yticks(range(0, maximum, step), [u"\xA3"  + str(x / 1000000) + " mil" for x in range(0, maximum, step)], fontsize=14)
     plt.xticks(fontsize=14)
 
     # print tick lines across the plot
@@ -142,27 +145,37 @@ def main():
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
 
-    positions = list()
+    positions       = list()
+    displace        = maxValue / 40
+    displaceCaption = maxValue / 15
 
-    for idx, playerId in enumerate(lastSeasonDataDict.keys()):
+    for idx, playerId in enumerate(sortedPlayers):
         # each line with different color
         plt.plot(allSeasons, playersDataDict[playerId],
                 lw=2.5, color=colors[idx % len(colors)])
 
-        posY = int(playersDataDict[playerId][-1])
+        value = playersDataDict[playerId][-1]
+        posY  = int(round(value))
 
         # prevent overlapping text
         if(posY in positions):
-            posY += 1
+            posY += displace
 
             while(posY in positions):
-                posY += 0.75
+                posY += displace
 
         positions.append(posY)
+
+        if(idx != len(sortedPlayers) - 1):
+            nextPlayerValue = playersDataDict[sortedPlayers[idx + 1]][-1]
+            if(posY > nextPlayerValue):
+                positions.append(nextPlayerValue)
+
         plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx % len(colors)])
 
-    plt.text(allSeasons[len(allSeasons) / 2], -5, "Football players market value fluctuation through seasons 2001-2015",
-             fontsize=13, ha="center")
+    plt.text(allSeasons[len(allSeasons) / 2], -displaceCaption,
+             "Football players market value fluctuation through seasons 2001-2015 for club " + filename,
+             fontsize=20, ha="center")
 
     # check if directory 'Visualizations' exists and create it if necessary
     directory = 'Visualizations/ValuePlots'
