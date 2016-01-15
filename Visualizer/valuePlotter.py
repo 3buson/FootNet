@@ -13,13 +13,26 @@ def main():
     connection = utils.connectToDB()
     cursor     = connection.cursor()
 
-    playersInput  = raw_input('Please enter desired player IDs separated by comma: ')
-    players       = playersInput.split(',')
-    players       = [int(player) for player in players]
-    playersString = ','.join(map(str, players))
+    inputType     = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
 
-    allSeasons = constants.allSeasons[0:-1]
-    allSeasons = [season + 2000 for season in allSeasons]
+    if(inputType.lower() == 'club'):
+        byClubs = True
+    else:
+        byClubs = False
+
+    if(not byClubs):
+        playersInput  = raw_input('Please enter desired player IDs separated by comma: ')
+        players       = playersInput.split(',')
+        players       = [int(player) for player in players]
+        playersString = ','.join(map(str, players))
+    else:
+        clubInput = raw_input('Please enter desired club ID: ')
+        clubId    = int(clubInput)
+        players   = []
+
+    currentSeason = constants.currentSeason
+    allSeasons    = constants.allSeasons[0:-1]
+    allSeasons    = [season + 2000 for season in allSeasons]
 
     # "Tableau 20" RGB colors
     colors = constants.tabelau20
@@ -33,13 +46,21 @@ def main():
 
     # prepare the data
     playersDataDict = dict()
-    playersData     = cursor.execute("SELECT idP, idS, playerValue FROM playerclubseason WHERE idP IN (%s) ORDER BY idP" % playersString)
-    maxValue        = 0
+
+    if(byClubs):
+        playersData = cursor.execute("SELECT idP, idS, playerValue FROM playerclubseason WHERE idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) ORDER BY idP, idS", currentSeason, clubId)
+    else:
+        playersData = cursor.execute("SELECT idP, idS, playerValue FROM playerclubseason WHERE idP IN (%s) ORDER BY idP, idS" % playersString)
+
+    maxValue = 0
 
     for playerData in playersData:
         playerId = playerData[0]
         seasonId = playerData[1]
         value    = playerData[2]
+
+        if(byClubs):
+            players.append(playerId)
 
         # we want values in millions of pounds
         if(not value):
@@ -56,12 +77,10 @@ def main():
             playersDataDict[playerId] = [0] * 15
 
 
-    # remove plot frame lines
+    # remove some plot frame lines
     ax = plt.subplot(111)
     ax.spines["top"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
 
     ax.get_xaxis().tick_bottom()
     ax.get_yaxis().tick_left()
@@ -75,9 +94,11 @@ def main():
     plt.yticks(range(0, maximum, step), [u"\xA3"  + str(x) + " mil" for x in range(0, maximum, step)], fontsize=14)
     plt.xticks(fontsize=14)
 
-    # tick lines across the plot
+    # print tick lines across the plot
     for y in range(0, maximum, step):
-        plt.plot(range(allSeasons[0], allSeasons[len(allSeasons) - 1]), [y] * len(range(allSeasons[0], allSeasons[len(allSeasons) - 1])), "--", lw=0.5, color="black", alpha=0.3)
+        plt.plot(range(allSeasons[0], allSeasons[len(allSeasons) - 1] + 1),
+                 [y] * len(range(allSeasons[0], allSeasons[len(allSeasons) - 1] + 1)),
+                 "--", lw=0.5, color="black", alpha=0.3)
 
     # remove the tick marks
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
@@ -86,14 +107,43 @@ def main():
     for rank, column in enumerate(players):
         # each line with different color
         plt.plot(allSeasons, playersDataDict[column],
-                lw=2.5, color=colors[rank])
+                lw=2.5, color=colors[rank % len(colors)])
 
-        
+        # Add a text label to the right end of every line. Most of the code below
+        # is adding specific offsets y position because some labels overlapped.
+        # y_pos = gender_degree_data[column.replace("\n", " ")].values[-1] - 0.5
+        # if column == "Foreign Languages":
+        #     y_pos += 0.5
+        # elif column == "English":
+        #     y_pos -= 0.5
+        # elif column == "Communications\nand Journalism":
+        #     y_pos += 0.75
+        # elif column == "Art and Performance":
+        #     y_pos -= 0.25
+        # elif column == "Agriculture":
+        #     y_pos += 1.25
+        # elif column == "Social Sciences and History":
+        #     y_pos += 0.25
+        # elif column == "Business":
+        #     y_pos -= 0.75
+        # elif column == "Math and Statistics":
+        #     y_pos += 0.75
+        # elif column == "Architecture":
+        #     y_pos -= 0.75
+        # elif column == "Computer Science":
+        #     y_pos += 0.75
+        # elif column == "Engineering":
+        #     y_pos -= 0.25
 
-    plt.text(100, 100, "Football players market value fluctuation through seasons 2001-2015", fontsize=17, ha="center")
+        # Again, make sure that all labels are large enough to be easily read
+        # by the viewer.
+        # plt.text(2011.5, y_pos, column, fontsize=14, color=tableau20[rank])
 
-    plt.show()
-    # plt.savefig("playersValueFluctuation.png", bbox_inches="tight")
+    plt.text(allSeasons[len(allSeasons) / 2], -5, "Football players market value fluctuation through seasons 2001-2015",
+             fontsize=13, ha="center")
+
+    # plt.show()
+    plt.savefig("playersValueFluctuation.png", bbox_inches="tight")
 
 if __name__ == "__main__":
     main()
