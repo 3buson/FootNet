@@ -102,7 +102,17 @@ def main():
         else:
             playersDataDict[playerId] = [0] * 15
 
-        playersNames[playerId] = unicode(lastName, 'latin-1')
+        if(lastName):
+            name = lastName
+        else:
+            name = firstName
+
+        try:
+            playerName = unicode(name, 'latin-1')
+        except TypeError:
+            playerName = name
+
+        playersNames[playerId] = playerName
 
 
     # remove some plot frame lines
@@ -143,23 +153,23 @@ def main():
 
         # prevent overlapping text
         if(posY in positions):
-            posY += 2
+            posY += 1
 
             while(posY in positions):
-                posY += 2
+                posY += 0.75
 
         positions.append(posY)
-        plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx])
+        plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx % len(colors)])
 
     plt.text(allSeasons[len(allSeasons) / 2], -5, "Football players market value fluctuation through seasons 2001-2015",
              fontsize=13, ha="center")
 
     # check if directory 'Visualizations' exists and create it if necessary
-    directory = 'Visualizations'
+    directory = 'Visualizations/ValuePlots'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    plt.savefig('Visualizations/' + filename + '.png')
+    plt.savefig(directory + '/' + filename + '.png')
 
 if __name__ == "__main__":
     main()

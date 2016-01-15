@@ -224,11 +224,11 @@ def main():
             filename = metric + 'ByCountry_leagues_' + leaguesStringCompact + '_seasons_' + seasonsStringCompact + '.svg'
 
         # check if directory 'Visualizations' exists and create it if necessary
-        directory = 'Visualizations'
+        directory = 'Visualizations/GeoPlots'
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        f = open('Visualizations/' + filename, "w")
+        f = open(directory + '/' + filename, "w")
 
         # it's really important that "viewBox" is correctly capitalized and BeautifulSoup kills the capitalization in my tests
         f.write(str(soup).replace('viewbox', 'viewBox', 1))
