@@ -154,7 +154,7 @@ def main():
         soup = BeautifulSoup(svg, selfClosingTags=['defs', 'sodipodi:namedview', 'path'])
 
         # blue shades
-        colors = ["#a9caea", "#9dbede", "#92b2d3", "#87a6c8", "#7b9abc", "#708eb1", "#6582a6", "#5a769b", "#4e6a8f", "#435e84", "#385279", "#2c466d", "#213a62", "#19325D", "#0b234c"]
+        colors = constants.blueShades
 
         # find counties with and without multiple polygons
         gs    = soup.contents[2].findAll('g',    recursive=False)
