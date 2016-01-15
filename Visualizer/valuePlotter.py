@@ -173,9 +173,14 @@ def main():
 
         plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx % len(colors)])
 
+
+    caption = "Football players market value fluctuation through seasons 2001-2015 for club "
+
+    if(byClubs):
+        caption += filename
+
     plt.text(allSeasons[len(allSeasons) / 2], -displaceCaption,
-             "Football players market value fluctuation through seasons 2001-2015 for club " + filename,
-             fontsize=20, ha="center")
+             caption, fontsize=20, ha="center")
 
     # check if directory 'Visualizations' exists and create it if necessary
     directory = 'Visualizations/ValuePlots'
