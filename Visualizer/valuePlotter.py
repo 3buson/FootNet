@@ -34,33 +34,57 @@ def main():
     allSeasons    = constants.allSeasons[0:-1]
     allSeasons    = [season + 2000 for season in allSeasons]
 
-    # "Tableau 20" RGB colors
-    colors = constants.tabelau20
+    # 26 RGB colors for chart
+    colors = constants.rgb26
 
     # scale RGB values to the [0, 1] interval
     for i in range(len(colors)):
         r, g, b   = colors[i]
         colors[i] = (r / 255.0, g / 255.0, b / 255.0)
 
-    plt.figure(figsize=(12, 14))
+    plt.figure(figsize=(12,14))
 
     # prepare the data
-    playersDataDict = dict()
+    playersDataDict    = dict()
+    lastSeasonDataDict = dict()
+    playersNames       = dict()
 
     if(byClubs):
-        playersData = cursor.execute("SELECT idP, idS, playerValue FROM playerclubseason WHERE idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) ORDER BY idP, idS", currentSeason, clubId)
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) ORDER BY idP, idS",
+                         currentSeason, clubId)
+        playersData = cursor.fetchall()
+
+        cursor.execute("SELECT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY idP, idS",
+                        currentSeason, clubId, currentSeason)
+        lastSeasonData = cursor.fetchall()
     else:
-        playersData = cursor.execute("SELECT idP, idS, playerValue FROM playerclubseason WHERE idP IN (%s) ORDER BY idP, idS" % playersString)
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (%s) ORDER BY idP, idS"
+                         % playersString)
+        playersData = cursor.fetchall()
+
+        cursor.execute("SELECT pcs.idP, pcs.playerValue, FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
+                        % (currentSeason, playersString))
+        lastSeasonData = cursor.fetchall()
 
     maxValue = 0
 
+    for lastSeasonDataForPlayer in lastSeasonData:
+        playerId = lastSeasonDataForPlayer[0]
+        value    = lastSeasonDataForPlayer[1]
+
+        lastSeasonDataDict[playerId] = float(value) / 1000000
+
     for playerData in playersData:
-        playerId = playerData[0]
-        seasonId = playerData[1]
-        value    = playerData[2]
+        playerId  = playerData[0]
+        seasonId  = playerData[1]
+        value     = playerData[2]
+
+        firstName = playerData[3]
+        lastName  = playerData[4]
 
         if(byClubs):
-            players.append(playerId)
+            if(playerId not in players):
+                players.append(playerId)
 
         # we want values in millions of pounds
         if(not value):
@@ -75,6 +99,8 @@ def main():
             playersDataDict[playerId][seasonId - 1] = value
         else:
             playersDataDict[playerId] = [0] * 15
+
+        playersNames[playerId] = unicode(lastName, 'latin-1')
 
 
     # remove some plot frame lines
@@ -104,46 +130,29 @@ def main():
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
 
-    for rank, column in enumerate(players):
+    positions = list()
+
+    for idx, playerId in enumerate(lastSeasonDataDict.keys()):
         # each line with different color
-        plt.plot(allSeasons, playersDataDict[column],
-                lw=2.5, color=colors[rank % len(colors)])
+        plt.plot(allSeasons, playersDataDict[playerId],
+                lw=2.5, color=colors[idx % len(colors)])
 
-        # Add a text label to the right end of every line. Most of the code below
-        # is adding specific offsets y position because some labels overlapped.
-        # y_pos = gender_degree_data[column.replace("\n", " ")].values[-1] - 0.5
-        # if column == "Foreign Languages":
-        #     y_pos += 0.5
-        # elif column == "English":
-        #     y_pos -= 0.5
-        # elif column == "Communications\nand Journalism":
-        #     y_pos += 0.75
-        # elif column == "Art and Performance":
-        #     y_pos -= 0.25
-        # elif column == "Agriculture":
-        #     y_pos += 1.25
-        # elif column == "Social Sciences and History":
-        #     y_pos += 0.25
-        # elif column == "Business":
-        #     y_pos -= 0.75
-        # elif column == "Math and Statistics":
-        #     y_pos += 0.75
-        # elif column == "Architecture":
-        #     y_pos -= 0.75
-        # elif column == "Computer Science":
-        #     y_pos += 0.75
-        # elif column == "Engineering":
-        #     y_pos -= 0.25
+        posY = int(playersDataDict[playerId][-1])
 
-        # Again, make sure that all labels are large enough to be easily read
-        # by the viewer.
-        # plt.text(2011.5, y_pos, column, fontsize=14, color=tableau20[rank])
+        # prevent overlapping text
+        if(posY in positions):
+            posY += 2
+
+            while(posY in positions):
+                posY += 2
+
+        positions.append(posY)
+        plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx])
 
     plt.text(allSeasons[len(allSeasons) / 2], -5, "Football players market value fluctuation through seasons 2001-2015",
              fontsize=13, ha="center")
 
-    # plt.show()
-    plt.savefig("playersValueFluctuation.png", bbox_inches="tight")
+    plt.savefig("playersValueFluctuation.png")
 
 if __name__ == "__main__":
     main()
