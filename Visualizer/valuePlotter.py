@@ -1,8 +1,8 @@
 __author__ = 'matic'
 
 import matplotlib.pyplot as plt
-import pandas as pd
 import sys
+import os
 
 sys.path.insert(0, '../')
 import constants
@@ -13,7 +13,7 @@ def main():
     connection = utils.connectToDB()
     cursor     = connection.cursor()
 
-    inputType     = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
+    inputType = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
 
     if(inputType.lower() == 'club'):
         byClubs = True
@@ -29,6 +29,8 @@ def main():
         clubInput = raw_input('Please enter desired club ID: ')
         clubId    = int(clubInput)
         players   = []
+
+    filename = raw_input("Please enter image filename: ")
 
     currentSeason = constants.currentSeason
     allSeasons    = constants.allSeasons[0:-1]
@@ -152,7 +154,12 @@ def main():
     plt.text(allSeasons[len(allSeasons) / 2], -5, "Football players market value fluctuation through seasons 2001-2015",
              fontsize=13, ha="center")
 
-    plt.savefig("playersValueFluctuation.png")
+    # check if directory 'Visualizations' exists and create it if necessary
+    directory = 'Visualizations'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    plt.savefig('Visualizations/' + filename + '.png')
 
 if __name__ == "__main__":
     main()
