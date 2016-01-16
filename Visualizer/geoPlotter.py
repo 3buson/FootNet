@@ -46,7 +46,7 @@ def main():
 
     # read country abbreviations from csv
     countries = dict()
-    reader    = csv.reader(open('countrymapping.csv'), delimiter=",")
+    reader    = csv.reader(open(constants.countrySVGMap), delimiter=",")
 
     for row in reader:
         try:
