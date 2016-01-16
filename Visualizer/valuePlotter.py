@@ -14,19 +14,11 @@ def main():
     connection = utils.connectToDB()
     cursor     = connection.cursor()
 
-    inputType    = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
-    seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
+    # type input
+    inputType = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
+    byClubs   = (inputType.lower() == 'club')
 
-    if(seasonsInput == 'all'):
-        seasons              = seasonsInput
-        seasonsString        = constants.allSeasonsString
-    else:
-        seasons              = seasonsInput.split(',')
-        seasons              = [int(season) for season in seasons]
-        seasonsString        = ','.join(map(str, seasons))
-
-    byClubs = (inputType.lower() == 'club')
-
+    # players/club input
     if(not byClubs):
         playersInput  = raw_input('Please enter desired player IDs separated by comma: ')
         players       = playersInput.split(',')
@@ -37,14 +29,26 @@ def main():
         clubId    = int(clubInput)
         players   = []
 
-    filename = raw_input("Please enter image filename: ")
+    # seasons input
+    seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
 
-    currentSeason = constants.currentSeason
-    allSeasons    = constants.allSeasons[0:-1]
-    allSeasons    = [season + 2000 for season in allSeasons]
+    if(seasonsInput == 'all'):
+        seasons       = constants.allSeasons[0:-1]
+        lastSeason    = seasons[-1]
+        seasons       = [int(season) + 2000 for season in seasons]
+        seasonsString = constants.allSeasonsString
+    else:
+        seasons       = seasonsInput.split(',')
+        lastSeason    = seasons[-1]
+        seasonsString = ','.join(map(str, seasons))
+        seasons       = [int(season) + 2000 for season in seasons]
+
+    # filename input
+    filename = raw_input("Please enter image filename: ")
 
     # 30 RGB colors for chart
     colors = constants.rgb30
+    # mix them so similar colors will not represent players with similar value
     shuffle(colors)
 
     # scale RGB values to the [0, 1] interval
@@ -52,7 +56,9 @@ def main():
         r, g, b   = colors[i]
         colors[i] = (r / 255.0, g / 255.0, b / 255.0)
 
-    plt.figure(figsize=(20,14))
+
+    plotLength = 20 - max(0, (15 - (len(seasons) * 3)))
+    plt.figure(figsize=(plotLength,14))
 
     # prepare the data
     playersDataDict    = dict()
@@ -61,20 +67,20 @@ def main():
     playersNames       = dict()
 
     if(byClubs):
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) ORDER BY idP, idS",
-                         currentSeason, clubId)
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = %s AND idClub = %d) AND idS IN (%s) ORDER BY idP, idS"
+                       % (lastSeason, clubId, seasonsString))
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY playerValue",
-                        currentSeason, clubId, currentSeason)
+        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY playerValue",
+                        lastSeason, clubId, lastSeason)
         lastSeasonData = cursor.fetchall()
     else:
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (%s) ORDER BY idP, idS"
-                         % playersString)
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (%s) AND pcs.idS IN (%s) ORDER BY idP, idS"
+                         % (playersString, seasonsString))
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT pcs.idP, pcs.playerValue, FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
-                        % (currentSeason, playersString))
+        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue, FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
+                        % (lastSeason, playersString))
         lastSeasonData = cursor.fetchall()
 
     maxValue = 0
@@ -84,7 +90,13 @@ def main():
         value    = lastSeasonDataForPlayer[1]
 
         sortedPlayers.append(playerId)
-        lastSeasonDataDict[playerId] = float(value) / 1000000
+
+        if(value):
+            value = float(value) / 1000000
+        else:
+            value = 0.0
+
+        lastSeasonDataDict[playerId] = value
 
     for playerData in playersData:
         playerId  = playerData[0]
@@ -98,7 +110,7 @@ def main():
             if(playerId not in players):
                 players.append(playerId)
 
-        if(not value):
+        if(not value or int(value) == -1):
             value = 0
         else:
             value = int(round(value))
@@ -107,9 +119,11 @@ def main():
             maxValue = value
 
         if(playerId in playersDataDict.keys()):
-            playersDataDict[playerId][seasonId - 1] = value
+            playersDataDict[playerId][seasons.index(seasonId + 2000)] = value
         else:
-            playersDataDict[playerId] = [0] * 15
+            playersDataDict[playerId] = [0] * len(seasons)
+
+            playersDataDict[playerId][seasons.index(seasonId + 2000)] = value
 
         if(lastName):
             name = lastName
@@ -133,31 +147,40 @@ def main():
     ax.get_yaxis().tick_left()
 
     # limit the range of the plot to where the data is
-    plt.xlim(allSeasons[0], allSeasons[len(allSeasons) - 1])
+    plt.xlim(seasons[0], seasons[len(seasons) - 1])
 
-    maximum = int(round(maxValue))
-    step    = int(round(maxValue / 10))
+    valueMaximum   = int(round(maxValue))
+    valueStep      = int(round(maxValue / 10))
+    seasonsMinimum = seasons[0]
+    seasonsMaximum = seasons[-1] + 1
+    seasonsStep    = 1
 
-    plt.yticks(range(0, maximum, step), [u"\xA3"  + str(x / 1000000) + " mil" for x in range(0, maximum, step)], fontsize=14)
-    plt.xticks(fontsize=14)
+    plt.yticks(range(0, valueMaximum, valueStep),
+               [u"\xA3"  + str(x / 1000000) + " mil " for x in range(0, valueMaximum, valueStep)],
+               fontsize=14)
+
+    plt.xticks(range(seasonsMinimum, seasonsMaximum, seasonsStep),
+               [str(x) for x in range(seasonsMinimum, seasonsMaximum, seasonsStep)],
+               fontsize=14)
 
     # print tick lines across the plot
-    for y in range(0, maximum, step):
-        plt.plot(range(allSeasons[0], allSeasons[len(allSeasons) - 1] + 1),
-                 [y] * len(range(allSeasons[0], allSeasons[len(allSeasons) - 1] + 1)),
+    for y in range(0, valueMaximum, valueStep):
+        plt.plot(range(seasons[0], seasons[len(seasons) - 1] + 1),
+                 [y] * len(range(seasons[0], seasons[len(seasons) - 1] + 1)),
                  "--", lw=0.5, color="black", alpha=0.3)
 
     # remove the tick marks
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
 
-    positions       = list()
-    displace        = maxValue / 40
-    displaceCaption = maxValue / 15
+    positions        = list()
+    displace         = maxValue / 40
+    displaceCaptionY = maxValue / 15
+    displaceCaptionX = (seasons[0] + seasons[-1]) / 2.0
 
     for idx, playerId in enumerate(sortedPlayers):
         # each line with different color
-        plt.plot(allSeasons, playersDataDict[playerId],
+        plt.plot(seasons, playersDataDict[playerId],
                 lw=2.5, color=colors[idx % len(colors)])
 
         value = playersDataDict[playerId][-1]
@@ -177,15 +200,17 @@ def main():
             if(posY > nextPlayerValue):
                 positions.append(nextPlayerValue)
 
-        plt.text(allSeasons[-1], posY, playersNames[playerId], fontsize=14, color=colors[idx % len(colors)])
+        plt.text(seasons[-1], posY, playersNames[playerId],
+                 fontsize=14, color=colors[idx % len(colors)])
 
 
-    caption = "Football players market value fluctuation through seasons 2001-2015 for club "
+    caption = "Football players market value fluctuation through seasons %s-%s for club "\
+              % (seasons[0], seasons[-1])
 
     if(byClubs):
         caption += filename
 
-    plt.text(allSeasons[len(allSeasons) / 2], -displaceCaption,
+    plt.text(displaceCaptionX, -displaceCaptionY,
              caption, fontsize=20, ha="center")
 
     # check if directory 'Visualizations' exists and create it if necessary
@@ -193,6 +218,7 @@ def main():
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+    # plt.show()
     plt.savefig(directory + '/' + filename + '.png')
 
 if __name__ == "__main__":
