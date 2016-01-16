@@ -14,12 +14,18 @@ def main():
     connection = utils.connectToDB()
     cursor     = connection.cursor()
 
-    inputType = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
+    inputType    = raw_input('Do you want price fluctuation for a specific club (current squad) or for selected players? (Club/Players): ')
+    seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
 
-    if(inputType.lower() == 'club'):
-        byClubs = True
+    if(seasonsInput == 'all'):
+        seasons              = seasonsInput
+        seasonsString        = constants.allSeasonsString
     else:
-        byClubs = False
+        seasons              = seasonsInput.split(',')
+        seasons              = [int(season) for season in seasons]
+        seasonsString        = ','.join(map(str, seasons))
+
+    byClubs = (inputType.lower() == 'club')
 
     if(not byClubs):
         playersInput  = raw_input('Please enter desired player IDs separated by comma: ')
