@@ -46,6 +46,13 @@ def main():
     # filename input
     filename = raw_input("Please enter image filename: ")
 
+    if(byClubs):
+        print "[Visualizer ValuePlotter]  Generating chart for club %s for seasons %s..."%\
+              (filename, seasonsString)
+    else:
+        print "[Visualizer ValuePlotter]  Generating chart for players %s for seasons %s..." %\
+              (playersString, seasonsString)
+
     # 30 RGB colors for chart
     colors = constants.rgb30
     # mix them so similar colors will not represent players with similar value
@@ -212,6 +219,13 @@ def main():
 
     plt.text(displaceCaptionX, -displaceCaptionY,
              caption, fontsize=20, ha="center")
+
+    if(byClubs):
+        print "[Visualizer ValuePlotter]  Chart for club %s for seasons %s generated."%\
+              (filename, seasonsString)
+    else:
+        print "[Visualizer ValuePlotter]  Chart for players %s for seasons %s generated." %\
+              (playersString, seasonsString)
 
     # check if directory 'Visualizations' exists and create it if necessary
     directory = 'Visualizations/ValuePlots'
