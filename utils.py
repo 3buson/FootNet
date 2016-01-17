@@ -212,7 +212,7 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
 
                 if(len(slicedLine) > 2):
                     [nodeId, nodeName, nodeProperty] = slicedLine
-                    nodeData[int(nodeId[2:])] = (nodeName, nodeProperty)
+                    nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
 
                     graph.add_node(int(nodeId[2:]))
 
@@ -247,8 +247,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
         cursor = connection.cursor()
 
-        cursor.execute("SELECT p.* FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP" %
-                       seasonsString, leaguesString)
+        cursor.execute("SELECT DISTINCT p.idP, p.idC, p.firstName, p.lastName, p.birthDate FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP" %
+                       (seasonsString, leaguesString))
 
         players       = cursor.fetchall()
         playerIdx     = 1
@@ -259,8 +259,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP ORDER BY idP, idS" %
-                       seasonsString, leaguesString)
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
+                       (seasonsString, leaguesString))
 
         playersData = cursor.fetchall()
         playersInfo = dict()
@@ -280,7 +280,11 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
             if(player[0] > 0):
                 playerIndices[player[0]] = playerIdx
                 playerAge                = date.today().year - player[4]
-                playerName               = unicode(" ".join([player[2] , player[3]])).encode('utf-8').replace('"', '')
+
+                try:
+                    playerName = unicode(" ".join([player[2] , player[3]])).encode('latin-1').replace('"', '')
+                except:
+                    playerName  = " ".join([player[2] , player[3]]).replace('"', '')
 
                 playerList.append("# %d \"%s\" %d\n" % (playerIdx, playerName, playerAge))
 
@@ -293,7 +297,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
                 cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idP = %s AND pcs.idS IN (%s) AND c.idL IN (%s)" %
-                               playerId, seasonsString, leaguesString)
+                               (playerId, seasonsString, leaguesString))
 
                 clubsBySeasons = cursor.fetchall()
 
@@ -312,7 +316,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
                         if playerIndices[playerId] < playerIndices[linkedPlayer]:
                             playerId1 = playerIndices[playerId]
                             playerId2 = playerIndices[linkedPlayer]
-                            weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo, withAge=True)
+                            weight    = calculatePlayersWeight(playerId, linkedPlayer, playersInfo)
 
                             edgeList.append("%s %s %f\n" % (playerId1, playerId2, weight))
                             numEdges += 1
@@ -321,7 +325,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # output player list
         # output edge list
         cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s)" %
-                       seasonsString, leaguesString)
+                       (seasonsString, leaguesString))
 
         numNodes = cursor.fetchone()
 
