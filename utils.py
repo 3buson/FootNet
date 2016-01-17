@@ -349,6 +349,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         connection.close()
         file.close()
 
+    return playerIndices, playersInfo
+
 
 def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByClubValue=True, weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
