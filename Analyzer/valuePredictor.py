@@ -44,6 +44,10 @@ def predictPlayerValue(network, playerId, playersInfo):
         age          = date.today().year - int(birthYear)
         ageDeviation = abs(constants.mostValuableAge - age)
 
+        # young players should be penalized less
+        if(age < constants.mostValuableAge):
+            ageDeviation *= 0.8
+
         initialValueBoost   = value / 2.0
         boostPercentDropOff = ageDeviation / 5
         valueBoost          = initialValueBoost * max(-0.5, (1 - boostPercentDropOff))

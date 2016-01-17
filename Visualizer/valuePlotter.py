@@ -65,7 +65,7 @@ def main():
 
 
     plotLength = 20 - max(0, (15 - (len(seasons) * 3)))
-    plt.figure(figsize=(plotLength,14))
+    plt.figure(figsize=(plotLength,15))
 
     # prepare the data
     playersDataDict    = dict()
@@ -86,7 +86,7 @@ def main():
                          % (playersString, seasonsString))
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue, FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
+        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
                         % (lastSeason, playersString))
         lastSeasonData = cursor.fetchall()
 
@@ -181,9 +181,11 @@ def main():
                     labelbottom="on", left="off", right="off", labelleft="on")
 
     positions        = list()
-    displace         = maxValue / 40
+    displace         = maxValue / 70
     displaceCaptionY = maxValue / 15
     displaceCaptionX = (seasons[0] + seasons[-1]) / 2.0
+
+    lastPosY = 0
 
     for idx, playerId in enumerate(sortedPlayers):
         # each line with different color
@@ -192,6 +194,10 @@ def main():
 
         value = playersDataDict[playerId][-1]
         posY  = int(round(value))
+
+        # don't allow more valuable players to be below less valuable players
+        if(posY < lastPosY):
+            posY = lastPosY
 
         # prevent overlapping text
         if(posY in positions):
@@ -210,6 +216,7 @@ def main():
         plt.text(seasons[-1], posY, playersNames[playerId],
                  fontsize=14, color=colors[idx % len(colors)])
 
+        lastPosY = posY
 
     caption = "Football players market value fluctuation through seasons %s-%s for club "\
               % (seasons[0], seasons[-1])
