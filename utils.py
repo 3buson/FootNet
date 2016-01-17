@@ -259,7 +259,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue, p.birthDate, p.playingPosition FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
                        (seasonsString, leaguesString))
 
         playersData = cursor.fetchall()
