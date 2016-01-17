@@ -50,7 +50,7 @@ def predictPlayerValue(network, playerId, playersInfo):
 
         initialValueBoost   = value / 2.0
         boostPercentDropOff = ageDeviation / 5
-        valueBoost          = initialValueBoost * max(-0.5, (1 - boostPercentDropOff))
+        valueBoost          = initialValueBoost * max(-0.6, (1 - boostPercentDropOff))
 
         predictedValue += valueBoost
 
