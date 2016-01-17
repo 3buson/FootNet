@@ -181,7 +181,7 @@ def main():
                     labelbottom="on", left="off", right="off", labelleft="on")
 
     positions        = list()
-    displace         = maxValue / 70
+    displace         = maxValue / 65
     displaceCaptionY = maxValue / 15
     displaceCaptionX = (seasons[0] + seasons[-1]) / 2.0
 
@@ -218,11 +218,11 @@ def main():
 
         lastPosY = posY
 
-    caption = "Football players market value fluctuation through seasons %s-%s for club "\
+    caption = "Football players market value fluctuation through seasons %s-%s"\
               % (seasons[0], seasons[-1])
 
     if(byClubs):
-        caption += filename
+        caption += ' for club ' + filename
 
     plt.text(displaceCaptionX, -displaceCaptionY,
              caption, fontsize=20, ha="center")
