@@ -72,7 +72,12 @@ def main():
     tempFilename = 'PlayerNetPricePredictionTMP' + `randint(0,100)` + '.adj'
     playerIds    = raw_input('Please enter IDs of the players you want to predict value for (seperated by comma): ')
     playerIds    = playerIds.split(',')
-    seasons      = [13,14,15]
+    history      = raw_input('Enter how many seasons would you like to take into account in value predictor: ')
+    seasons      = list()
+
+    for i in range(0, int(history)):
+        seasons.append(int(constants.currentSeason) - i)
+    seasons.reverse()
 
     # export edge list to a temporary file
     [playerIndices, playersInfo] = utils.createPlayerEdgeListFromDB(tempFilename, seasons)
