@@ -95,11 +95,13 @@ def main():
     playerNames       = [nodeData[mappedPlayerId][0] for mappedPlayerId in mappedPlayerIds]
     playerNamesString = ', '.join(playerNames)
 
-    print "[Value predictor]  Predicting value for player(s) %s..." % playerNamesString
+    print "\n[Value predictor]  Predicting value for player(s) %s..." % playerNamesString
 
     # predict the value for the selected player
     predictedValues = predictPlayerValue(network, mappedPlayerIds, playersInfoMapped)
     predictedValues = [predictedValue / 1000000.0 for predictedValue in predictedValues]
+
+    print "\n"
 
     for idx, predictedValue in enumerate(predictedValues):
         print "[Value predictor]  Predicted value for player %s: %.2f million pounds" % (playerNames[idx], predictedValue)
