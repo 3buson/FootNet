@@ -129,12 +129,30 @@ leagueIds['SerieB']               = 26
 
 
 leagueURLIds         = dict()
+leagueURLIds['ENG']  = 'GB1'
+leagueURLIds['ESP']  = 'ES1'
+leagueURLIds['GER']  = 'L1'
+leagueURLIds['ITA']  = 'IT1'
+leagueURLIds['FRA']  = 'FR1'
+leagueURLIds['NED']  = 'NL1'
+leagueURLIds['POR']  = 'PO2'
+leagueURLIds['TUR']  = 'TR1'
+leagueURLIds['BEL']  = 'BE1'
+leagueURLIds['RUS']  = 'RU1'
+leagueURLIds['UKR']  = 'UKR1'
+leagueURLIds['SWI']  = 'C1'
+leagueURLIds['GRE']  = 'GR1'
 leagueURLIds['ROM']  = 'RO1'
 leagueURLIds['CRO']  = 'KR1'
 leagueURLIds['AUT']  = 'A1'
 leagueURLIds['CZE']  = 'TS1'
 leagueURLIds['DEN']  = 'DK1'
 leagueURLIds['SRB']  = 'SER1'
+
+leagueURLIds['BRA']  = 'BRA1'
+leagueURLIds['ARG']  = 'AR1N'
+leagueURLIds['USA']  = 'MLS1'
+
 leagueURLIds['ENG2'] = 'GB2'
 leagueURLIds['ESP2'] = 'ES2'
 leagueURLIds['GER2'] = 'L2'
