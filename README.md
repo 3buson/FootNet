@@ -19,3 +19,9 @@ Visualizer is capable of player market value through time visualizations (valueP
 * [pyquery](https://pypi.python.org/pypi/pyquery) - for FileParser
 * [Matplotlib](https://pypi.python.org/pypi/matplotlib/1.5.1) - For Visualizer (valuePlotter)
 * [BeautifulSoup](https://pypi.python.org/pypi/BeautifulSoup/3.2.1) - For Visualizer (geoPlotter)
+
+### TODO ###
+* Inserting into the database can be optimized a lot (disable FK ckecking, autocommits, bulk inserts, ...)
+* SQL injection is possible at the moment (when accepting input as comma separated values/ids), this needs to be fixed
+* Club ranking is not parsing properly because of a wired way this is displayed on transfermarkt
+* ...
