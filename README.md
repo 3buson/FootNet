@@ -23,5 +23,5 @@ Visualizer is capable of player market value through time visualizations (valueP
 ### TODO ###
 * Inserting into the database can be optimized a lot (disable FK ckecking, autocommits, bulk inserts, ...)
 * SQL injection is possible at the moment (when accepting input as comma separated values/ids), this needs to be fixed
-* Club ranking is not parsing properly because of a wired way this is displayed on transfermarkt
+* Club ranking is not parsing properly because of a wired way this is displayed on transfermarkt - there is no league check if a club is relegated and wins second league it will receive ranking 1
 * ...
