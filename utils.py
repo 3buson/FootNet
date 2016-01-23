@@ -31,12 +31,16 @@ def calculatePlayersCareerSums(connection):
 
     print "[Players Career Sum Calculator]  Updating players career stats..."
 
-    cursor.execute("SELECT idP, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), SUM(minutesPerGoal), SUM(minutesPlayed) FROM playerclubseason GROUP BY idP")
+    cursor.execute("SELECT idP, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), SUM(minutesPerGoal), SUM(minutesPlayed) "
+                   "FROM playerclubseason "
+                   "GROUP BY idP")
     playersCareerStats = cursor.fetchall()
 
     for pcs in playersCareerStats:
         try:
-            cursor.execute("UPDATE player SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? WHERE idP = ?",
+            cursor.execute("UPDATE player "
+                           "SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? "
+                           "WHERE idP = ?",
                        pcs[1], pcs[2], pcs[3], pcs[4], pcs[5], pcs[6], pcs[7], pcs[8], pcs[9], pcs[10], pcs[11], pcs[12], pcs[13], pcs[0])
         except pyodbc.DatabaseError, e:
             print "[Players Career Sum Calculator]  ERROR - DatabaseError", e
@@ -54,12 +58,16 @@ def calculateClubsSums(connection):
 
     print "[Clubs Sum Calculator]  Updating clubs stats..."
 
-    cursor.execute("SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), AVG(minutesPerGoal), SUM(minutesPlayed) FROM playerclubseason GROUP BY idClub")
+    cursor.execute("SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), AVG(minutesPerGoal), SUM(minutesPlayed) "
+                   "FROM playerclubseason "
+                   "GROUP BY idClub")
     playersCareerStats = cursor.fetchall()
 
     for pcs in playersCareerStats:
         try:
-            cursor.execute("UPDATE club SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? WHERE idClub = ?",
+            cursor.execute("UPDATE club "
+                           "SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? "
+                           "WHERE idClub = ?",
                        pcs[1], pcs[2], pcs[3], pcs[4], pcs[5], pcs[6], pcs[7], pcs[8], pcs[9], pcs[10], pcs[11], pcs[12], pcs[13], pcs[0])
         except pyodbc.DatabaseError, e:
             print "[Clubs Sum Calculator]  ERROR - DatabaseError", e
@@ -210,9 +218,13 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
                 skipped   += 1
                 slicedLine = line.split('"')
 
-                if(len(slicedLine) > 2):
+                if(len(slicedLine) > 1):
                     [nodeId, nodeName, nodeProperty] = slicedLine
-                    nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
+
+                    if(len(slicedLine) > 3):
+                        nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
+                    else:
+                        nodeData[int(nodeId[2:])] = nodeName
 
                     graph.add_node(int(nodeId[2:]))
 
@@ -247,7 +259,11 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
         cursor = connection.cursor()
 
-        cursor.execute("SELECT DISTINCT p.idP, p.idC, p.firstName, p.lastName, p.birthDate FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) GROUP BY idP" %
+        cursor.execute("SELECT DISTINCT p.idP, p.idC, p.firstName, p.lastName, p.birthDate FROM player p "
+                       "JOIN playerclubseason pcs USING (idP) "
+                       "JOIN club c USING (idClub) "
+                       "WHERE pcs.idS IN (%s) AND c.idL IN (%s) "
+                       "GROUP BY idP" %
                        (seasonsString, leaguesString))
 
         players       = cursor.fetchall()
@@ -259,7 +275,12 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # playerIndices dictionary will be used to map real player ids to consecutive ids for use in the network
 
         # get all player info
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue, p.birthDate, p.playingPosition FROM playerclubseason pcs JOIN player p USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.idClub, p.birthDate, pcs.playerValue, p.birthDate, p.playingPosition "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "JOIN club c USING (idClub) "
+                       "WHERE pcs.idS IN (%s) AND c.idL IN (%s) "
+                       "ORDER BY idP, idS" %
                        (seasonsString, leaguesString))
 
         playersData = cursor.fetchall()
@@ -296,7 +317,10 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
             if(playerId > 0):
                 # get all the clubs this player played for in a specific season (playerClubSeason - by playerID)
-                cursor.execute("SELECT pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idP = %s AND pcs.idS IN (%s) AND c.idL IN (%s)" %
+                cursor.execute("SELECT pcs.idClub, pcs.idS "
+                               "FROM playerclubseason pcs "
+                               "JOIN club c USING (idClub) "
+                               "WHERE pcs.idP = %s AND pcs.idS IN (%s) AND c.idL IN (%s)" %
                                (playerId, seasonsString, leaguesString))
 
                 clubsBySeasons = cursor.fetchall()
@@ -305,7 +329,11 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
                 # link all the players from all the clubs to the current player
                 linkedPlayerIds = list()
                 for clubBySeason in clubsBySeasons:
-                    cursor.execute("SELECT pcs.idP FROM playerclubseason pcs WHERE pcs.idClub = ? AND pcs.idS = ?", clubBySeason[0], clubBySeason[1])
+                    cursor.execute("SELECT pcs.idP "
+                                   "FROM playerclubseason pcs "
+                                   "WHERE pcs.idClub = ? AND pcs.idS = ?",
+                                   clubBySeason[0], clubBySeason[1])
+
                     playersInClubInSeason = cursor.fetchall()
 
                     for playerInClubSeason in playersInClubInSeason:
@@ -324,7 +352,11 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
         # output starting comments - number of nodes and edges, format
         # output player list
         # output edge list
-        cursor.execute("SELECT COUNT(DISTINCT p.idP) FROM player p JOIN playerclubseason pcs USING (idP) JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL IN (%s)" %
+        cursor.execute("SELECT COUNT(DISTINCT p.idP) "
+                       "FROM player p "
+                       "JOIN playerclubseason pcs USING (idP) "
+                       "JOIN club c USING (idClub) "
+                       "WHERE pcs.idS IN (%s) AND c.idL IN (%s)" %
                        (seasonsString, leaguesString))
 
         numNodes = cursor.fetchone()
@@ -374,7 +406,12 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
 
         cursor = connection.cursor()
 
-        cursor.execute("SELECT c.idClub, c.nameClub FROM club c JOIN clubseason cs USING (idClub) WHERE cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+        cursor.execute("SELECT c.idClub, c.nameClub "
+                       "FROM club c "
+                       "JOIN clubseason cs USING (idClub) "
+                       "WHERE cs.idS IN (%s) AND c.idL IN (%s) "
+                       "GROUP BY idClub "
+                       "ORDER BY idClub" %
                        (seasonsString, leaguesString))
 
         clubs = cursor.fetchall()
@@ -407,7 +444,12 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
 
 
         # add club average value to clubsInfo
-        cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.value != -1 AND cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub, idS" %
+        cursor.execute("SELECT cs.idClub, c.idL, AVG(cs.value) "
+                       "FROM clubseason cs "
+                       "JOIN club c USING (idClub) "
+                       "WHERE cs.value != -1 AND cs.idS IN (%s) AND c.idL IN (%s) "
+                       "GROUP BY idClub "
+                       "ORDER BY idClub, idS" %
                        (seasonsString, leaguesString))
 
         clubValues = cursor.fetchall()
@@ -420,7 +462,12 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
             clubsInfo[currentClubIdx]['importance'].append(clubValue[2])
 
         # add club average ranking to clubsInfo
-        cursor.execute("SELECT cs.idClub, AVG(cs.ranking) FROM clubseason cs JOIN club c USING (idClub) WHERE cs.ranking != -1 AND cs.idS IN (%s) AND c.idL IN (%s) GROUP BY idClub ORDER BY idClub" %
+        cursor.execute("SELECT cs.idClub, AVG(cs.ranking) "
+                       "FROM clubseason cs "
+                       "JOIN club c USING (idClub) "
+                       "WHERE cs.ranking != -1 AND cs.idS IN (%s) AND c.idL IN (%s) "
+                       "GROUP BY idClub "
+                       "ORDER BY idClub" %
                         (seasonsString, leaguesString))
 
         clubRankings = cursor.fetchall()
@@ -433,7 +480,11 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
 
             clubsInfo[currentClubIdx]['importance'].append(clubRanking[1])
 
-        cursor.execute("SELECT pcs.idP, pcs.idClub, pcs.idS FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS in (%s) AND c.idL IN (%s) ORDER BY idP, idS" %
+        cursor.execute("SELECT pcs.idP, pcs.idClub, pcs.idS "
+                       "FROM playerclubseason pcs "
+                       "JOIN club c USING (idClub) "
+                       "WHERE pcs.idS in (%s) AND c.idL IN (%s) "
+                       "ORDER BY idP, idS" %
                        (seasonsString, leaguesString))
 
         playerClubSeasons = cursor.fetchall()
@@ -471,7 +522,9 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
         # output starting comments - number of nodes and edges, format
         # output player list
         # output edge list
-        cursor.execute("SELECT COUNT(idClub) FROM footballnetwork.club")
+        cursor.execute("SELECT COUNT(idClub) "
+                       "FROM footballnetwork.club")
+
         numNodes = cursor.fetchone()
 
         file.write("# 'FootNetClub' undirected weighted network\n")
@@ -501,7 +554,9 @@ def getCountriesDict():
         connection = connectToDB()
         cursor     = connection.cursor()
 
-        cursor.execute("SELECT * from countries")
+        cursor.execute("SELECT * "
+                       "FROM countries")
+
         result = cursor.fetchall()
 
         for resultRow in result:
@@ -522,7 +577,11 @@ def checkIfPlayerExists(connection, playerId):
     try:
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * from player WHERE idP = ?", playerId)
+        cursor.execute("SELECT * "
+                       "FROM player "
+                       "WHERE idP = ?",
+                       playerId)
+
         result = cursor.fetchall()
 
         if(len(result) > 0):

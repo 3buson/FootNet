@@ -74,19 +74,43 @@ def main():
     playersNames       = dict()
 
     if(byClubs):
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = %s AND idClub = %d) AND idS IN (%s) ORDER BY idP, idS"
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "WHERE pcs.idP IN ("
+                            "SELECT idP "
+                            "FROM playerclubseason "
+                            "WHERE idS = %s AND idClub = %d"
+                       ") AND idS IN (%s) "
+                       "ORDER BY idP, idS"
                        % (lastSeason, clubId, seasonsString))
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (SELECT idP FROM playerclubseason WHERE idS = ? AND idClub = ?) AND pcs.idS = ? ORDER BY playerValue",
+        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "WHERE pcs.idP IN ("
+                            "SELECT idP "
+                            "FROM playerclubseason "
+                            "WHERE idS = ? AND idClub = ?"
+                       ") AND pcs.idS = ? "
+                       "ORDER BY playerValue",
                         lastSeason, clubId, lastSeason)
         lastSeasonData = cursor.fetchall()
     else:
-        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idP IN (%s) AND pcs.idS IN (%s) ORDER BY idP, idS"
+        cursor.execute("SELECT pcs.idP, pcs.idS, pcs.playerValue, p.firstName, p.lastName "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "WHERE pcs.idP IN (%s) AND pcs.idS IN (%s) "
+                       "ORDER BY idP, idS"
                          % (playersString, seasonsString))
         playersData = cursor.fetchall()
 
-        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue FROM playerclubseason pcs JOIN player p USING (idP) WHERE pcs.idS = %s AND pcs.idP IN (%s) ORDER BY playerValue"
+        cursor.execute("SELECT DISTINCT pcs.idP, pcs.playerValue "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "WHERE pcs.idS = %s AND pcs.idP IN (%s) "
+                       "ORDER BY playerValue"
                         % (lastSeason, playersString))
         lastSeasonData = cursor.fetchall()
 

@@ -72,12 +72,25 @@ def main():
             weightByAppsString = ''
 
         if(gkMetric):
-            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps) FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC" %
+            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps) "
+                           "FROM playerclubseason pcs "
+                           "JOIN player p USING (idP) "
+                           "JOIN countries c USING (idC) "
+                           "JOIN club cl USING (idClub) "
+                           "WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s) "
+                           "GROUP BY idC" %
                             (seasonsString, leaguesString))
 
             goalKeeperAppsArray = cursor.fetchall()
 
-        cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s FROM playerclubseason pcs JOIN player p USING (idP) JOIN countries c USING (idC) JOIN club cl USING (idClub) WHERE pcs.idS IN (%s) AND cl.idL IN (%s) GROUP BY idC ORDER BY SUM(pcs.%s) DESC" %
+        cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s "
+                       "FROM playerclubseason pcs "
+                       "JOIN player p USING (idP) "
+                       "JOIN countries c USING (idC) "
+                       "JOIN club cl USING (idClub) "
+                       "WHERE pcs.idS IN (%s) AND cl.idL IN (%s) "
+                       "GROUP BY idC "
+                       "ORDER BY SUM(pcs.%s) DESC" %
                         (metric, weightByAppsString, seasonsString, leaguesString, metric))
 
         stats = cursor.fetchall()
@@ -161,7 +174,13 @@ def main():
         paths = soup.contents[2].findAll('path', recursive=False)
 
         # define what each path style should be as a base (with color fill added at the end)
-        path_style = "fill-opacity:1;stroke:#ffffff;stroke-width:0.99986994;stroke-miterlimit:3.97446823;stroke-dasharray:none;stroke-opacity:1;fill:"
+        path_style = "fill-opacity:1;" \
+                     "stroke:#ffffff;" \
+                     "stroke-width:0.99986994;" \
+                     "stroke-miterlimit:3.97446823;" \
+                     "stroke-dasharray:none;" \
+                     "stroke-opacity:1;" \
+                     "fill:"
 
         # replace the style with the color fill you want
         for p in paths:

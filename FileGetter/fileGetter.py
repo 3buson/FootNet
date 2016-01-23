@@ -29,7 +29,8 @@ def fetchHTMLFiles(clubDict, league, season='15'):
         os.makedirs(dir)
 
     for clubName, clubId in clubDict.iteritems():
-        print "[File Getter]  Getting HTML for club: %s\tleague: %s\tseason: 20%s" % (clubName, league, season)
+        print "[File Getter]  Getting HTML for club: %s\tleague: %s\tseason: 20%s" % \
+              (clubName, league, season)
 
         url      = baseURL + `clubId`
         filename = baseDirname + league + '/' + season + '/' + clubName + '_' + `clubId`
@@ -60,7 +61,8 @@ def main():
 
             print "\n[File Getter]  Fetched all HTML files for league %s\n" % league
 
-        print "\n[File Getter]  Fetched all HTML files for all leagues for season %s\n" % season
+        print "\n[File Getter]  Fetched all HTML files for all leagues for season %s\n" % \
+              season
 
 if __name__ == "__main__":
     main()

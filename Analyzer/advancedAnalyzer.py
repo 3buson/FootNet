@@ -53,6 +53,8 @@ def main():
     export   = raw_input('Do you want to do an edge list export first? (Y/N): ')
     filename = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
 
+    playerAnalysis = (filename.lower() == 'players')
+
     if(export.lower() == 'y'):
         export       = True
         seasonsInput = raw_input('Please enter desired seasons separated by comma (all for all of them): ')
@@ -77,17 +79,19 @@ def main():
         leagues = leaguesInput.split(',')
         leagues = [int(league) for league in leagues]
 
-    if(filename.lower() == 'players'):
+    if(playerAnalysis):
         ageGroups = raw_input('Do you want to analyze players perspectiveness? (Y/N): ')
         ageGroups = (ageGroups == 'Y')
+    else:
+        ageGroups = False
 
     if(export):
-        if(filename.lower() == 'players'):
+        if(playerAnalysis):
             utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons, leagues)
         else:
-            utils.createClubEdgeLisctFromDB('ClubNet.adj', seasons, leagues, False)
+            utils.createClubEdgeListFromDB('ClubNet.adj', seasons, leagues, False)
 
-    if(filename == 'Players'):
+    if(playerAnalysis):
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
     else:
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('ClubNet.adj', directed=True)
@@ -101,7 +105,7 @@ def main():
     print "[Analyzer]  sorting PageRank dictionary..."
     pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
 
-    if(filename == 'Clubs'):
+    if(not playerAnalysis):
         print "[Analyzer]  calculating Betweenness centrality..."
         betweenness = nx.betweenness_centrality(network)
         # betweenness = utils.calculateWeightedBetweennessCentrality(network)
@@ -112,7 +116,10 @@ def main():
     if(not ageGroups):
         print "\n[Analyzer - Results]  PageRank"
         for i in range(0, 100):
-            print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
+            if(not playerAnalysis):
+                print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]], pagerank[i][1])
+            else:
+                print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
     else:
         # separate players into age groups
         print "\n[Analyzer - Results]  Separating players into page groups..."
@@ -149,11 +156,11 @@ def main():
         print "\n[Analyzer - Results]  PageRank scores by age groups written into files."
 
 
-    if(filename == 'Clubs'):
+    if(not playerAnalysis):
         print "\n[Analyzer - Results]  Betweenness centrality"
         for i in range(0, 100):
             print "Node name: %s, score: %f" %\
-                  (nodeData[betweenness[i][0]][0], betweenness[i][1])
+                  (nodeData[betweenness[i][0]], betweenness[i][1])
 
 if __name__ == "__main__":
     main()

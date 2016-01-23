@@ -40,7 +40,8 @@ class Player:
             idC = countriesDict['Unknown']
 
         try:
-            cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            cursor.execute("INSERT IGNORE INTO player(idP, idC, firstName, lastName, birthDate, playingPosition, playingNumber, height) "
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                        self.idP, idC, self.firstName, self.lastName, self.birthDate, self.playingPosition, self.playingNumber, self.height)
 
         except pyodbc.DatabaseError, e:

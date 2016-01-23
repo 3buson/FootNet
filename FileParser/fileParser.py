@@ -23,16 +23,30 @@ def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'
 
     if(seasonIds != 'all'):
         if(leagueIds == 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS IN (%s) ORDER BY pcs.idP" %
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
+                           "FROM playerclubseason pcs "
+                           "JOIN club c USING (idClub) "
+                           "WHERE pcs.idS IN (%s) "
+                           "ORDER BY pcs.idP" %
                            ','.join(map(str, seasonIds)))
         else:
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE pcs.idS IN (%s) AND c.idL = %s ORDER BY pcs.idP" %
+            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
+                           "FROM playerclubseason pcs JOIN club c "
+                           "USING (idClub) "
+                           "WHERE pcs.idS IN (%s) AND c.idL = %s "
+                           "ORDER BY pcs.idP" %
                            (','.join(map(str, seasonIds)), ','.join(map(str, leagueIds))))
     elif(leagueIds != 'all'):
-        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL FROM playerclubseason pcs JOIN club c USING (idClub) WHERE c.idL IN (%s) ORDER BY pcs.idP" %
+        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
+                       "FROM playerclubseason pcs "
+                       "JOIN club c USING (idClub) "
+                       "WHERE c.idL IN (%s) "
+                       "ORDER BY pcs.idP" %
                        ','.join(map(str, leagueIds)))
     else:
-        cursor.execute("SELECT pcs.idP, pcs.idS FROM playerclubseason pcs ORDER BY pcs.idP")
+        cursor.execute("SELECT pcs.idP, pcs.idS "
+                       "FROM playerclubseason pcs "
+                       "ORDER BY pcs.idP")
 
     playersSeasons = cursor.fetchall()
     entries        = len(playersSeasons)
@@ -44,7 +58,8 @@ def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'
         percent = float(processed) / entries * 100.0
 
         if(processed % 50 == 0):
-            print "\n[File Parser - details parser]  Parsed %f%% player club season details\n" % (percent)
+            print "\n[File Parser - details parser]  Parsed %f%% player club season details\n" %\
+                  (percent)
 
         parsePlayerClubSeasonDetails(connection, playerSeason[0], playerSeason[1], playerSeason[2])
 
@@ -65,9 +80,14 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
     else:
         seasonId = `seasonId`
 
-    url = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + `playerId` + '/saison/20' + seasonId + '/plus/1'
+    url = 'http://www.transfermarkt.co.uk/randomString/leistungsdaten/spieler/' + \
+          `playerId` + \
+          '/saison/20' + \
+          seasonId + \
+          '/plus/1'
 
-    print "[File Parser - details parser]  Getting player club season details from %s..." % url
+    print "[File Parser - details parser]  Getting player club season details from %s..." % \
+          url
 
     try:
         playerHTML = urlgrabber.urlopen(url, retries=10)
@@ -90,7 +110,8 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
         print "[File Parser - details parser]  Player details not available"
         return
 
-    print "[File Parser - details parser]  Parsing player club season details for player %d, season %s..." % (playerId, seasonId)
+    print "[File Parser - details parser]  Parsing player club season details for player %d, season %s..." % \
+          (playerId, seasonId)
 
     fieldIdx = 0
 
@@ -567,19 +588,21 @@ def main():
 
                     # loop through clubs
                     for filename in os.listdir(currentDirectory2):
-                        print "[File Parser]  Parsing file %s, league: %s, season: %s..." %\
+                        print "[File Parser]  Parsing file %s, league: %s, season: %s..." % \
                               (filename, leagueDirectory, seasonDirectory)
 
                         startTime = time.time()
                         parseFile(connection, currentDirectory2 + '/' + filename, leagueDirectory, seasonDirectory)
                         endTime = time.time()
 
-                        print "[File Parser]  Parsed file %s, league: %s, season: %s | Time spent %f s" %\
+                        print "[File Parser]  Parsed file %s, league: %s, season: %s | Time spent %f s" % \
                               (filename, leagueDirectory, seasonDirectory, (endTime - startTime))
 
-                    print "\n[File Parser]  Parsed season %s, league: %s\n" % (seasonDirectory, leagueDirectory)
+                    print "\n[File Parser]  Parsed season %s, league: %s\n" % \
+                          (seasonDirectory, leagueDirectory)
 
-            print "\n[File Parser]  Parsed all seasons for league %s\n" % leagueDirectory
+            print "\n[File Parser]  Parsed all seasons for league %s\n" % \
+                  leagueDirectory
 
     # --- PARSE ONE FILE ONLY --- #
     # filename = "../FileGetter/html/LaLiga/15/VCF_1049"
