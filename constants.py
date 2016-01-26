@@ -4,6 +4,8 @@ __author__ = 'matic'
 # --- VARIOUS CONSTANTS --- #
 currentSeason       = '15'
 inflationRatio      = 2.11
+youngestAgeGroup    = 17
+oldestAgeGroup      = 25
 perspectiveAge      = 18
 mostValuableAge     = 27
 noRankingPenalty    = 25

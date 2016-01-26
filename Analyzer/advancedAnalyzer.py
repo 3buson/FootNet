@@ -8,6 +8,7 @@ import os
 
 sys.path.insert(0, '../')
 import utils
+import constants
 
 
 def printNetworkProperties(network, directed):
@@ -126,19 +127,23 @@ def main():
 
         baseFilename  = 'perspectivePlayers'
         playersGroups = dict()
-        for age in range(18,25):
-            print "\n[Analyzer - Results]  Processing age group ", age
+        for age in range(constants.youngestAgeGroup, constants.oldestAgeGroup):
+            print "[Analyzer - Results]  Processing age group ", age
 
             playersGroups[age] = list()
             for pagerankRecord in pagerank:
+                playerId    = pagerankRecord[0]
+                playerAge   = nodeData[pagerankRecord[0]][1]
+                playerScore = pagerankRecord[1]
+
                 # if player has 'correct' age
-                if(nodeData[pagerankRecord[0]][1] == age):
+                if(playerAge == age):
                     # add player ID, player age and player PageRank score to list
-                    playersGroups[age].append([pagerankRecord[0], nodeData[pagerankRecord[0]][1], pagerankRecord[1]])
+                    playersGroups[age].append([playerId, playerAge, playerScore])
                 if(len(playersGroups[age]) >= 25):
                     break
 
-            # check if directory 'Visualizations' exists and create it if necessary
+            # check if directory 'PlayersByAgeGroups' exists and create it if necessary
             directory = 'PlayersByAgeGroups'
             if not os.path.exists(directory):
                 os.makedirs(directory)

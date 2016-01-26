@@ -180,11 +180,15 @@ def createGraphFromEdgeList(filename, directed=False):
                 skipped   += 1
                 slicedLine = line.split('"')
 
-                if(len(slicedLine) > 2):
-                    [nodeId, nodeName, nodeProperty] = line.split('"')
-                    nodeData[int(nodeId)] = (nodeName, nodeProperty)
+                if(len(slicedLine) > 1):
+                    [nodeId, nodeName, nodeProperty] = slicedLine
 
-                    graph.add_node(int(nodeId[1:]))
+                    if(len(slicedLine) > 2):
+                        nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
+                    else:
+                        nodeData[int(nodeId[2:])] = nodeName
+
+                    graph.add_node(int(nodeId[2:]))
 
     print "[Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
@@ -221,7 +225,7 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
                 if(len(slicedLine) > 1):
                     [nodeId, nodeName, nodeProperty] = slicedLine
 
-                    if(len(slicedLine) > 3):
+                    if(len(slicedLine) > 2):
                         nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
                     else:
                         nodeData[int(nodeId[2:])] = nodeName
