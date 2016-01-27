@@ -3,6 +3,7 @@ __author__ = 'Matevz Lenic'
 import snap
 import networkx as nx
 from operator import itemgetter
+from datetime import date
 import sys
 import os
 
@@ -113,22 +114,25 @@ def main():
         print "[Analyzer]  sorting Betweenness centrality dictionary..."
         betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
 
+
     # print top 25
-    if(not ageGroups):
-        print "\n[Analyzer - Results]  PageRank"
-        for i in range(0, 100):
-            if(not playerAnalysis):
-                print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]], pagerank[i][1])
-            else:
-                print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
-    else:
+    print "\n[Analyzer - Results]  PageRank"
+    for i in range(0, 100):
+        if(not playerAnalysis):
+            print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]], pagerank[i][1])
+        else:
+            print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
+
+    if(ageGroups):
         # separate players into age groups
-        print "\n[Analyzer - Results]  Separating players into page groups..."
+        print "\n[Analyzer - Results]  Separating players into age groups..."
 
         baseFilename  = 'perspectivePlayers'
         playersGroups = dict()
         for age in range(constants.youngestAgeGroup, constants.oldestAgeGroup):
-            print "[Analyzer - Results]  Processing age group ", age
+            birthYear = date.today().year - age
+
+            print "[Analyzer - Results]  Processing players born in %d" % birthYear
 
             playersGroups[age] = list()
             for pagerankRecord in pagerank:
@@ -138,9 +142,9 @@ def main():
 
                 # if player has 'correct' age
                 if(playerAge == age):
-                    # add player ID, player age and player PageRank score to list
                     playersGroups[age].append([playerId, playerAge, playerScore])
-                if(len(playersGroups[age]) >= 25):
+                # only do this for top 50 players of each age group
+                if(len(playersGroups[age]) >= 50):
                     break
 
             # check if directory 'PlayersByAgeGroups' exists and create it if necessary
@@ -149,12 +153,12 @@ def main():
                 os.makedirs(directory)
 
             # write this to a file
-            f = open(directory + '/' + baseFilename + `age` + '.txt', 'w')
-            f.write("PageRank results for players aged %d\n\n" % age)
+            f = open(directory + '/' + baseFilename + `birthYear` + '.txt', 'w')
+            f.write("PageRank results for players born in %d\n\n" % birthYear)
 
             for playerRecord in playersGroups[age]:
-                f.write("Player name: %s, player age: %d, score: %f\n" %
-                        (nodeData[playerRecord[0]][0], playerRecord[1], playerRecord[2]))
+                f.write("Player name: %s, score: %f\n" %
+                        (nodeData[playerRecord[0]][0], playerRecord[2]))
 
             f.close()
 
