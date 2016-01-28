@@ -1,14 +1,16 @@
 __author__ = 'matic'
 
 import time
-import traceback
 import pyodbc
+import traceback
 import networkx as nx
 from datetime import date
-from operator import itemgetter
 from collections import deque
 
 import constants
+
+
+### ---- DATABASE FUNCTIONS ---- ###
 
 def connectToDB():
     connection = None
@@ -25,6 +27,53 @@ def connectToDB():
 
     return connection
 
+
+def getCountriesDict(connection):
+    cDict = dict()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * "
+                       "FROM countries")
+
+        result = cursor.fetchall()
+
+        for resultRow in result:
+            cDict[resultRow[1]] = resultRow[0]
+
+    except pyodbc.DatabaseError, e:
+        print "[Countries mapper]  ERROR - DatabaseError", e
+        pass
+
+    finally:
+        return cDict
+
+
+def checkIfPlayerExists(connection, playerId):
+    exists = False
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * "
+                       "FROM player "
+                       "WHERE idP = ?",
+                       playerId)
+
+        result = cursor.fetchall()
+
+        exists = (len(result) > 0)
+
+    except pyodbc.DatabaseError, e:
+        print "[Player existance checker]  ERROR - DatabaseError", e
+        pass
+
+    finally:
+        return exists
+
+
+### ---- DATABASE SUM FUNCTIONS ---- ###
 
 def calculatePlayersCareerSums(connection):
     cursor = connection.cursor()
@@ -80,7 +129,9 @@ def calculateClubsSums(connection):
     print "[Clubs Sum Calculator]  Finished updating players career stats"
 
 
-def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, withInflation=True):
+### ---- WEIGHT FUNCTIONS ---- ###
+
+def calculatePlayersWeight(playerId1, playerId2, playersInfo, withInflation=True):
     weight = 0
 
     if(withInflation):
@@ -123,11 +174,7 @@ def calculatePlayersWeight(playerId1, playerId2, playersInfo, withAge=False, wit
                 else:
                     playerValue2 = float(playerValue2) * inflation
 
-                if(withAge):
-                    weight += ((playerValue1 + playerValue2) / 100000.0) +\
-                              ((1 / abs((playerAge1 + playerAge2) - (constants.perspectiveAge * 2 + 0.5) / 2.0)) * 1000)
-                else:
-                    weight += (playerValue1 + playerValue2) / 100000.0
+                weight += (playerValue1 + playerValue2) / 100000.0
 
     return weight
 
@@ -156,6 +203,9 @@ def calculateClubWeight(clubId, clubsInfo, byValue=True):
         weight = constants.defaultClubWeight
 
     return weight
+
+
+### ---- GRAPH CREATION FUNCTIONS ---- ###
 
 def createGraphFromEdgeList(filename, directed=False):
     print "[Graph Creator]  Reading filename %s..." % filename
@@ -240,6 +290,8 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
 
     return graph, nodeData
 
+
+### ---- EDGE LIST CREATION FUNCTIONS ---- ###
 
 def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
     print "[Exporter]  Exporting player edge list"
@@ -388,7 +440,8 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
     return playerIndices, playersInfo
 
 
-def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByClubValue=True, weightedByClubImportance=True):
+def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
+                             weightedByClubValue=True, weightedByClubImportance=True):
     print "[Exporter]  Exporting club transfer edge list"
 
     if(seasons != 'all'):
@@ -531,7 +584,7 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
 
         numNodes = cursor.fetchone()
 
-        file.write("# 'FootNetClub' undirected weighted network\n")
+        file.write("# 'FootNetClub' directed weighted network\n")
         file.write("# %d nodes and %d edges\n" % (numNodes[0], numEdges))
         file.write("# By Matevz Lenic & Matic Tribuson\n")
 
@@ -551,53 +604,8 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all', weightedByC
         connection.close()
         file.close()
 
-def getCountriesDict():
-    cDict = dict()
 
-    try:
-        connection = connectToDB()
-        cursor     = connection.cursor()
-
-        cursor.execute("SELECT * "
-                       "FROM countries")
-
-        result = cursor.fetchall()
-
-        for resultRow in result:
-            cDict[resultRow[1]] = resultRow[0]
-
-    except pyodbc.DatabaseError, e:
-        print "[Countries mapper]  ERROR - DatabaseError", e
-        pass
-
-    finally:
-        connection.close()
-        return cDict
-
-
-def checkIfPlayerExists(connection, playerId):
-    exists = False
-
-    try:
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT * "
-                       "FROM player "
-                       "WHERE idP = ?",
-                       playerId)
-
-        result = cursor.fetchall()
-
-        if(len(result) > 0):
-            exists = True
-
-    except pyodbc.DatabaseError, e:
-        print "[Player existance checker]  ERROR - DatabaseError", e
-        pass
-
-    finally:
-        return exists
-
+### ---- NETWORK ANALYSIS FUNCTIONS ---- ###
 
 def calculatePageRank(graph):
     ranking    = dict()
