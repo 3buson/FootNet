@@ -15,8 +15,8 @@ import constants
 
 def printNetworkProperties(network, directed):
     print "[Analyzer]  Calculating average degrees..."
-    degrees          = network.degree()
-    averageDegree    = sum(degrees.values()) / float(len(degrees.values()))
+    degrees       = network.degree()
+    averageDegree = sum(degrees.values()) / float(len(degrees.values()))
     print "[Analyzer]  Average degree: %f" % averageDegree
 
     if(directed):
@@ -53,10 +53,15 @@ def printNetworkProperties(network, directed):
 
 
 def main():
-    export   = raw_input('Do you want to do an edge list export first? (Y/N): ')
-    filename = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
+    export       = raw_input('Do you want to do an edge list export first? (Y/N): ')
+    outputToFile = raw_input('Do you want to output results to a file as well? (Y/N): ')
+    filename     = raw_input('Do you want to analyze players or clubs? (Players/Clubs): ')
 
     playerAnalysis = (filename.lower() == 'players')
+    outputToFile   = (outputToFile.lower() == 'y')
+
+    if(outputToFile):
+        outputFile = open(filename + 'AnalysisResults.txt', 'w')
 
     if(export.lower() == 'y'):
         export       = True
@@ -121,13 +126,26 @@ def main():
         betweenness = sorted(betweenness.items(), key=itemgetter(1), reverse=True)
 
 
-    # print top 25
-    print "\n[Analyzer - Results]  PageRank"
+    # print top 100
+    pagerankString = "\n[Analyzer - Results]  PageRank"
+    print pagerankString
+
+    if(outputToFile):
+        outputFile.write(pagerankString + '\n\n')
+
     for i in range(0, 100):
         if(not playerAnalysis):
-            print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]], pagerank[i][1])
+            outputString = "Node name: %s, score: %f" % (nodeData[pagerank[i][0]], pagerank[i][1])
+            print outputString
+
+            if(outputToFile):
+                outputFile.write(outputString + '\n')
         else:
-            print "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
+            outputString = "Node name: %s, score: %f" % (nodeData[pagerank[i][0]][0], pagerank[i][1])
+            print outputString
+
+            if(outputToFile):
+                outputFile.write(outputString + '\n')
 
     if(ageGroups):
         # separate players into age groups
@@ -172,10 +190,21 @@ def main():
 
 
     if(not playerAnalysis):
-        print "\n[Analyzer - Results]  Betweenness centrality"
+        betweennessString = "\n[Analyzer - Results]  Betweenness centrality"
+        print betweennessString
+
+        if(outputToFile):
+            outputFile.write('\n' + betweennessString + '\n\n')
         for i in range(0, 100):
-            print "Node name: %s, score: %f" %\
-                  (nodeData[betweenness[i][0]], betweenness[i][1])
+            outputString = "Node name: %s, score: %f" % (nodeData[betweenness[i][0]], betweenness[i][1])
+            print outputString
+
+            if(outputToFile):
+                outputFile.write(outputString + '\n')
+
+
+    if(outputToFile):
+        outputFile.close()
 
 
 if __name__ == "__main__":
