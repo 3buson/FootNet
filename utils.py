@@ -275,7 +275,7 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
                 if(len(slicedLine) > 1):
                     [nodeId, nodeName, nodeProperty] = slicedLine
 
-                    if(len(slicedLine) > 2):
+                    if(len(slicedLine) > 2 and nodeProperty != '\n'):
                         nodeData[int(nodeId[2:])] = (nodeName, int(nodeProperty))
                     else:
                         nodeData[int(nodeId[2:])] = nodeName
@@ -447,7 +447,7 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
     if(seasons != 'all'):
         seasonsString = ','.join(map(str, seasons))
     else:
-        seasonsString = constants.allLeaguesString
+        seasonsString = constants.allSeasonsString
 
     if(leagues != 'all'):
         leaguesString = ','.join(map(str, leagues))
@@ -557,7 +557,6 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
                 clubTransfersOut[clubId2][clubId1] += 1
 
         for club in clubs:
-
             clubList.append("# %d \"%s\"\n" % (clubIndices[club[0]], club[1]))
 
         for clubInEntry1 in clubTransfersIn:
@@ -579,8 +578,11 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
         # output starting comments - number of nodes and edges, format
         # output player list
         # output edge list
-        cursor.execute("SELECT COUNT(idClub) "
-                       "FROM footballnetwork.club")
+        cursor.execute("SELECT COUNT(DISTINCT c.idClub) "
+                       "FROM playerclubseason pcs "
+                       "JOIN club c USING (idClub) "
+                       "WHERE pcs.idS IN (%s) AND c.idL IN (%s) " %
+                       (seasonsString, leaguesString))
 
         numNodes = cursor.fetchone()
 

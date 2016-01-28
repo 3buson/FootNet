@@ -92,7 +92,7 @@ def main():
         if(playerAnalysis):
             utils.createPlayerEdgeListFromDB("PlayerNet.adj", seasons, leagues)
         else:
-            utils.createClubEdgeListFromDB('ClubNet.adj', seasons, leagues, False)
+            utils.createClubEdgeListFromDB('ClubNet.adj', seasons, leagues)
 
     if(playerAnalysis):
         [network, nodeData] = utils.createWeightedGraphFromEdgeList('PlayerNet.adj')
@@ -176,6 +176,7 @@ def main():
         for i in range(0, 100):
             print "Node name: %s, score: %f" %\
                   (nodeData[betweenness[i][0]], betweenness[i][1])
+
 
 if __name__ == "__main__":
     main()
