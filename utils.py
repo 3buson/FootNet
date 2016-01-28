@@ -20,7 +20,7 @@ def connectToDB():
             connection = pyodbc.connect('DSN=FootNet')
 
         except Exception, e:
-            print "[DB connector]  Error connecting to database. Trying again in 1 sec.", e
+            print "\n[DB connector]  Error connecting to database. Trying again in 1 sec.", e
             traceback.print_exc()
 
         time.sleep(1)
@@ -45,7 +45,7 @@ def getCountriesDict(connection):
             cDict[resultRow[1]] = resultRow[0]
 
     except pyodbc.DatabaseError, e:
-        print "[Countries mapper]  ERROR - DatabaseError", e
+        print "\n[Countries mapper]  ERROR - DatabaseError", e
         pass
 
     finally:
@@ -70,7 +70,7 @@ def checkIfPlayerExists(connection, playerId):
         exists = (len(result) > 0)
 
     except pyodbc.DatabaseError, e:
-        print "[Player existence checker]  ERROR - DatabaseError", e
+        print "\n[Player existence checker]  ERROR - DatabaseError\n", e
         pass
 
     finally:
@@ -82,7 +82,7 @@ def checkIfPlayerExists(connection, playerId):
 def calculatePlayersCareerSums(connection):
     cursor = connection.cursor()
 
-    print "[Players Career Sum Calculator]  Updating players career stats..."
+    print "\n[Players Career Sum Calculator]  Updating players career stats..."
 
     cursor.execute('''
                     SELECT idP, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), SUM(minutesPerGoal), SUM(minutesPlayed)
@@ -110,13 +110,13 @@ def calculatePlayersCareerSums(connection):
         finally:
             connection.commit()
 
-    print "[Players Career Sum Calculator]  Finished updating players career stats"
+    print "[Players Career Sum Calculator]  Finished updating players career stats\n"
 
 
 def calculateClubsSums(connection):
     cursor = connection.cursor()
 
-    print "[Clubs Sum Calculator]  Updating clubs stats..."
+    print "\n[Clubs Sum Calculator]  Updating clubs stats..."
 
     cursor.execute('''
                     SELECT idClub, SUM(apps), SUM(goals), SUM(assists), SUM(ownGoals), SUM(yellowCards), SUM(redCards), SUM(onSubs), SUM(offSubs), SUM(penaltyGoals), SUM(concededGoals), SUM(cleanSheets), AVG(minutesPerGoal), SUM(minutesPlayed)
@@ -142,7 +142,7 @@ def calculateClubsSums(connection):
         finally:
             connection.commit()
 
-    print "[Clubs Sum Calculator]  Finished updating players career stats"
+    print "[Clubs Sum Calculator]  Finished updating players career stats\n"
 
 
 ### ---- WEIGHT FUNCTIONS ---- ###
@@ -219,7 +219,7 @@ def calculateClubWeight(clubId, clubsInfo, byValue=True):
 ### ---- GRAPH CREATION FUNCTIONS ---- ###
 
 def createGraphFromEdgeList(filename, directed=False):
-    print "[Graph Creator]  Reading filename %s..." % filename
+    print "\n[Graph Creator]  Reading filename %s..." % filename
 
     nodeData = dict()
 
@@ -255,13 +255,13 @@ def createGraphFromEdgeList(filename, directed=False):
           (filename, skipped)
     print "[Graph Creator]  Graph has %d nodes and %d edges" %\
           (graph.number_of_nodes(), graph.number_of_edges())
-    print "[Graph Creator]  Edges in edge list %d" % edges
+    print "[Graph Creator]  Edges in edge list %d\n" % edges
 
     return graph, nodeData
 
 
 def createWeightedGraphFromEdgeList(filename, directed=False):
-    print "[Graph Creator]  Reading filename %s..." % filename
+    print "\n[Weighted Graph Creator]  Reading filename %s..." % filename
 
     nodeData = dict()
 
@@ -293,11 +293,11 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
 
                     graph.add_node(int(nodeId[2:]))
 
-    print "[Graph Creator]  Read filename %s, skipped %d lines" %\
+    print "[Weighted Graph Creator]  Read filename %s, skipped %d lines" %\
           (filename, skipped)
-    print "[Graph Creator]  Graph has %d nodes and %d edges" %\
+    print "[Weighted Graph Creator]  Graph has %d nodes and %d edges" %\
           (graph.number_of_nodes(), graph.number_of_edges())
-    print "[Graph Creator]  Edges in edge list %d" % edges
+    print "[Weighted Graph Creator]  Edges in edge list %d\n" % edges
 
     return graph, nodeData
 
@@ -305,7 +305,7 @@ def createWeightedGraphFromEdgeList(filename, directed=False):
 ### ---- EDGE LIST CREATION FUNCTIONS ---- ###
 
 def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
-    print "[Exporter]  Exporting player edge list"
+    print "\n[Exporter]  Exporting player edge list"
 
     if(seasons != 'all'):
         seasonsString = ','.join(map(str, seasons))
@@ -454,7 +454,9 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
     finally:
         endTime = time.time()
-        print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
+        print "[Exporter]  Edge list exported, time spent %f s\n" %\
+              (endTime - startTime)
+
         connection.close()
         file.close()
 
@@ -463,7 +465,7 @@ def createPlayerEdgeListFromDB(filename, seasons='all', leagues='all'):
 
 def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
                              weightedByClubValue=True, weightedByClubImportance=True):
-    print "[Exporter]  Exporting club transfer edge list"
+    print "\n[Exporter]  Exporting club transfer edge list"
 
     if(seasons != 'all'):
         seasonsString = ','.join(map(str, seasons))
@@ -633,7 +635,9 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
 
     finally:
         endTime = time.time()
-        print "[Exporter]  Edge list exported, time spent %f s" % (endTime - startTime)
+        print "[Exporter]  Edge list exported, time spent %f s\n" %\
+              (endTime - startTime)
+
         connection.close()
         file.close()
 
@@ -641,7 +645,7 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
 ### ---- NETWORK ANALYSIS FUNCTIONS ---- ###
 
 def calculatePageRank(graph):
-    print "[PageRank calculator]  calculating PageRank scores"
+    print "\n[PageRank calculator]  calculating PageRank scores"
 
     startTime  = time.time()
     ranking    = dict()
@@ -676,13 +680,14 @@ def calculatePageRank(graph):
         iterations += 1
 
     endTime = time.time()
-    print "[PageRank calculator]  PageRank calculation done, time spent: %f s" % (endTime - startTime)
+    print "[PageRank calculator]  PageRank calculation done, time spent: %f s\n" %\
+          (endTime - startTime)
 
     return ranking
 
 
 def calculateBetweennessCentrality(graph):
-    print "[Betweenness calculator]  calculating Betweenness scores"
+    print "\n[Betweenness calculator]  calculating Betweenness scores"
 
     startTime  = time.time()
     N          = graph.number_of_nodes() + 1
@@ -745,13 +750,14 @@ def calculateBetweennessCentrality(graph):
                     cb[w] += delta[w]
 
     endTime = time.time()
-    print "[Betweenness calculator]  Betweenness calculation done, time spent: %f s" % (endTime - startTime)
+    print "[Betweenness calculator]  Betweenness calculation done, time spent: %f s\n" %\
+          (endTime - startTime)
 
     return cb
 
 
 def calculateWeightedBetweennessCentrality(graph):
-    print "[Betweenness calculator]  calculating weighted Betweenness scores"
+    print "\n[Weighted Betweenness calculator]  calculating weighted Betweenness scores"
 
     startTime = time.time()
     N         = graph.number_of_nodes() + 1
@@ -763,7 +769,7 @@ def calculateWeightedBetweennessCentrality(graph):
 
     for node in graph.nodes():
         if(node % 500 == 0):
-            print "[Betweenness calculator]  Processed %d nodes" % (node)
+            print "[Weighted Betweenness calculator]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
@@ -826,13 +832,14 @@ def calculateWeightedBetweennessCentrality(graph):
                     cb[w] += delta[w]
 
     endTime = time.time()
-    print "[Betweenness calculator]  Weighted Betweenness calculation done, time spent: %f s" % (endTime - startTime)
+    print "[Weighted Betweenness calculator]  Weighted Betweenness calculation done, time spent: %f s\n" %\
+          (endTime - startTime)
 
     return cb
 
 
 def calculateBridgenessCentrality(graph):
-    print "[Bridgeness calculator]  calculating weighted Bridgeness scores"
+    print "\n[Bridgeness calculator]  calculating weighted Bridgeness scores"
 
     startTime = time.time()
     N         = graph.number_of_nodes() + 1
@@ -897,6 +904,7 @@ def calculateBridgenessCentrality(graph):
                     cb[w] += delta[w]
 
     endTime = time.time()
-    print "[Bridgeness calculator]  Bridgeness calculation done, time spent: %f s" % (endTime - startTime)
+    print "[Bridgeness calculator]  Bridgeness calculation done, time spent: %f s\n" %\
+          (endTime - startTime)
 
     return cb
