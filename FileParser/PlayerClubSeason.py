@@ -33,11 +33,13 @@ class PlayerClubSeason:
         cursor = connection.cursor()
 
         try:
-            cursor.execute("INSERT IGNORE INTO playerclubseason(idP, idClub, idS, playerValue, playerNumber, apps, goals, assists, ownGoals, yellowCards, redCards, onSubs, offSubs, penaltyGoals, concededGoals, cleanSheets, minutesPerGoal, minutesPlayed) "
-                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       self.idP, self.idClub, self.idS, self.playerValue, self.playerNumber, self.apps, self.goals,
-                       self.assists, self.ownGoals, self.yellowCards, self.redCards, self.onSubs, self.offSubs,
-                       self.penaltyGoals, self.concededGoals, self.cleanSheets, self.minutesPerGoal, self.minutesPlayed)
+            cursor.execute('''
+                            INSERT IGNORE INTO playerclubseason(idP, idClub, idS, playerValue, playerNumber, apps, goals, assists, ownGoals, yellowCards, redCards, onSubs, offSubs, penaltyGoals, concededGoals, cleanSheets, minutesPerGoal, minutesPlayed)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                           ''',
+                           self.idP, self.idClub, self.idS, self.playerValue, self.playerNumber, self.apps, self.goals,
+                           self.assists, self.ownGoals, self.yellowCards, self.redCards, self.onSubs, self.offSubs,
+                           self.penaltyGoals, self.concededGoals, self.cleanSheets, self.minutesPerGoal, self.minutesPlayed)
 
         except pyodbc.DatabaseError, e:
             print "[PlayerClubSeason class]  ERROR - DatabaseError", e
@@ -52,12 +54,14 @@ class PlayerClubSeason:
         cursor = connection.cursor()
 
         try:
-            cursor.execute("UPDATE playerclubseason "
-                           "SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=? "
-                           "WHERE idP = ? AND idS = ?",
-                       self.apps, self.goals, self.assists, self.ownGoals, self.yellowCards, self.redCards,
-                       self.onSubs, self.offSubs, self.penaltyGoals, self.concededGoals,
-                       self.cleanSheets, self.minutesPerGoal, self.minutesPlayed, self.idP, self.idS)
+            cursor.execute('''
+                            UPDATE playerclubseason
+                            SET apps=?, goals=?, assists=?, ownGoals=?, yellowCards=?, redCards=?, onSubs=?, offSubs=?, penaltyGoals=?, concededGoals=?, cleanSheets=?, minutesPerGoal=?, minutesPlayed=?
+                            WHERE idP = ? AND idS = ?
+                           ''',
+                           self.apps, self.goals, self.assists, self.ownGoals, self.yellowCards, self.redCards,
+                           self.onSubs, self.offSubs, self.penaltyGoals, self.concededGoals,
+                           self.cleanSheets, self.minutesPerGoal, self.minutesPlayed, self.idP, self.idS)
 
         except pyodbc.DatabaseError, e:
             print "[PlayerClubSeason class]  ERROR - DatabaseError", e

@@ -23,30 +23,35 @@ def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'
 
     if(seasonIds != 'all'):
         if(leagueIds == 'all'):
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
-                           "FROM playerclubseason pcs "
-                           "JOIN club c USING (idClub) "
-                           "WHERE pcs.idS IN (%s) "
-                           "ORDER BY pcs.idP" %
+            cursor.execute('''
+                            SELECT pcs.idP, pcs.idS, c.idL
+                            FROM playerclubseason pcs
+                            JOIN club c USING (idClub)
+                            WHERE pcs.idS IN (%s)
+                            ORDER BY pcs.idP''' %
                            ','.join(map(str, seasonIds)))
         else:
-            cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
-                           "FROM playerclubseason pcs JOIN club c "
-                           "USING (idClub) "
-                           "WHERE pcs.idS IN (%s) AND c.idL = %s "
-                           "ORDER BY pcs.idP" %
+            cursor.execute('''
+                            SELECT pcs.idP, pcs.idS, c.idL
+                            FROM playerclubseason pcs JOIN club c
+                            USING (idClub)
+                            WHERE pcs.idS IN (%s) AND c.idL = %s
+                            ORDER BY pcs.idP''' %
                            (','.join(map(str, seasonIds)), ','.join(map(str, leagueIds))))
     elif(leagueIds != 'all'):
-        cursor.execute("SELECT pcs.idP, pcs.idS, c.idL "
-                       "FROM playerclubseason pcs "
-                       "JOIN club c USING (idClub) "
-                       "WHERE c.idL IN (%s) "
-                       "ORDER BY pcs.idP" %
+        cursor.execute('''
+                        SELECT pcs.idP, pcs.idS, c.idL
+                        FROM playerclubseason pcs
+                        JOIN club c USING (idClub)
+                        WHERE c.idL IN (%s)
+                        ORDER BY pcs.idP''' %
                        ','.join(map(str, leagueIds)))
     else:
-        cursor.execute("SELECT pcs.idP, pcs.idS "
-                       "FROM playerclubseason pcs "
-                       "ORDER BY pcs.idP")
+        cursor.execute('''
+                        SELECT pcs.idP, pcs.idS
+                        FROM playerclubseason pcs
+                        ORDER BY pcs.idP
+                       ''')
 
     playersSeasons = cursor.fetchall()
     entries        = len(playersSeasons)

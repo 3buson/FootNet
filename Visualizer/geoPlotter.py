@@ -72,26 +72,30 @@ def main():
             weightByAppsString = ''
 
         if(gkMetric):
-            cursor.execute("SELECT c.nameCountry, SUM(pcs.apps) "
-                           "FROM playerclubseason pcs "
-                           "JOIN player p USING (idP) "
-                           "JOIN countries c USING (idC) "
-                           "JOIN club cl USING (idClub) "
-                           "WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s) "
-                           "GROUP BY idC" %
-                            (seasonsString, leaguesString))
+            cursor.execute('''
+                            SELECT c.nameCountry, SUM(pcs.apps)
+                            FROM playerclubseason pcs
+                            JOIN player p USING (idP)
+                            JOIN countries c USING (idC)
+                            JOIN club cl USING (idClub)
+                            WHERE p.playingPosition = 'GK' AND pcs.idS IN (%s) AND cl.idL IN (%s)
+                            GROUP BY idC
+                           ''' %
+                           (seasonsString, leaguesString))
 
             goalKeeperAppsArray = cursor.fetchall()
 
-        cursor.execute("SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s "
-                       "FROM playerclubseason pcs "
-                       "JOIN player p USING (idP) "
-                       "JOIN countries c USING (idC) "
-                       "JOIN club cl USING (idClub) "
-                       "WHERE pcs.idS IN (%s) AND cl.idL IN (%s) "
-                       "GROUP BY idC "
-                       "ORDER BY SUM(pcs.%s) DESC" %
-                        (metric, weightByAppsString, seasonsString, leaguesString, metric))
+        cursor.execute('''
+                        SELECT c.nameCountry, SUM(pcs.apps), SUM(pcs.%s)%s
+                        FROM playerclubseason pcs
+                        JOIN player p USING (idP)
+                        JOIN countries c USING (idC)
+                        JOIN club cl USING (idClub)
+                        WHERE pcs.idS IN (%s) AND cl.idL IN (%s)
+                        GROUP BY idC
+                        ORDER BY SUM(pcs.%s) DESC
+                       '''%
+                       (metric, weightByAppsString, seasonsString, leaguesString, metric))
 
         stats = cursor.fetchall()
 
