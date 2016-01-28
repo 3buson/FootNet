@@ -13,6 +13,7 @@ class ClubSeason:
         self.ranking = ranking
         self.value   = value
 
+
     def dbInsert(self, connection):
         cursor = connection.cursor()
 

@@ -1,9 +1,9 @@
 __author__ = 'matic'
 
-import matplotlib.pyplot as plt
-from random import shuffle
-import sys
 import os
+import sys
+from random import shuffle
+import matplotlib.pyplot as plt
 
 sys.path.insert(0, '../')
 import constants
@@ -265,6 +265,7 @@ def main():
 
     # plt.show()
     plt.savefig(directory + '/' + filename + '.png')
+
 
 if __name__ == "__main__":
     main()

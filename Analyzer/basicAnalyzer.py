@@ -24,6 +24,7 @@ def analyzeCloseness(FNGraph):
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
 
+
 def analyzePageRank(FNGraph):
     t1 = time.time()
 
@@ -44,6 +45,7 @@ def analyzePageRank(FNGraph):
         nodesPrinted += 1
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
+
 
 def analyzeBetweenness(FNGraph):
     t1 = time.time()
@@ -66,6 +68,7 @@ def analyzeBetweenness(FNGraph):
         nodesPrinted += 1
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
+
 
 def analyzeDegrees(FNGraph):
     t1 = time.time()
@@ -97,6 +100,7 @@ def analyzeDegrees(FNGraph):
     plt.savefig('DegreeDistribution.png')
 
     print "\nFinished calculating in %.3f seconds\n" % (time.time()-t1)
+
 
 def analyzeMisc(FNGraph):
     # LCC, average distances, clustering
@@ -133,6 +137,7 @@ def analyzeMisc(FNGraph):
     print "\tNetwork average distance: %.3f" % avgDist
 
     print "\nFinished calculating in %f seconds\n" % (time.time() - t1)
+
 
 def main():
     FNGraph = snap.LoadEdgeList(snap.PUNGraph, "EPLLaLiga131415")

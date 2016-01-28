@@ -1,16 +1,14 @@
 __author__ = 'matic'
 
-import snap
-import networkx as nx
-from random import randint
-from datetime import date
-import operator
-import sys
 import os
+import sys
+import operator
+from datetime import date
+from random import randint
 
 sys.path.insert(0, '../')
-import constants
 import utils
+import constants
 
 
 def predictPlayerValue(network, playerIds, playersInfo):
@@ -67,6 +65,7 @@ def predictPlayerValue(network, playerIds, playersInfo):
         predictedValues.append(int(round(predictedValue)))
 
     return predictedValues
+
 
 def main():
     tempFilename = 'PlayerNetPricePredictionTMP' + `randint(0,100)` + '.adj'

@@ -608,6 +608,9 @@ def createClubEdgeListFromDB(filename, seasons='all', leagues='all',
 ### ---- NETWORK ANALYSIS FUNCTIONS ---- ###
 
 def calculatePageRank(graph):
+    print "[PageRank calculator]  calculating PageRank scores"
+
+    startTime  = time.time()
     ranking    = dict()
     newRanking = dict()
 
@@ -617,9 +620,10 @@ def calculatePageRank(graph):
 
     iterations = 0
 
+    # TODO: run until convergence...
     while iterations < 30:
         if(iterations % 10 == 0):
-            print "[PageRank]  Iteration %d" % iterations
+            print "[PageRank calculator]  Iteration %d" % iterations
 
         sum = 0
 
@@ -637,13 +641,19 @@ def calculatePageRank(graph):
         ranking = newRanking
 
         iterations += 1
+
+    endTime = time.time()
+    print "[PageRank calculator]  PageRank calculation done, time spent: %f s" % (endTime - startTime)
+
     return ranking
 
 
 def calculateBetweennessCentrality(graph):
-    N = graph.number_of_nodes() + 1
+    print "[Betweenness calculator]  calculating Betweenness scores"
 
-    cb = dict()
+    startTime  = time.time()
+    N          = graph.number_of_nodes() + 1
+    cb         = dict()
 
     # initialize cb to zero
     for i in range(1, N):
@@ -651,7 +661,7 @@ def calculateBetweennessCentrality(graph):
 
     for node in graph.nodes():
         if(node % 500 == 0):
-            print "[Betweenness]  Processed %d nodes" % (node)
+            print "[Betweenness calculator]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
@@ -701,13 +711,18 @@ def calculateBetweennessCentrality(graph):
                 if(w != node):
                     cb[w] += delta[w]
 
+    endTime = time.time()
+    print "[Betweenness calculator]  Betweenness calculation done, time spent: %f s" % (endTime - startTime)
+
     return cb
 
 
 def calculateWeightedBetweennessCentrality(graph):
-    N = graph.number_of_nodes() + 1
+    print "[Betweenness calculator]  calculating weighted Betweenness scores"
 
-    cb = dict()
+    startTime = time.time()
+    N         = graph.number_of_nodes() + 1
+    cb        = dict()
 
     # initialize cb to zero
     for i in range(1, N):
@@ -715,7 +730,7 @@ def calculateWeightedBetweennessCentrality(graph):
 
     for node in graph.nodes():
         if(node % 500 == 0):
-            print "[Betweenness]  Processed %d nodes" % (node)
+            print "[Betweenness calculator]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
@@ -777,13 +792,18 @@ def calculateWeightedBetweennessCentrality(graph):
                 if(w != node):
                     cb[w] += delta[w]
 
+    endTime = time.time()
+    print "[Betweenness calculator]  Weighted Betweenness calculation done, time spent: %f s" % (endTime - startTime)
+
     return cb
 
 
 def calculateBridgenessCentrality(graph):
-    N = graph.number_of_nodes() + 1
+    print "[Bridgeness calculator]  calculating weighted Bridgeness scores"
 
-    cb = dict()
+    startTime = time.time()
+    N         = graph.number_of_nodes() + 1
+    cb        = dict()
 
     # initialize cb to zero
     for i in range(1, N):
@@ -793,7 +813,7 @@ def calculateBridgenessCentrality(graph):
         sp = nx.shortest_path_length(graph, node)
 
         if(node % 500 == 0):
-            print "[Bridgeness]  Processed %d nodes" % (node)
+            print "[Bridgeness calculator]  Processed %d nodes" % (node)
 
         S = list()
         P = list()
@@ -842,5 +862,8 @@ def calculateBridgenessCentrality(graph):
                 delta[v] += (sigma[v] / float(sigma[w])) * (1 + delta[w])
                 if(sp[w] > 1):
                     cb[w] += delta[w]
+
+    endTime = time.time()
+    print "[Bridgeness calculator]  Bridgeness calculation done, time spent: %f s" % (endTime - startTime)
 
     return cb

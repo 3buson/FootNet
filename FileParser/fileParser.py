@@ -1,21 +1,21 @@
 __author__ = 'Matevz Lenic'
 
-from pyquery import PyQuery as pq
-import urlgrabber
-import time
-import sys
-import re
 import os
-
-sys.path.insert(0, '../')
-import constants
-import utils
+import re
+import sys
+import time
+import urlgrabber
+from pyquery import PyQuery as pq
 
 from Club import Club
 from Player import Player
 from Season import Season
 from ClubSeason import ClubSeason
 from PlayerClubSeason import PlayerClubSeason
+
+sys.path.insert(0, '../')
+import constants
+import utils
 
 
 def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'):
@@ -335,6 +335,7 @@ def parsePlayerClubSeasonDetails(connection, playerId, seasonId, leagueId):
 
     return
 
+
 def parseFile(connection, filename, league, season):
     document    = pq(filename=filename)
     pcsList     = list()
@@ -611,6 +612,7 @@ def main():
 
     # --- PARSE AND UPDATE PLAYER CLUB SEASON DETAILS --- #
     parseAllPlayerClubSeasonDetails(connection)
+
 
 if __name__ == "__main__":
     main()

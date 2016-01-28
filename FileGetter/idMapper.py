@@ -8,41 +8,47 @@ from pyquery import PyQuery as pq
 sys.path.insert(0, '../')
 import constants
 
-leaguesDict  = constants.leagueURLIds
-outputString = ''
-baseURL      = 'http://www.transfermarkt.co.uk/liga-1/startseite/wettbewerb/'
 
-for league, leagueURL in leaguesDict.items():
-    url = baseURL + leagueURL
+def main():
+    leaguesDict  = constants.leagueURLIds
+    outputString = ''
+    baseURL      = 'http://www.transfermarkt.co.uk/liga-1/startseite/wettbewerb/'
 
-    try:
-        leagueHTML = urlgrabber.urlopen(url, retries=10)
-    except Exception, e:
-        time.sleep(10)
-        leagueHTML = urlgrabber.urlopen(url, retries=10)
+    for league, leagueURL in leaguesDict.items():
+        url = baseURL + leagueURL
 
-    outputString += 'clubDict' + league + '       = dict()\n'
+        try:
+            leagueHTML = urlgrabber.urlopen(url, retries=10)
+        except Exception, e:
+            time.sleep(10)
+            leagueHTML = urlgrabber.urlopen(url, retries=10)
 
-    document = pq(leagueHTML.read())
+        outputString += 'clubDict' + league + '       = dict()\n'
 
-    leagueHTML.close()
+        document = pq(leagueHTML.read())
 
-    print "[ID Mappper]  Mapping IDs for league %s..." % (league)
+        leagueHTML.close()
 
-    # parse clubs table
-    for i in document(document(document(".items")[0]).children()[2]).children().items():
-        clubName = pq(i.children()[2]).children().attr('title')
-        clubURL  = pq(i.children()[2]).children().attr('href')
+        print "[ID Mappper]  Mapping IDs for league %s..." % (league)
 
-        clubNameNoSpace = clubName.replace(" ", "").upper()
-        startClubURLIdx = clubURL.index('/verein/') + len('/verein/')
-        endClubURLIdx   = clubURL.index('/saison_id/', startClubURLIdx)
-        clubId          = clubURL[startClubURLIdx:endClubURLIdx]
+        # parse clubs table
+        for i in document(document(document(".items")[0]).children()[2]).children().items():
+            clubName = pq(i.children()[2]).children().attr('title')
+            clubURL  = pq(i.children()[2]).children().attr('href')
 
-        outputString += 'clubDict' + league + '[\'' + clubNameNoSpace[0:4] + '\'] = ' + clubId + ' # ' + clubName + '\n'
+            clubNameNoSpace = clubName.replace(" ", "").upper()
+            startClubURLIdx = clubURL.index('/verein/') + len('/verein/')
+            endClubURLIdx   = clubURL.index('/saison_id/', startClubURLIdx)
+            clubId          = clubURL[startClubURLIdx:endClubURLIdx]
 
-    outputString += '\n\n'
+            outputString += 'clubDict' + league + '[\'' + clubNameNoSpace[0:4] + '\'] = ' + clubId + ' # ' + clubName + '\n'
 
-print "[ID Mappper]  Finished mapping IDs for all leagues\n\n"
+        outputString += '\n\n'
 
-print outputString
+    print "[ID Mappper]  Finished mapping IDs for all leagues\n\n"
+
+    print outputString
+
+
+if __name__ == "__main__":
+    main()

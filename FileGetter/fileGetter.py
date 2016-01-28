@@ -12,6 +12,7 @@ import constants
 baseDirname = 'html/'
 baseURL     = 'http://www.transfermarkt.co.uk/jumplist/startseite/verein/'
 
+
 def fetchHTMLFiles(clubDict, league, season='15'):
     # create HTML directory
     dir = os.path.dirname(baseDirname)
@@ -53,6 +54,7 @@ def fetchHTMLFiles(clubDict, league, season='15'):
 
             pass
 
+
 def main():
     for season in constants.seasons.keys():
         for country in constants.leagues.keys():
@@ -63,6 +65,7 @@ def main():
 
         print "\n[File Getter]  Fetched all HTML files for all leagues for season %s\n" % \
               season
+
 
 if __name__ == "__main__":
     main()

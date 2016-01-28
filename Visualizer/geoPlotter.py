@@ -1,14 +1,14 @@
 __author__ = 'matic'
 
 import os
-import csv
 import sys
+import csv
 import traceback
 from BeautifulSoup import BeautifulSoup
 
 sys.path.insert(0, '../')
-import constants
 import utils
+import constants
 
 
 def main():
@@ -254,6 +254,7 @@ def main():
         f.close()
 
         print "[Visualizer GeoPlotter]  Image for metric %s generated" % metric
+
 
 if __name__ == "__main__":
     main()

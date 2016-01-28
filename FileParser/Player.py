@@ -4,7 +4,7 @@ import pyodbc
 import traceback
 
 import utils
-import constants
+
 
 class Player:
 
@@ -18,6 +18,7 @@ class Player:
         self.playingPosition = playingPosition
         self.playingNumber   = playingNumber
         self.height          = height
+
 
     def to_string(self):
         print "idP - %d;\nnationality - %s;\nfirstName - %s;\nlastName - %s;\n" \

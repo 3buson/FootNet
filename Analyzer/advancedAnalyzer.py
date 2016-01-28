@@ -1,11 +1,12 @@
 __author__ = 'Matevz Lenic'
 
+import os
+import sys
+import time
 import snap
 import networkx as nx
-from operator import itemgetter
 from datetime import date
-import sys
-import os
+from operator import itemgetter
 
 sys.path.insert(0, '../')
 import utils
@@ -102,9 +103,14 @@ def main():
     # printNetworkProperties(network, directed)
 
     print "[Analyzer]  calculating PageRank..."
-    pagerank = nx.pagerank(network)
-    # pagerank = utils.calculatePageRank(network)
+
+    startTime = time.time()
+    pagerank  = nx.pagerank(network)
+    endTime   = time.time()
+
+    print "[Analyzer]  PageRank calculated, time spent: %f s" % (endTime - startTime)
     print "[Analyzer]  sorting PageRank dictionary..."
+
     pagerank = sorted(pagerank.items(), key=itemgetter(1), reverse=True)
 
     if(not playerAnalysis):

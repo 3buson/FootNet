@@ -3,7 +3,6 @@ __author__ = 'Matevz Lenic'
 import pyodbc
 import traceback
 
-import utils
 
 class PlayerClubSeason:
 
@@ -29,6 +28,7 @@ class PlayerClubSeason:
         self.minutesPerGoal = minutesPerGoal
         self.minutesPlayed  = minutesPlayed
 
+
     def dbInsert(self, connection):
         cursor = connection.cursor()
 
@@ -46,6 +46,7 @@ class PlayerClubSeason:
             pass
 
         connection.commit()
+
 
     def dbUpdate(self, connection):
         cursor = connection.cursor()

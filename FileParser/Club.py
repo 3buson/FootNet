@@ -3,7 +3,6 @@ __author__ = 'Matevz Lenic'
 import pyodbc
 import traceback
 
-import utils
 
 class Club:
 
