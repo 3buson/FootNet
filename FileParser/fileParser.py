@@ -57,7 +57,7 @@ def parseAllPlayerClubSeasonDetails(connection, seasonIds='all', leagueIds='all'
     entries        = len(playersSeasons)
     processed      = 0
 
-    print "[File Parser - details parser]  Entries to process: %d" % entries
+    print "\n[File Parser - details parser]  Entries to process: %d" % entries
 
     for playerSeason in playersSeasons:
         percent = float(processed) / entries * 100.0
