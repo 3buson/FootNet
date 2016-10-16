@@ -1,10 +1,10 @@
 # README #
 
 ### What is it all about? ###
-Footnet is a collection od tools that is capable of scraping the data about football players and clubs from a popular webpage transfermarkt. It has been intended as as scraping, analyzing and visualizing tool for football data.
+Footnet is a collection of tools that is capable of scraping the data about football players and clubs from a popular webpage transfermarkt. It has been intended as as scraping, analyzing and visualizing tool for football data.
 It is capable of getting the info about all the players and clubs from selected leagues and for selected seasons (intended only for 2000+ years, with minor changes it could be made completely general).
 
-Since transfermarkt does not have an API, FileGetter will take care of locally storing all the needed club HTMLs and FileParser will parse them and insert the data into the database (default database is'footballnetwork', initial setup SQL file is provided). Database connection is done via ODBS so you will need to setup a DSN with the proper database name, username and password (default DSN name is 'FootNet'). FileParser has a function for parsing details of all the stored players including all the statistics available at transfermarkt (apps, goals, assists, ...).
+Since transfermarkt does not have an API, FileGetter will take care of locally storing all the needed club HTMLs and FileParser will parse them and insert the data into the database (default database is 'footballnetwork', initial setup SQL file is provided). Database connection is done via ODBS so you will need to setup a DSN with the proper database name, username and password (default DSN name is 'FootNet'). FileParser has a function for parsing details of all the stored players including all the statistics available at transfermarkt (apps, goals, assists, ...).
 
 Analyzer uses networkx to build a player and club network and is able to export the network into an edge list and use a version of PageRank to identify 'the best' players and springboard clubs.
 As an experiment a value predictor is also available, predicting values of given players (by player ID) by checking values of this players' teammates and also taking some other data about the player into account.
